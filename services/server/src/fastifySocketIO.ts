@@ -9,10 +9,20 @@ declare module "fastify" {
 
 export default fp(
   async function (fastify, opts) {
-    fastify.decorate("io", require("socket.io")(fastify.server, opts));
+    const io = new Server(fastify.server, {
+      cors: {
+        origin: true,
+      },
+    });
+    fastify.decorate("io", io);
     fastify.addHook("onClose", (fastify, done) => {
       fastify.io.close();
       done();
+    });
+
+    io.on("connection", (socket) => {
+      console.log(`Socket connected ${socket.id}`);
+      console.log(socket.handshake.query);
     });
   },
   { fastify: "4.x" }
