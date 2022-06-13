@@ -1,7 +1,7 @@
 import EventEmitter from "events";
-import { Room } from "./Room";
+import { Message, Room } from "./Room";
 
-interface Translation {
+export interface Translation {
   text: string;
   targetLang: string;
 }
@@ -16,6 +16,10 @@ export class Translator extends EventEmitter {
     this.targetLang = targetLang;
 
     this.room.on("message", this.translateMessage.bind(this));
+  }
+
+  destroy() {
+    this.room.off("message", this.translateMessage.bind(this));
   }
 
   async translateMessage(message: Message) {

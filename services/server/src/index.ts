@@ -1,13 +1,19 @@
 import fastify from "fastify";
 // import fastifyIO from "fastify-socket.io";
-import fastifyIO from "./fastifySocketIO";
+import socketTransport from "./socketTransport";
+import { RoomsManager } from "./RoomsManager";
 
 const serverStart = async () => {
   const server = fastify({
-    logger: true,
+    logger: {
+      level: "debug",
+    },
   });
+  const roomsManager = new RoomsManager();
   try {
-    server.register(fastifyIO);
+    server.register(socketTransport, {
+      roomsManager,
+    });
     await server.listen({
       port: 4554,
       host: "0.0.0.0",
@@ -19,3 +25,9 @@ const serverStart = async () => {
 };
 
 serverStart();
+
+["exit", "SIGINT", "SIGTERM"].forEach((eventType) => {
+  process.on(eventType as any, () => {
+    process.exit();
+  });
+});
