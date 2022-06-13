@@ -15,6 +15,9 @@ export default function Room() {
       );
       socket.once("connect", () => {
         setIsConnected(true);
+        socket.on("translation", (...args) => {
+          console.log(...args);
+        });
       });
     }
   }, [router.query.lang, router.query.room]);

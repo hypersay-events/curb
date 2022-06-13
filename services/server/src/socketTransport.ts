@@ -45,6 +45,7 @@ const socketTransport: FastifyPluginAsync<socketTransportOptions> = async (
     );
 
     const onTranslation = (translation: Translation) => {
+      console.log("emitting");
       socket.emit("translation", translation);
     };
 

@@ -15,16 +15,17 @@ export class Translator extends EventEmitter {
     this.room = room;
     this.targetLang = targetLang;
 
-    this.room.on("message", this.translateMessage.bind(this));
+    this.room.on("message", this.translateMessage);
   }
 
   destroy() {
-    this.room.off("message", this.translateMessage.bind(this));
+    console.log("destroying translator");
+    this.room.off("message", this.translateMessage);
   }
 
-  async translateMessage(message: Message) {
+  translateMessage = async (message: Message) => {
     console.log(
-      `Translating message [${message.lang}]${message.text} to [${this.targetLang}]`
+      `Translating message [${message.lang}]"${message.text}" to [${this.targetLang}]`
     );
     if (this.targetLang === "original") {
       this.emit("translation", {
@@ -33,5 +34,9 @@ export class Translator extends EventEmitter {
       } as Translation);
       return;
     }
-  }
+    this.emit("translation", {
+      text: `${this.targetLang}: ${message.text}`,
+      targetLang: this.targetLang,
+    } as Translation);
+  };
 }

@@ -2,6 +2,7 @@ import fastify from "fastify";
 // import fastifyIO from "fastify-socket.io";
 import socketTransport from "./socketTransport";
 import { RoomsManager } from "./RoomsManager";
+import api from "./api";
 
 const serverStart = async () => {
   const server = fastify({
@@ -12,6 +13,9 @@ const serverStart = async () => {
   const roomsManager = new RoomsManager();
   try {
     server.register(socketTransport, {
+      roomsManager,
+    });
+    server.register(api, {
       roomsManager,
     });
     await server.listen({
