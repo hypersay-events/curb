@@ -1,0 +1,11 @@
+{
+  "name": "@hypersay-events/curb-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "LearnFWD",
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {
+    "typescript": "^4.7.3"
+  }
+}
