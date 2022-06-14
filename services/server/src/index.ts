@@ -8,6 +8,7 @@ import defaultConfig, { Config } from "./config/default";
 import { container as Container } from "tsyringe";
 import getLogger from "./utilities/logger";
 import { Logger } from "pino";
+import fastifyCors from "@fastify/cors";
 
 const configManager = createConfigManager({
   configurations: {
@@ -33,6 +34,9 @@ const serverStart = async () => {
   });
   const roomsManager = new RoomsManager(config);
   try {
+    server.register(fastifyCors, {
+      origin: true,
+    });
     server.register(socketTransport, {
       roomsManager,
     });

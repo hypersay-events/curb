@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import { CaptionerInput } from "../../../components/Captions/CaptionInput";
+import { Monitor } from "../../../components/Monitor";
 
 export default function Room() {
   const router = useRouter();
@@ -27,7 +29,13 @@ export default function Room() {
       <p>
         Room {router.query.room}, lang {router.query.lang}
       </p>
-      <p>{isConnected ? "connected" : "connecting"}</p>
+      <div>
+        <CaptionerInput language="en" roomName={router.query.room as string} />
+      </div>
+
+      <div>
+        <Monitor />
+      </div>
     </div>
   );
 }

@@ -30,6 +30,8 @@ const api: FastifyPluginAsync<ApiOptions> = async (
       roomName: string;
       lang: string;
       text: string;
+      timestampStart?: number;
+      timestampEnd?: number;
     };
   }>("/caption", opts, async (request, _reply) => {
     const room = roomsManager.getOrCreateRoom(request.body.roomName);
