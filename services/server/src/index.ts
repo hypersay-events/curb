@@ -36,6 +36,7 @@ const serverStart = async () => {
   try {
     server.register(fastifyCors, {
       origin: true,
+      maxAge: 60 * 60 * 24,
     });
     server.register(socketTransport, {
       roomsManager,

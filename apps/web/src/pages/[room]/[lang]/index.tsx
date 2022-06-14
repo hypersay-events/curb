@@ -8,7 +8,8 @@ export default function Room() {
   return (
     <div>
       <p>
-        Room {router.query.room}, lang {router.query.lang}
+        Room <strong>{router.query.room}</strong>. Target language:{" "}
+        <strong>{router.query.lang}</strong>
       </p>
       <div>
         <CaptionerInput roomName={router.query.room as string} />

@@ -22,7 +22,8 @@ export const Monitor = () => {
         });
       });
     }
-  }, [router.query.lang, router.query.room, setTranslation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.query.lang, router.query.room]);
 
   return (
     <div>
