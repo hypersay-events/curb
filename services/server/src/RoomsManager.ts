@@ -1,3 +1,4 @@
+import { Config } from "./config/default";
 import { Room } from "./Room";
 import { Translator } from "./Translator";
 
@@ -14,8 +15,11 @@ interface RoomWithTranslators {
 
 export class RoomsManager {
   private rooms: Map<string, RoomWithTranslators> = new Map();
+  private readonly config: Config;
 
-  constructor() {}
+  constructor(config: Config) {
+    this.config = config;
+  }
 
   getRoom(roomName: string) {
     return this.rooms.get(roomName);
@@ -38,7 +42,10 @@ export class RoomsManager {
     if (!room.langs[opt.targetLang]) {
       room.langs[opt.targetLang] = {
         connected: 1,
-        translator: new Translator(room.room, opt.targetLang),
+        translator: new Translator({
+          room: room.room,
+          targetLang: opt.targetLang,
+        }),
       };
     } else {
       room.langs[opt.targetLang] = {

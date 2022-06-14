@@ -1,19 +1,29 @@
 import EventEmitter from "events";
+import { autoInjectable, inject } from "tsyringe";
+import { Config } from "./config/default";
 import { Message, Room } from "./Room";
+import TranslationService from "./services/TranslationService";
 
 export interface Translation {
   text: string;
   targetLang: string;
 }
 
+@autoInjectable()
 export class Translator extends EventEmitter {
   private readonly room: Room;
   private readonly targetLang: string;
+  private readonly translationService: TranslationService;
 
-  constructor(room: Room, targetLang: string) {
+  constructor(
+    opt: { room: Room; targetLang: string },
+    translationService?: TranslationService
+  ) {
     super();
+    const { room, targetLang } = opt;
     this.room = room;
     this.targetLang = targetLang;
+    this.translationService = translationService as TranslationService;
 
     this.room.on("message", this.translateMessage);
   }
@@ -24,9 +34,6 @@ export class Translator extends EventEmitter {
   }
 
   translateMessage = async (message: Message) => {
-    console.log(
-      `Translating message [${message.lang}]"${message.text}" to [${this.targetLang}]`
-    );
     if (this.targetLang === "original") {
       this.emit("translation", {
         text: message.text,
@@ -34,8 +41,14 @@ export class Translator extends EventEmitter {
       } as Translation);
       return;
     }
+    const translation = await this.translationService.translate({
+      targetLanguage: this.targetLang,
+      sourceLanguage: message.lang,
+      text: message.text,
+    });
+
     this.emit("translation", {
-      text: `${this.targetLang}: ${message.text}`,
+      text: translation,
       targetLang: this.targetLang,
     } as Translation);
   };

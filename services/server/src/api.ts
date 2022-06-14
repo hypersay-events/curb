@@ -37,7 +37,7 @@ const api: FastifyPluginAsync<ApiOptions> = async (
       lang: request.body.lang,
       text: request.body.text,
     });
-    return { pong: "it worked!" };
+    return { status: 200 };
   });
 };
 

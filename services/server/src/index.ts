@@ -1,16 +1,37 @@
+import "reflect-metadata";
 import fastify from "fastify";
-// import fastifyIO from "fastify-socket.io";
 import socketTransport from "./socketTransport";
 import { RoomsManager } from "./RoomsManager";
 import api from "./api";
+import { createConfigManager } from "configuring";
+import defaultConfig, { Config } from "./config/default";
+import { container as Container } from "tsyringe";
+import getLogger from "./utilities/logger";
+import { Logger } from "pino";
+
+const configManager = createConfigManager({
+  configurations: {
+    default: defaultConfig,
+  },
+});
+const config = configManager.getConfig();
+const logger = getLogger(config);
+
+Container.register<Config>("Config", {
+  useValue: config,
+});
+
+Container.register<Logger>("Logger", {
+  useValue: logger,
+});
 
 const serverStart = async () => {
+  const requestLogEnabled = config.logger?.enableRequestsLogging || false;
   const server = fastify({
-    logger: {
-      level: "debug",
-    },
+    logger,
+    disableRequestLogging: !requestLogEnabled,
   });
-  const roomsManager = new RoomsManager();
+  const roomsManager = new RoomsManager(config);
   try {
     server.register(socketTransport, {
       roomsManager,
