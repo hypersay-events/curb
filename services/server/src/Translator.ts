@@ -29,7 +29,6 @@ export class Translator extends EventEmitter {
   }
 
   destroy() {
-    console.log("destroying translator");
     this.room.off("message", this.translateMessage);
   }
 
