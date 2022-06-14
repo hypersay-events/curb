@@ -3,10 +3,12 @@ import { useCallback, useEffect, useState } from "react";
 import { useTemporaryState } from "../../hooks/useTemporaryState";
 import { useRecordStartTime } from "./hooks";
 
+const languages = ["en", "it", "ro", "fr"];
+
 export const CaptionerInput: React.FC<{
-  language: string;
   roomName?: string;
 }> = ({ language, roomName }) => {
+  const [language, setLanguage] = useState<string | null>(null);
   const [text, setText] = useState("");
   const { startTime, resetTimer } = useRecordStartTime(text);
   const [secCounter, setSecCounter] = useState<number | null>(null);
@@ -94,6 +96,14 @@ export const CaptionerInput: React.FC<{
 
   return (
     <div style={{ display: "flex", alignItems: "stretch", width: "100%" }}>
+      <select value={language} onChange={(e) => setLanguage(e.target.value)}>
+        <option>Select language</option>
+        {languages.map((l) => (
+          <option key={l} value={l}>
+            {l}
+          </option>
+        ))}
+      </select>
       {/* <Text>Create subtitles for {language.language}</Text> */}
       <div
         style={{
@@ -109,7 +119,7 @@ export const CaptionerInput: React.FC<{
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyUp={onKeyUp}
-          disabled={!roomName}
+          disabled={!roomName || !language}
         />
 
         <button onClick={onSend} disabled={!text || !roomName}>
