@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Welcome from "./components/Welcome";
 import { Captions } from "./components/Captions";
+import { SocketProvider } from "./components/SocketProvider";
 
 interface RoomDef {
   roomId: string;
@@ -33,11 +34,9 @@ function App() {
       {location === "welcome" ? (
         <Welcome setRoomIdAndLanguage={onSetRoomIdAndLanguage} />
       ) : location === "room" && roomDef ? (
-        <Captions
-          roomId={roomDef.roomId}
-          targetLang={roomDef.targetLang}
-          onGoBack={onGoBack}
-        />
+        <SocketProvider roomId={roomDef.roomId} targetLang={roomDef.targetLang}>
+          <Captions onGoBack={onGoBack} />
+        </SocketProvider>
       ) : null}
     </>
   );
