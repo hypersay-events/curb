@@ -35,7 +35,7 @@ function Welcome({ setRoomIdAndLanguage }: WelcomeParams) {
       e.preventDefault();
       if (!submitDisabled) setRoomIdAndLanguage(roomId, targetLang);
     },
-    [submitDisabled, roomId, targetLang]
+    [submitDisabled, setRoomIdAndLanguage, roomId, targetLang]
   );
 
   return (

@@ -1,11 +1,7 @@
-import { appWindow } from "@tauri-apps/api/window";
 import { Icon } from "@iconify/react";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 import React, { useEffect, useState } from "react";
-
-type onSubmitEventType =
-  | React.MouseEvent<HTMLButtonElement>
-  | React.FormEvent<HTMLFormElement>;
+import { useTemporaryState } from "../hooks/useTemporaryState";
 
 export interface CaptionsParams {
   roomId: string;
@@ -19,7 +15,7 @@ export const Captions = React.memo(function Captions({
   onGoBack,
 }: CaptionsParams) {
   const [isConnected, setIsConnected] = useState(false);
-  const [translation, setTranslation] = useState<string>("...");
+  const [translation, setTranslation] = useTemporaryState<string>("", 5000);
 
   useEffect(() => {
     console.log("Connecting...", roomId, targetLang);
@@ -34,7 +30,12 @@ export const Captions = React.memo(function Captions({
       });
     });
 
+    return () => {
+      socket.disconnect();
+    };
+
     // FIXME: disconnect on unmount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId, targetLang]);
 
   return (
@@ -47,10 +48,16 @@ export const Captions = React.memo(function Captions({
         <Icon icon="bi:arrow-left" />
       </button>
       <main className="h-screen flex items-center" data-tauri-drag-region>
-        <p className="text-lg">{isConnected ? "Connected" : "Disconnected"}</p>
-        <p className="text-lg">{translation}</p>
-        <p className="text-lg">{roomId}</p>
-        <p className="text-lg">{targetLang}</p>
+        <div>
+          <p className="text-lg">
+            {isConnected ? "Connected" : "Disconnected"} to{" "}
+            <strong>{roomId}</strong>, for lang <strong>{targetLang}</strong>
+          </p>
+        </div>
+        <br />
+        <div>
+          <p className="text-lg">{translation}</p>
+        </div>
       </main>
     </div>
   );

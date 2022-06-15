@@ -3,17 +3,22 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useTemporaryState } from "../hooks/useTemporaryState";
 
-export const Monitor = () => {
+interface MonitorProps {
+  roomName: string;
+  language?: string;
+}
+
+export const Monitor: React.FC<MonitorProps> = ({
+  roomName,
+  language = "original",
+}) => {
   const [isConnected, setIsConnected] = useState(false);
-  const router = useRouter();
   const [translation, setTranslation] = useTemporaryState("", 5000);
 
   useEffect(() => {
-    if (router.query.lang && router.query.room) {
+    if (roomName) {
       const socket = io(
-        `http://localhost:4554?targetLang=${
-          router.query.lang as string
-        }&roomName=${router.query.room as string}`
+        `http://localhost:4554?targetLang=${language}&roomName=${roomName}`
       );
       socket.once("connect", () => {
         setIsConnected(true);
@@ -23,7 +28,7 @@ export const Monitor = () => {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.query.lang, router.query.room]);
+  }, [language, roomName /* , setTranslation */]);
 
   return (
     <div>
