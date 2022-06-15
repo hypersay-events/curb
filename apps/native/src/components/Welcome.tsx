@@ -1,6 +1,6 @@
 import { appWindow } from "@tauri-apps/api/window";
 import { Icon } from "@iconify/react";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 type onSubmitEventType =
   | React.MouseEvent<HTMLButtonElement>
@@ -12,22 +12,31 @@ export interface WelcomeParams {
 
 function Welcome({ setRoomIdAndLanguage }: WelcomeParams) {
   const [roomId, setRoomId] = useState("");
-  const [targetLang, setTargetLang] = useState("");
+  const [targetLang, setTargetLang] = useState("uk");
 
-  const onRoomIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRoomId(e.target.value);
-  };
+  const onRoomIdChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setRoomId(e.target.value);
+    },
+    []
+  );
 
-  const onTargetLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setTargetLang(e.target.value);
-  };
+  const onTargetLangChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      setTargetLang(e.target.value);
+    },
+    []
+  );
 
   const submitDisabled = roomId.length < 2;
 
-  const onSubmit = (e: onSubmitEventType) => {
-    e.preventDefault();
-    if (!submitDisabled) setRoomIdAndLanguage(roomId, targetLang);
-  };
+  const onSubmit = useCallback(
+    (e: onSubmitEventType) => {
+      e.preventDefault();
+      if (!submitDisabled) setRoomIdAndLanguage(roomId, targetLang);
+    },
+    [submitDisabled, roomId, targetLang]
+  );
 
   return (
     <div className="group bg-slate-900 text-white block relative overflow-hidden rounded-xl">
@@ -59,10 +68,12 @@ function Welcome({ setRoomIdAndLanguage }: WelcomeParams) {
               className="rounded text-pink-800 text-bold text-2xl  text-center h-12"
               placeholder="EventCode"
               onChange={onRoomIdChange}
+              value={roomId}
             />
             <select
               className="rounded text-pink-800 text-bold text-xl px-3 text-center h-12"
-              defaultValue="uk"
+              value={targetLang}
+              onChange={onTargetLangChange}
             >
               <option value="en">English</option>
               <option value="ro">Romanian</option>

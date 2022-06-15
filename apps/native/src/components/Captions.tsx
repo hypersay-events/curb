@@ -13,12 +13,16 @@ export interface CaptionsParams {
   onGoBack: () => void;
 }
 
-function Captions({ roomId, targetLang, onGoBack }: CaptionsParams) {
+export const Captions = React.memo(function Captions({
+  roomId,
+  targetLang,
+  onGoBack,
+}: CaptionsParams) {
   const [isConnected, setIsConnected] = useState(false);
   const [translation, setTranslation] = useState<string>("...");
 
   useEffect(() => {
-    console.log("Connecting...");
+    console.log("Connecting...", roomId, targetLang);
     const socket = io(
       `http://localhost:4554?targetLang=${targetLang}&roomName=${roomId}`
     );
@@ -50,6 +54,4 @@ function Captions({ roomId, targetLang, onGoBack }: CaptionsParams) {
       </main>
     </div>
   );
-}
-
-export default Captions;
+});

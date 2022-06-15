@@ -1,29 +1,46 @@
-import { ReactNode, useState } from "react";
-import { appWindow } from "@tauri-apps/api/window";
-import { Icon } from "@iconify/react";
+import { useCallback, useEffect, useState } from "react";
 import Welcome from "./components/Welcome";
-import Captions from "./components/Captions";
+import { Captions } from "./components/Captions";
 
-type onSubmitEventType =
-  | React.MouseEvent<HTMLButtonElement>
-  | React.FormEvent<HTMLFormElement>;
+interface RoomDef {
+  roomId: string;
+  targetLang: string;
+}
 
 function App() {
-  const onSetRoomIdAndLanguage = (roomId: string, targetLang: string) => {
-    setCurrentPanel(
-      <Captions
-        roomId={roomId}
-        targetLang={targetLang}
-        onGoBack={() => setCurrentPanel(welcome)}
-      />
-    );
-  };
+  const [location, setLocation] = useState<"welcome" | "room">("welcome");
+  const [roomDef, setRoomDef] = useState<RoomDef | null>(null);
+  const onSetRoomIdAndLanguage = useCallback(
+    (roomId: string, targetLang: string) => {
+      setRoomDef({
+        roomId,
+        targetLang,
+      });
+    },
+    []
+  );
 
-  const welcome = <Welcome setRoomIdAndLanguage={onSetRoomIdAndLanguage} />;
+  useEffect(() => {
+    setLocation(roomDef ? "room" : "welcome");
+  }, [roomDef]);
 
-  const [currentPanel, setCurrentPanel] = useState<ReactNode>(welcome);
+  const onGoBack = useCallback(() => {
+    setRoomDef(null);
+  }, []);
 
-  return currentPanel;
+  return (
+    <>
+      {location === "welcome" ? (
+        <Welcome setRoomIdAndLanguage={onSetRoomIdAndLanguage} />
+      ) : location === "room" && roomDef ? (
+        <Captions
+          roomId={roomDef.roomId}
+          targetLang={roomDef.targetLang}
+          onGoBack={onGoBack}
+        />
+      ) : null}
+    </>
+  );
 }
 
 export default App;
