@@ -29,6 +29,8 @@ function Captions({ roomId, targetLang, onGoBack }: CaptionsParams) {
         setTranslation(translation.text);
       });
     });
+
+    // FIXME: disconnect on unmount
   }, [roomId, targetLang]);
 
   return (

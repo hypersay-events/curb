@@ -14,11 +14,6 @@ function Welcome({ setRoomIdAndLanguage }: WelcomeParams) {
   const [roomId, setRoomId] = useState("");
   const [targetLang, setTargetLang] = useState("");
 
-  const onSubmit = (e: onSubmitEventType) => {
-    e.preventDefault();
-    setRoomIdAndLanguage(roomId, targetLang);
-  };
-
   const onRoomIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRoomId(e.target.value);
   };
@@ -28,6 +23,11 @@ function Welcome({ setRoomIdAndLanguage }: WelcomeParams) {
   };
 
   const submitDisabled = roomId.length < 2;
+
+  const onSubmit = (e: onSubmitEventType) => {
+    e.preventDefault();
+    if (!submitDisabled) setRoomIdAndLanguage(roomId, targetLang);
+  };
 
   return (
     <div className="group bg-slate-900 text-white block relative overflow-hidden rounded-xl">
@@ -57,7 +57,7 @@ function Welcome({ setRoomIdAndLanguage }: WelcomeParams) {
               size={12}
               name="room"
               className="rounded text-pink-800 text-bold text-2xl  text-center h-12"
-              placeholder="Event Code"
+              placeholder="EventCode"
               onChange={onRoomIdChange}
             />
             <select
