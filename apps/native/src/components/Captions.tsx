@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useTemporaryState } from "../hooks/useTemporaryState";
 import { SocketContext } from "./SocketProvider";
 
@@ -9,8 +9,10 @@ export interface CaptionsParams {
 
 export const Captions = React.memo(
   function Captions({ onGoBack }: CaptionsParams) {
-    const { socket, roomId, targetLang } = useContext(SocketContext);
-    const [translation, setTranslation] = useTemporaryState<string>("", 5000);
+    const { socket, roomId, targetLang, isReady } = useContext(SocketContext);
+    const [translation, setTranslation] = useState(
+      "Utilities for controlling the leading (line height) of an element."
+    ); // useTemporaryState<string>("", 10000);
 
     useEffect(() => {
       const onTranslate = (translation: { text: string }) => {
@@ -23,26 +25,28 @@ export const Captions = React.memo(
     }, [setTranslation, socket]);
 
     return (
-      <div className="bg-black/25 text-white block relative overflow-hidden rounded-xl hover:bg-black group transition duration-700 ease-in-out">
-        <button
-          type="button"
-          onClick={onGoBack}
-          className="absolute top-0 left-0 m-2 opacity-0 group-hover:opacity-100"
+      <div className="bg-black/50 text-white block relative overflow-hidden rounded-xl hover:bg-black group transition duration-700 ease-in-out">
+        <div className="absolute top-0 left-0 mx-2 opacity-0 group-hover:opacity-100">
+          <button type="button" onClick={onGoBack}>
+            <Icon icon="bi:arrow-left" />
+          </button>
+          <span className="opacity-40 mx-2 p-0 text-xs leading-3">
+            {roomId} ({targetLang})
+          </span>
+        </div>
+        <div
+          className="h-screen flex items-center bg-red p-5"
+          data-tauri-drag-region
         >
-          <Icon icon="bi:arrow-left" />
-        </button>
-        <main className="h-screen flex items-center" data-tauri-drag-region>
-          <div>
-            <p className="text-lg">
-              Connected to <strong>{roomId}</strong>, for lang{" "}
-              <strong>{targetLang}</strong>
-            </p>
-          </div>
-          <br />
-          <div>
-            <p className="text-lg">{translation}</p>
-          </div>
-        </main>
+          <p
+            style={{
+              fontSize: "4vw",
+              fontWeight: "bold",
+            }}
+          >
+            {translation}
+          </p>
+        </div>
       </div>
     );
   },

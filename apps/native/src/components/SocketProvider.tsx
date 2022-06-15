@@ -5,6 +5,7 @@ export const SocketContext = createContext<{
   socket: Socket | null;
   roomId?: string;
   targetLang?: string;
+  isReady?: boolean;
 }>({
   socket: null,
 });
@@ -15,7 +16,7 @@ export const SocketProvider: React.FC<{
   targetLang: string;
 }> = ({ children, roomId, targetLang }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
-  const [ready, setReady] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     console.log("Connecting...", roomId, targetLang);
@@ -24,7 +25,7 @@ export const SocketProvider: React.FC<{
     );
     socket.once("connect", () => {
       setSocket(socket);
-      setReady(true);
+      setIsReady(true);
     });
 
     return () => {
@@ -38,9 +39,10 @@ export const SocketProvider: React.FC<{
         socket,
         roomId,
         targetLang,
+        isReady,
       }}
     >
-      {ready ? children : <>Loading...</>}
+      {children}
     </SocketContext.Provider>
   );
 };
