@@ -13,10 +13,6 @@ export const Captions = React.memo(
     const [translation, setTranslation] = useTemporaryState<string>("", 5000);
 
     useEffect(() => {
-      console.log("mounted");
-    }, []);
-
-    useEffect(() => {
       const onTranslate = (translation: { text: string }) => {
         setTranslation(translation.text);
       };

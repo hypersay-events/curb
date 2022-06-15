@@ -20,7 +20,6 @@ function App() {
     },
     []
   );
-
   useEffect(() => {
     setLocation(roomDef ? "room" : "welcome");
   }, [roomDef]);
