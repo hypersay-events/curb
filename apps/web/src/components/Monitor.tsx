@@ -43,5 +43,21 @@ export const Translation: React.FC<MonitorProps> = ({
 }) => {
   const { translation } = useMonitor(roomName, language);
 
-  return <Text>{translation}</Text>;
+  return (
+    <Text
+      component="span"
+      sx={(theme) => ({
+        display: "inline",
+        fontSize: theme.fontSizes.xl,
+        fontWeight: "bold",
+        lineHeight: "110%",
+        backgroundColor: theme.colors.gray[9],
+        boxShadow: `0.2em 0 0 ${theme.colors.gray[9]},-0.2em 0 0 ${theme.colors.gray[9]}`,
+        // borderRadius: theme.radius.md,
+      })}
+      data-tauri-drag-region
+    >
+      {translation || "..."}
+    </Text>
+  );
 };
