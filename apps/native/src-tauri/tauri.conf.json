@@ -85,12 +85,15 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "Hypersay Events - caption platform",
+        "title": "Hypersay Events - live caption client",
         "alwaysOnTop": true,
         "decorations": false,
         "transparent": true,
         "width": 800,
-        "height": 128
+        "height": 128,
+        "minWidth": 800,
+        "minHeight": 128,
+        "center": true
       }
     ]
   }

@@ -820,6 +820,11 @@
   resolved "https://registry.yarnpkg.com/@socket.io/component-emitter/-/component-emitter-3.1.0.tgz#96116f2a912e0c02817345b3c10751069920d553"
   integrity sha512-+9jVqKhRSpsc591z5vX+X5Yyw+he/HCB4iQ/RYxw35CEPaY1gnsNE43nf9n9AaYjAQrTiI/mOwKUKdUs9vf7Xg==
 
+"@tabler/icons@^1.70.0":
+  version "1.70.0"
+  resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-1.70.0.tgz#28ebbd38f70169887a06111d1e33deff9cf635ee"
+  integrity sha512-JsCDrVJdbeMzNWluefQNIjkWIBZMAye+94fdWM96UzrWgDvct8X791wVVgfUurHPF/YtGT9ajOvqr5yo+zDW9g==
+
 "@tauri-apps/api@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@tauri-apps/api/-/api-1.0.0.tgz#944b1faf1cf3f916b4ff5a23b6a49a83d7b60003"
