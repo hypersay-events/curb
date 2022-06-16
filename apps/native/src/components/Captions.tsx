@@ -96,6 +96,8 @@ export const Captions = React.memo(
                 lineHeight: "110%",
                 backgroundColor: theme.colors.gray[9],
                 boxShadow: `0.2em 0 0 ${theme.colors.gray[9]},-0.2em 0 0 ${theme.colors.gray[9]}`,
+                color: isWindowHover ? "inherit" : "white",
+                transition: "color 0.5s ease",
                 // borderRadius: theme.radius.md,
               })}
             >
