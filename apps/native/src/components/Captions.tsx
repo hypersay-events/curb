@@ -25,7 +25,7 @@ export const Captions = React.memo(
     }, [setTranslation, socket]);
 
     return (
-      <div className="bg-black/50 text-white block relative overflow-hidden rounded-xl hover:bg-black group transition duration-700 ease-in-out">
+      <div className="bg-black/50 text-white block relative overflow-hidden hover:bg-black group transition duration-700 ease-in-out">
         <div className="absolute top-0 left-0 mx-2 opacity-0 group-hover:opacity-100">
           <button type="button" onClick={onGoBack}>
             <Icon icon="bi:arrow-left" />
@@ -34,14 +34,12 @@ export const Captions = React.memo(
             {roomId}({targetLang} {isReady ? "ready" : "not"})
           </span>
         </div>
-        <div
-          className="h-screen flex items-center bg-red p-5"
-          data-tauri-drag-region
-        >
+        <div className="h-screen flex items-center bg-red p-5">
           <p
             style={{
-              fontSize: "4vw",
+              fontSize: "3vw",
               fontWeight: "bold",
+              lineHeight: "110%",
             }}
           >
             {translation}

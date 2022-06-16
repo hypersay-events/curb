@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import Welcome from "./components/Welcome";
 import { Captions } from "./components/Captions";
 import { SocketProvider } from "./components/SocketProvider";
+import { Box } from "@mantine/core";
 
 interface RoomDef {
   roomId: string;
@@ -29,7 +30,18 @@ function App() {
   }, []);
 
   return (
-    <>
+    <Box
+      sx={(theme) => ({
+        borderRadius: theme.radius.lg,
+        overflow: "hidden",
+        // borderWidth: 1,
+        // borderColor: "transparent",
+        // ":hover": {
+        //   borderColor: "white",
+        // },
+      })}
+      data-tauri-drag-region
+    >
       {location === "welcome" ? (
         <Welcome setRoomIdAndLanguage={onSetRoomIdAndLanguage} />
       ) : location === "room" && roomDef ? (
@@ -37,7 +49,7 @@ function App() {
           <Captions onGoBack={onGoBack} />
         </SocketProvider>
       ) : null}
-    </>
+    </Box>
   );
 }
 
