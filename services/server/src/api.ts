@@ -28,7 +28,7 @@ const api: FastifyPluginAsync<ApiOptions> = async (
   fastify.post<{
     Body: {
       roomName: string;
-      lang: string;
+      lang?: string;
       text: string;
       timestampStart?: number;
       timestampEnd?: number;
@@ -36,8 +36,10 @@ const api: FastifyPluginAsync<ApiOptions> = async (
   }>("/caption", opts, async (request, _reply) => {
     const room = roomsManager.getOrCreateRoom(request.body.roomName);
     room.room.addMessage({
-      lang: request.body.lang,
+      lang: request.body.lang || "auto",
       text: request.body.text,
+      timestampStart: request.body.timestampStart,
+      timestampEnd: request.body.timestampEnd,
     });
     return { status: 200 };
   });

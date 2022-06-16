@@ -2,6 +2,7 @@ import EventEmitter from "events";
 import { autoInjectable, inject } from "tsyringe";
 import { Config } from "./config/default";
 import { Message, Room } from "./Room";
+import CaptionDBService from "./services/CaptionDBService";
 import TranslationService from "./services/TranslationService";
 
 export interface Translation {
@@ -14,16 +15,19 @@ export class Translator extends EventEmitter {
   private readonly room: Room;
   private readonly targetLang: string;
   private readonly translationService: TranslationService;
+  private readonly captionDBService: CaptionDBService;
 
   constructor(
     opt: { room: Room; targetLang: string },
-    translationService?: TranslationService
+    translationService?: TranslationService,
+    captionDBService?: CaptionDBService
   ) {
     super();
     const { room, targetLang } = opt;
     this.room = room;
     this.targetLang = targetLang;
     this.translationService = translationService as TranslationService;
+    this.captionDBService = captionDBService as CaptionDBService;
 
     this.room.on("message", this.translateMessage);
   }
@@ -50,5 +54,14 @@ export class Translator extends EventEmitter {
       text: translation,
       targetLang: this.targetLang,
     } as Translation);
+
+    await this.captionDBService.saveCaption({
+      roomName: this.room.id,
+      sourceLanguage: message.lang,
+      targetLanguage: this.targetLang,
+      text: translation || "",
+      timestampStart: message.timestampStart,
+      timestampEnd: message.timestampEnd,
+    });
   };
 }

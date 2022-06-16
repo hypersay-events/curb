@@ -32,7 +32,7 @@ const serverStart = async () => {
     logger,
     disableRequestLogging: !requestLogEnabled,
   });
-  const roomsManager = new RoomsManager(config);
+  const roomsManager = Container.resolve(RoomsManager);
   try {
     server.register(fastifyCors, {
       origin: true,
