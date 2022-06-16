@@ -159,11 +159,16 @@ export const CaptionerInput: React.FC<{
       <Group>
         <Textarea
           autosize
-          placeholder="Insert captions and hit Enter"
+          autoFocus
+          placeholder={
+            !language
+              ? "☝️ Select input language first"
+              : "Type captions and hit Enter"
+          }
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyUp={onKeyUp}
-          disabled={!roomName}
+          disabled={!roomName || !language}
           autoCapitalize="off"
           autoComplete="off"
           autoCorrect="off"
@@ -177,6 +182,7 @@ export const CaptionerInput: React.FC<{
           disabled={!text || !roomName}
           size="xl"
           color="gray"
+          radius="md"
         >
           Send
         </Button>
