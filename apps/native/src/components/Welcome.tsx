@@ -5,11 +5,8 @@ import {
   ActionIcon,
   Group,
   Paper,
-  Image,
   Box,
   TextInput,
-  Select,
-  Button,
   NativeSelect,
 } from "@mantine/core";
 import imgUrl from "./hypersay-events-live-subtitles.svg";
@@ -24,7 +21,7 @@ export interface WelcomeParams {
 
 function Welcome({ setRoomIdAndLanguage }: WelcomeParams) {
   const [roomId, setRoomId] = useState("");
-  const [targetLang, setTargetLang] = useState("");
+  const [targetLang, setTargetLang] = useState("uk");
 
   const onRoomIdChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,6 +88,7 @@ function Welcome({ setRoomIdAndLanguage }: WelcomeParams) {
               autoCorrect="off"
               style={{ maxWidth: 200 }}
               variant="filled"
+              autoFocus
             />
             <NativeSelect
               placeholder="search language..."
