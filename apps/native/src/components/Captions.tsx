@@ -52,7 +52,11 @@ export const Captions = React.memo(
         })}
         data-tauri-drag-region
       >
-        <Stack align="stretch" style={{ height: "100%" }}>
+        <Stack
+          align="stretch"
+          style={{ height: "100%" }}
+          data-tauri-drag-region
+        >
           <Group
             sx={{
               opacity: isWindowHover ? 1 : 0,
@@ -86,6 +90,7 @@ export const Captions = React.memo(
             }
             px="lg"
             pb="lg"
+            data-tauri-drag-region
           >
             <Text
               component="span"
@@ -100,6 +105,7 @@ export const Captions = React.memo(
                 transition: "color 0.5s ease",
                 // borderRadius: theme.radius.md,
               })}
+              data-tauri-drag-region
             >
               {translation}
             </Text>

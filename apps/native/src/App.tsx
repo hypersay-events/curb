@@ -3,6 +3,8 @@ import Welcome from "./components/Welcome";
 import { Captions } from "./components/Captions";
 import { SocketProvider } from "./components/SocketProvider";
 import { Box } from "@mantine/core";
+import { useHotkeys } from "@mantine/hooks";
+import { appWindow } from "@tauri-apps/api/window";
 
 interface RoomDef {
   roomId: string;
@@ -28,6 +30,8 @@ function App() {
   const onGoBack = useCallback(() => {
     setRoomDef(null);
   }, []);
+
+  useHotkeys([["mod+q", () => appWindow.close()]]);
 
   return (
     <Box
