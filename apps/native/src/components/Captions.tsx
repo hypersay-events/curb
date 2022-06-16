@@ -46,9 +46,14 @@ export const Captions = React.memo(
       <Box
         sx={(theme) => ({
           position: "relative",
-          backgroundColor: isWindowHover ? theme.colors.gray[9] : "transparent",
+          backgroundColor: isWindowHover
+            ? theme.colors.gray[9]
+            : "rgba(0,0,0,0.3)",
+          backdropFilter: "blur(5px)",
           transition: "background-color 0.5s ease",
           height: "100vh",
+          borderRadius: theme.radius.lg,
+          overflow: "hidden",
         })}
         data-tauri-drag-region
       >
