@@ -1,5 +1,7 @@
+import { singleton } from "tsyringe";
 import { Config } from "./config/default";
 import { Room } from "./Room";
+import CaptionDBService from "./services/CaptionDBService";
 import { Translator } from "./Translator";
 
 interface RoomWithTranslators {
@@ -13,13 +15,11 @@ interface RoomWithTranslators {
   >;
 }
 
+@singleton()
 export class RoomsManager {
   private rooms: Map<string, RoomWithTranslators> = new Map();
-  private readonly config: Config;
 
-  constructor(config: Config) {
-    this.config = config;
-  }
+  constructor(private readonly captionDBService: CaptionDBService) {}
 
   getRoom(roomName: string) {
     return this.rooms.get(roomName);
