@@ -21,31 +21,22 @@ export interface WelcomeParams {
 
 function Welcome({ setRoomIdAndLanguage }: WelcomeParams) {
   const [roomId, setRoomId] = useState("");
-  const [targetLang, setTargetLang] = useState("uk");
+  const [targetLang, setTargetLang] = useState("");
 
-  const onRoomIdChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setRoomId(e.target.value);
-    },
-    []
-  );
+  const onRoomIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRoomId(e.target.value);
+  };
 
-  const onTargetLangChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setTargetLang(e.target.value);
-    },
-    []
-  );
+  const onTargetLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setTargetLang(e.target.value);
+  };
 
   const submitDisabled = roomId.length < 2;
 
-  const onSubmit = useCallback(
-    (e: onSubmitEventType) => {
-      e.preventDefault();
-      if (!submitDisabled) setRoomIdAndLanguage(roomId, targetLang);
-    },
-    [submitDisabled, setRoomIdAndLanguage, roomId, targetLang]
-  );
+  const onSubmit = (e: onSubmitEventType) => {
+    e.preventDefault();
+    if (!submitDisabled) setRoomIdAndLanguage(roomId, targetLang);
+  };
 
   return (
     <Paper style={{ position: "relative" }} p="md" data-tauri-drag-region>
