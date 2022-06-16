@@ -8,6 +8,7 @@ import {
   Box,
   TextInput,
   NativeSelect,
+  Center,
 } from "@mantine/core";
 import imgUrl from "./hypersay-events-live-subtitles.svg";
 
@@ -20,9 +21,10 @@ export interface WelcomeParams {
 }
 
 export const TARGET_LANGS = [
-  { value: "en", label: "English" },
-  { value: "ro", label: "Romanian" },
-  { value: "uk", label: "Ukrainian" },
+  { value: "en", label: "English", flag: "🇬🇧" },
+  { value: "ro", label: "Romanian", flag: "🇷🇴" },
+  { value: "it", label: "Italian", flag: "🇮🇹" },
+  { value: "uk", label: "Ukrainian", flag: "🇺🇦" },
 ];
 
 function Welcome({ setRoomIdAndLanguage }: WelcomeParams) {
@@ -45,7 +47,11 @@ function Welcome({ setRoomIdAndLanguage }: WelcomeParams) {
   };
 
   return (
-    <Paper style={{ position: "relative" }} p="md" data-tauri-drag-region>
+    <Paper
+      style={{ position: "relative", height: "100vh" }}
+      p="md"
+      data-tauri-drag-region
+    >
       <Group
         sx={{
           position: "absolute",
@@ -62,63 +68,64 @@ function Welcome({ setRoomIdAndLanguage }: WelcomeParams) {
           <Icon icon="tabler:x" width="18" />
         </ActionIcon>
       </Group>
-
-      <Group data-tauri-drag-region align="center">
-        <Box style={{ width: 250 }}>
-          <img
-            src={imgUrl}
-            alt="Hypersay Live Captions Logo"
-            draggable={false}
-            data-tauri-drag-region
-          />
-        </Box>
-        <form onSubmit={onSubmit} data-tauri-drag-region>
-          <Group style={{ width: 500 }}>
-            <TextInput
-              required
-              name="room"
-              placeholder="EventCode"
-              onChange={onRoomIdChange}
-              value={roomId}
-              autoCapitalize="off"
-              autoComplete="off"
-              autoCorrect="off"
-              style={{ maxWidth: 200 }}
-              variant="filled"
-              autoFocus
+      <Center style={{ height: "100%" }}>
+        <Group data-tauri-drag-region align="center">
+          <Box style={{ width: 250 }}>
+            <img
+              src={imgUrl}
+              alt="Hypersay Live Captions Logo"
+              draggable={false}
+              data-tauri-drag-region
             />
-            <NativeSelect
-              placeholder="search language..."
-              value={targetLang}
-              data={TARGET_LANGS}
-              onChange={onTargetLangChange}
-              autoCorrect="off"
-              autoCapitalize="off"
-              style={{ maxWidth: 200 }}
-              variant="filled"
-            />
-            <ActionIcon
-              onClick={onSubmit}
-              disabled={submitDisabled}
-              variant="transparent"
-              size={40}
-              sx={{
-                ":disabled": {
-                  background: "none",
-                  border: "none",
-                  opacity: 0.5,
-                },
-              }}
-            >
-              <Icon
-                icon="tabler:arrow-down-right-circle"
-                height={50}
-                style={{ transform: "rotate(-45deg)" }}
+          </Box>
+          <form onSubmit={onSubmit} data-tauri-drag-region>
+            <Group style={{ width: 500 }}>
+              <TextInput
+                required
+                name="room"
+                placeholder="EventCode"
+                onChange={onRoomIdChange}
+                value={roomId}
+                autoCapitalize="off"
+                autoComplete="off"
+                autoCorrect="off"
+                style={{ maxWidth: 200 }}
+                variant="filled"
+                autoFocus
               />
-            </ActionIcon>
-          </Group>
-        </form>
-      </Group>
+              <NativeSelect
+                placeholder="search language..."
+                value={targetLang}
+                data={TARGET_LANGS}
+                onChange={onTargetLangChange}
+                autoCorrect="off"
+                autoCapitalize="off"
+                style={{ maxWidth: 200 }}
+                variant="filled"
+              />
+              <ActionIcon
+                onClick={onSubmit}
+                disabled={submitDisabled}
+                variant="transparent"
+                size={40}
+                sx={{
+                  ":disabled": {
+                    background: "none",
+                    border: "none",
+                    opacity: 0.5,
+                  },
+                }}
+              >
+                <Icon
+                  icon="tabler:arrow-down-right-circle"
+                  height={50}
+                  style={{ transform: "rotate(-45deg)" }}
+                />
+              </ActionIcon>
+            </Group>
+          </form>
+        </Group>
+      </Center>
     </Paper>
   );
 }

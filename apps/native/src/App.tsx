@@ -34,11 +34,6 @@ function App() {
       sx={(theme) => ({
         borderRadius: theme.radius.lg,
         overflow: "hidden",
-        // borderWidth: 1,
-        // borderColor: "transparent",
-        // ":hover": {
-        //   borderColor: "white",
-        // },
       })}
       data-tauri-drag-region
     >

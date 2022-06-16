@@ -1,7 +1,9 @@
 import { Icon } from "@iconify/react";
+import { ActionIcon, Box, Group, Stack, Text } from "@mantine/core";
+import { appWindow } from "@tauri-apps/api/window";
 import React, { useContext, useEffect, useState } from "react";
-import { useTemporaryState } from "../hooks/useTemporaryState";
 import { SocketContext } from "./SocketProvider";
+import { TARGET_LANGS } from "./Welcome";
 
 export interface CaptionsParams {
   onGoBack: () => void;
@@ -9,10 +11,24 @@ export interface CaptionsParams {
 
 export const Captions = React.memo(
   function Captions({ onGoBack }: CaptionsParams) {
+    const [isWindowHover, setIsWindowHover] = useState(false);
     const { socket, roomId, targetLang, isReady } = useContext(SocketContext);
     const [translation, setTranslation] = useState(
-      "Utilities for controlling the leading (line height) of an element."
-    ); // useTemporaryState<string>("", 10000);
+      "Utilities for controlling the leading (line height) of an element. It goes on two lines as well."
+    );
+
+    appWindow.listen("tauri://focus", () => {
+      setIsWindowHover(true);
+    });
+
+    appWindow.listen("tauri://blur", () => {
+      setIsWindowHover(false);
+    });
+
+    // const [translation, setTranslation] = useTemporaryState<string>(
+    //   "[...]",
+    //   10000
+    // );
 
     useEffect(() => {
       const onTranslate = (translation: { text: string }) => {
@@ -24,28 +40,70 @@ export const Captions = React.memo(
       };
     }, [setTranslation, socket]);
 
+    const language = TARGET_LANGS.find((l) => l.value === targetLang);
+
     return (
-      <div className="bg-black/50 text-white block relative overflow-hidden hover:bg-black group transition duration-700 ease-in-out">
-        <div className="absolute top-0 left-0 mx-2 opacity-0 group-hover:opacity-100">
-          <button type="button" onClick={onGoBack}>
-            <Icon icon="bi:arrow-left" />
-          </button>
-          <span className="opacity-40 mx-2 p-0 text-xs leading-3">
-            {roomId}({targetLang} {isReady ? "ready" : "not"})
-          </span>
-        </div>
-        <div className="h-screen flex items-center bg-red p-5">
-          <p
-            style={{
-              fontSize: "3vw",
-              fontWeight: "bold",
-              lineHeight: "110%",
+      <Box
+        sx={(theme) => ({
+          position: "relative",
+          backgroundColor: isWindowHover ? theme.colors.gray[9] : "transparent",
+          transition: "background-color 0.5s ease",
+          height: "100vh",
+        })}
+        data-tauri-drag-region
+      >
+        <Stack align="stretch" style={{ height: "100%" }}>
+          <Group
+            sx={{
+              opacity: isWindowHover ? 1 : 0,
+              transition: "opacity 0.5s ease",
+              alignSelf: "flex-end",
             }}
+            spacing={5}
+            data-tauri-drag-region
           >
-            {translation}
-          </p>
-        </div>
-      </div>
+            <Text size="sm">
+              {roomId} &middot; {language?.flag} — {isReady ? "ready" : "not"}
+            </Text>
+            <Icon icon="tabler:drag-drop" width="18" data-tauri-drag-region />
+            <ActionIcon onClick={onGoBack}>
+              <Icon icon="bi:arrow-left" />
+            </ActionIcon>
+
+            <ActionIcon onClick={() => appWindow.close()}>
+              <Icon icon="tabler:x" width="18" />
+            </ActionIcon>
+          </Group>
+          <Box
+            style={
+              {
+                // display: "flex",
+                // flexDirection: "column",
+                // alignItems: "stretch",
+                // justifyContent: "flex-end",
+                // flexGrow: 1,
+              }
+            }
+            px="lg"
+            pb="lg"
+          >
+            <Text
+              component="span"
+              sx={(theme) => ({
+                display: "inline",
+                fontSize: "3vw",
+                fontWeight: "bold",
+                lineHeight: "110%",
+                backgroundColor: theme.colors.gray[9],
+                boxShadow: `0.2em 0 0 ${theme.colors.gray[9]},-0.2em 0 0 ${theme.colors.gray[9]}`,
+                // borderRadius: theme.radius.md,
+              })}
+            >
+              {translation}
+            </Text>
+          </Box>
+        </Stack>
+      </Box>
     );
   },
   (prevProps, nextProps) => {
