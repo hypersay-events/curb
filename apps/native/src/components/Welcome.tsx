@@ -85,6 +85,7 @@ function Welcome({ setRoomIdAndLanguage }: WelcomeParams) {
               alt="Hypersay Live Captions Logo"
               draggable={false}
               data-tauri-drag-region
+              style={{ width: "100%" }}
             />
           </Box>
           <form onSubmit={onSubmit} data-tauri-drag-region>
