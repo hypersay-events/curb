@@ -28,6 +28,14 @@ export const SocketProvider: React.FC<{
       setIsReady(true);
     });
 
+    socket.on("connect", () => {
+      setIsReady(true);
+    });
+
+    socket.on("disconnect", () => {
+      setIsReady(false);
+    });
+
     return () => {
       socket.disconnect();
     };

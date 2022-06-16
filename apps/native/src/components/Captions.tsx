@@ -31,7 +31,7 @@ export const Captions = React.memo(
             <Icon icon="bi:arrow-left" />
           </button>
           <span className="opacity-40 mx-2 p-0 text-xs leading-3">
-            {roomId} ({targetLang})
+            {roomId}({targetLang} {isReady ? "ready" : "not"})
           </span>
         </div>
         <div
