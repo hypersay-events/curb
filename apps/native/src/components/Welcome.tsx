@@ -29,22 +29,31 @@ export const TARGET_LANGS = [
 
 function Welcome({ setRoomIdAndLanguage }: WelcomeParams) {
   const [roomId, setRoomId] = useState("");
-  const [targetLang, setTargetLang] = useState("");
+  const [targetLang, setTargetLang] = useState("uk");
 
-  const onRoomIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRoomId(e.target.value);
-  };
+  const onRoomIdChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setRoomId(e.target.value);
+    },
+    []
+  );
 
-  const onTargetLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setTargetLang(e.target.value);
-  };
+  const onTargetLangChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      setTargetLang(e.target.value);
+    },
+    []
+  );
 
   const submitDisabled = roomId.length < 2;
 
-  const onSubmit = (e: onSubmitEventType) => {
-    e.preventDefault();
-    if (!submitDisabled) setRoomIdAndLanguage(roomId, targetLang);
-  };
+  const onSubmit = useCallback(
+    (e: onSubmitEventType) => {
+      e.preventDefault();
+      if (!submitDisabled) setRoomIdAndLanguage(roomId, targetLang);
+    },
+    [submitDisabled, setRoomIdAndLanguage, roomId, targetLang]
+  );
 
   return (
     <Paper
