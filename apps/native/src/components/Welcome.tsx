@@ -19,6 +19,12 @@ export interface WelcomeParams {
   setRoomIdAndLanguage: (roomId: string, targetLang: string) => void;
 }
 
+export const TARGET_LANGS = [
+  { value: "en", label: "English" },
+  { value: "ro", label: "Romanian" },
+  { value: "uk", label: "Ukrainian" },
+];
+
 function Welcome({ setRoomIdAndLanguage }: WelcomeParams) {
   const [roomId, setRoomId] = useState("");
   const [targetLang, setTargetLang] = useState("");
@@ -84,27 +90,13 @@ function Welcome({ setRoomIdAndLanguage }: WelcomeParams) {
             <NativeSelect
               placeholder="search language..."
               value={targetLang}
-              data={[
-                { value: "en", label: "English" },
-                { value: "ro", label: "Romanian" },
-                { value: "uk", label: "Ukrainian" },
-              ]}
+              data={TARGET_LANGS}
               onChange={onTargetLangChange}
               autoCorrect="off"
               autoCapitalize="off"
               style={{ maxWidth: 200 }}
               variant="filled"
             />
-
-            {/* <select
-            className="rounded text-pink-800 text-bold text-xl px-3 text-center h-12"
-            value={targetLang}
-            onChange={onTargetLangChange}
-          >
-            <option value="en">English</option>
-            <option value="ro">Romanian</option>
-            <option value="uk">Ukrainian</option>
-          </select> */}
             <ActionIcon
               onClick={onSubmit}
               disabled={submitDisabled}
