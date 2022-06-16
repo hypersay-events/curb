@@ -1,16 +1,16 @@
-name: "publish"
+name: "publish-native"
 
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - "apps/native/**"
 
 defaults:
   run:
     shell: bash
-    working-directory: app/native
+    working-directory: apps/native
     
 jobs:
   publish-tauri:
