@@ -6,6 +6,7 @@
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
+    "start": "node dist/index.js",
     "dev": "tsnd --respawn src/index.ts | pino-pretty",
     "build": "prisma generate && tsc --build ",
     "prisma": "prisma"

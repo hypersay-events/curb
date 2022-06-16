@@ -10,6 +10,9 @@ export const SocketContext = createContext<{
   socket: null,
 });
 
+const VITE_CAPTIONS_ENDPOINT =
+  import.meta.env.VITE_CAPTIONS_ENDPOINT || "http://localhost:4664";
+
 export const SocketProvider: React.FC<{
   children: ReactNode;
   roomId: string;
@@ -21,7 +24,7 @@ export const SocketProvider: React.FC<{
   useEffect(() => {
     console.log("Connecting...", roomId, targetLang);
     const socket = io(
-      `http://localhost:4554?targetLang=${targetLang}&roomName=${roomId}`
+      `${VITE_CAPTIONS_ENDPOINT}/?targetLang=${targetLang}&roomName=${roomId}`
     );
     socket.once("connect", () => {
       setSocket(socket);

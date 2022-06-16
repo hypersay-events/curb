@@ -45,7 +45,7 @@ const serverStart = async () => {
       roomsManager,
     });
     await server.listen({
-      port: 4554,
+      port: config.port,
       host: "0.0.0.0",
     });
   } catch (err) {

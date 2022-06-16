@@ -41,6 +41,7 @@ interface TranslationServicesOptions {
 export interface Config {
   translationServices: TranslationServicesOptions;
   logger: LoggerConfig;
+  port?: number;
 }
 
 const defaultConfig: Config = {
@@ -51,6 +52,7 @@ const defaultConfig: Config = {
     destination: process.stdout,
     enableRequestsLogging: process.env.ENABLE_REQUESTS_LOGGING === "true",
   },
+  port: parseInt(process.env.PORT || "4554", 10),
   translationServices: {
     disableCache: false,
     google: {
