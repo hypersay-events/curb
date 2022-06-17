@@ -30,6 +30,9 @@ export const INPUT_LANGUAGES = [
   { value: "fr", label: "French", flag: "🇫🇷" },
 ];
 
+const NEXT_PUBLIC_CAPTIONS_ENDPOINT =
+  process.env.NEXT_PUBLIC_CAPTIONS_ENDPOINT || "http://localhost:4554";
+
 export const CaptionerInput: React.FC<{
   roomName?: string;
 }> = ({ roomName }) => {
@@ -57,7 +60,7 @@ export const CaptionerInput: React.FC<{
         const l = language;
         const timestampStart = startTime.getTime();
         cleanAll();
-        await fetch("http://localhost:4554/caption", {
+        await fetch(`${NEXT_PUBLIC_CAPTIONS_ENDPOINT}/caption`, {
           method: "POST",
           body: JSON.stringify({
             roomName,

@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useTemporaryState } from "../hooks/useTemporaryState";
 
+const NEXT_PUBLIC_CAPTIONS_ENDPOINT =
+  process.env.NEXT_PUBLIC_CAPTIONS_ENDPOINT || "http://localhost:4554";
+
 export const useMonitor = <T>(roomName: string, language?: string) => {
   const [isConnected, setIsConnected] = useState(false);
   const [translation, setTranslation] = useTemporaryState("", 5000);
@@ -9,7 +12,7 @@ export const useMonitor = <T>(roomName: string, language?: string) => {
   useEffect(() => {
     if (roomName) {
       const socket = io(
-        `http://localhost:4554?targetLang=${language}&roomName=${roomName}`
+        `${NEXT_PUBLIC_CAPTIONS_ENDPOINT}?targetLang=${language}&roomName=${roomName}`
       );
       socket.once("connect", () => {
         setIsConnected(true);
