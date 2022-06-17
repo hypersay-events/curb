@@ -19,9 +19,7 @@ export default function Room() {
 
           <Status roomName={router.query.room as string} />
         </Group>
-        <Box>
-          Target language: <strong>{router.query.lang}</strong>
-        </Box>
+
         <Box style={{ flexGrow: 1 }}>
           <Translation
             roomName={router.query.room as string}

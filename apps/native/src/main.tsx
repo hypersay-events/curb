@@ -14,7 +14,18 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     >
       <Global
         styles={{
-          body: { background: "none" },
+          body: {
+            background: "none",
+            height: "100%",
+            width: "100%",
+            overflow: "hidden",
+          },
+          html: {
+            background: "none",
+            height: "100%",
+            width: "100%",
+            overflow: "hidden",
+          },
           "*": { userSelect: "none" },
           input: { userSelect: "auto" },
         }}
