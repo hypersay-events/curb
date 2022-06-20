@@ -3,11 +3,13 @@ import { SetStateAction, useEffect, useState } from "react";
 /**
  * Like useState, but the new value is kept temporarily. After `time` the initial value is set back
  * @param initialValue
+ * @param defaultValue
  * @param time
  * @returns
  */
 export const useTemporaryState = <T>(
   initialValue: T | (() => T),
+  defaultValue: T | (() => T),
   time: number
 ): [T, (newValue: SetStateAction<T>) => void] => {
   const [value, setValue] = useState<T>(initialValue);
@@ -18,13 +20,13 @@ export const useTemporaryState = <T>(
 
   useEffect(() => {
     const interval = setTimeout(() => {
-      setValue(initialValue);
+      setValue(defaultValue);
     }, time);
 
     return () => {
       clearTimeout(interval);
     };
-  }, [initialValue, time, value]);
+  }, [defaultValue, initialValue, time, value]);
 
   return [value, set];
 };
