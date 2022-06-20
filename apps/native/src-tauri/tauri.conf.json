@@ -17,7 +17,7 @@
         "all": false,
         "center": false,
         "close": true,
-        "create": false,
+        "create": true,
         "hide": false,
         "maximize": false,
         "minimize": false,
