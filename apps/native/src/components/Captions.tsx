@@ -118,21 +118,21 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
     >
       <Stack
         align="stretch"
-        sx={(theme) => ({
+        style={{
           height: "100%",
           position: "relative",
-          backgroundColor: theme.colors.gray[9],
-          zIndex: 1,
-        })}
+        }}
         data-tauri-drag-region
       >
         {/* Menu */}
         <Group
-          sx={{
+          sx={(theme) => ({
             opacity: isWindowHover ? 1 : 0,
             transition: "opacity 0.5s ease",
             alignSelf: "flex-end",
-          }}
+            backgroundColor: theme.colors.gray[9],
+            zIndex: 1,
+          })}
           spacing={5}
           data-tauri-drag-region
         >
