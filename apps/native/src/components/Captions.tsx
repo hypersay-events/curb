@@ -118,9 +118,15 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
     >
       <Stack
         align="stretch"
-        style={{ height: "100%", position: "relative" }}
+        sx={(theme) => ({
+          height: "100%",
+          position: "relative",
+          backgroundColor: theme.colors.gray[9],
+          zIndex: 1,
+        })}
         data-tauri-drag-region
       >
+        {/* Menu */}
         <Group
           sx={{
             opacity: isWindowHover ? 1 : 0,
@@ -130,6 +136,10 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
           spacing={5}
           data-tauri-drag-region
         >
+          <ActionIcon onClick={openSettingsWindow}>
+            <Icon icon="tabler:settings" width="18" />
+          </ActionIcon>
+
           <Text size="sm">
             {roomId} &middot; {language?.flag} — {isReady ? "ready" : "not"}
           </Text>
