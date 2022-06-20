@@ -7,7 +7,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "curb-native",
+    "productName": "Hypersay Captions Client",
     "version": "0.1.1"
   },
   "tauri": {
@@ -85,7 +85,7 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "Hypersay Events - live caption client",
+        "title": "Hypersay Live Captions",
         "alwaysOnTop": true,
         "decorations": false,
         "transparent": true,
