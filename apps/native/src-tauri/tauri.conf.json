@@ -91,7 +91,7 @@
         "transparent": true,
         "width": 800,
         "height": 128,
-        "minWidth": 800,
+        "minWidth": 400,
         "minHeight": 128,
         "center": true
       }
