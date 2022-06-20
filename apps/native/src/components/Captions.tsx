@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Icon } from "@iconify/react";
 import { ActionIcon, Box, Collapse, Group, Stack, Text } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
@@ -27,13 +27,16 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
   const [isWindowHover, setIsWindowHover] = useState(false);
   const [fontSize, setFontSize] = useState(DEFAULT_FONT_SIZE);
   const { socket, roomId, targetLang, isReady } = useContext(SocketContext);
+  const [showExampleLine, setShowExampleLine] = useState(true);
+  const exampleLine = useMemo(
+    () => FIRST_LINERS[Math.floor(Math.random() * FIRST_LINERS.length)],
+    []
+  );
 
   // const pickLiner = Math.floor(Math.random() * FIRST_LINERS.length);
-  const [parentRef] = useAutoAnimate(/* optional config */);
+  const [parentRef] = useAutoAnimate<HTMLDivElement>(/* optional config */);
 
-  const [lines, addLine] = useLines(
-    FIRST_LINERS[Math.floor(Math.random() * FIRST_LINERS.length)]
-  );
+  const [lines, addLine] = useLines();
 
   useEffect(() => {
     appWindow.listen("tauri://focus", () => {
@@ -56,6 +59,7 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
   useEffect(() => {
     const onTranslate = (translation: { text: string }) => {
       addLine(translation.text);
+      setShowExampleLine(false);
     };
     socket?.on("translation", onTranslate);
     return () => {
@@ -114,6 +118,27 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
           data-tauri-drag-region
           ref={parentRef}
         >
+          {showExampleLine ? (
+            <Box>
+              <Text
+                component="span"
+                sx={(theme) => ({
+                  display: "inline",
+                  fontSize: `${fontSize}vw`,
+                  fontWeight: "bold",
+                  lineHeight: "110%",
+                  backgroundColor: theme.colors.gray[9],
+                  boxShadow: `0.2em 0 0 ${theme.colors.gray[9]},-0.2em 0 0 ${theme.colors.gray[9]}`,
+                  color: isWindowHover ? "inherit" : "white",
+                  transition: "color 0.5s ease",
+                  // borderRadius: theme.radius.md,
+                })}
+                data-tauri-drag-region
+              >
+                {exampleLine}
+              </Text>
+            </Box>
+          ) : null}
           {lines.map((line) => (
             <Box key={line}>
               <Text
