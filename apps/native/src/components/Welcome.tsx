@@ -89,7 +89,7 @@ function Welcome({ setRoomIdAndLanguage }: WelcomeParams) {
             />
           </Box>
           <form onSubmit={onSubmit} data-tauri-drag-region>
-            <Group style={{ width: 500 }}>
+            <Group>
               <TextInput
                 required
                 name="room"
