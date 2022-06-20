@@ -1,9 +1,15 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Icon } from "@iconify/react";
 import { ActionIcon, Box, Group, Stack, Text } from "@mantine/core";
-import { useHotkeys } from "@mantine/hooks";
-import { appWindow } from "@tauri-apps/api/window";
+import { useHotkeys, useLocalStorage } from "@mantine/hooks";
 import { useLines } from "../hooks/useCaptionLines";
+import { appWindow, WebviewWindow } from "@tauri-apps/api/window";
+import {
+  DEFAULT_BG_COLOR,
+  DEFAULT_FONT_SIZE,
+  DEFAULT_TEXT_COLOR,
+  STEP,
+} from "./Settings";
 import { SocketContext } from "./SocketProvider";
 import { TARGET_LANGS } from "./Welcome";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
@@ -13,10 +19,7 @@ export interface CaptionsParams {
   onGoBack: () => void;
 }
 
-const STEP = 0.1;
-export const DEFAULT_FONT_SIZE = 3;
-
-const FIRST_LINERS = [
+export const FIRST_LINERS = [
   "It was a bright cold day in April, and the clocks were striking thirteen. [test]",
   "As Gregor Samsa awoke one morning from uneasy dreams he found himself transformed in his bed into a gigantic insect.  [test]",
   "I write this sitting in the kitchen sink. [test]",
@@ -26,7 +29,6 @@ const FIRST_LINERS = [
 
 export const Captions = function Captions({ onGoBack }: CaptionsParams) {
   const [isWindowHover, setIsWindowHover] = useState(false);
-  const [fontSize, setFontSize] = useState(DEFAULT_FONT_SIZE);
   const { socket, roomId, targetLang, isReady } = useContext(SocketContext);
   const [showExampleLine, setShowExampleLine] = useState(true);
   const exampleLine = useMemo(
@@ -70,6 +72,37 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
 
   const language = TARGET_LANGS.find((l) => l.value === targetLang);
 
+  const [fontSize, setFontSize] = useLocalStorage({
+    key: "font-size",
+    defaultValue: DEFAULT_FONT_SIZE,
+  });
+
+  const [bgColor] = useLocalStorage({
+    key: "background-color",
+    defaultValue: DEFAULT_BG_COLOR,
+  });
+
+  const [textColor] = useLocalStorage({
+    key: "text-color",
+    defaultValue: DEFAULT_TEXT_COLOR,
+  });
+
+  const openSettingsWindow = useCallback(() => {
+    console.log("called");
+    const webview = new WebviewWindow("settings", {
+      url: "settings.html",
+      title: "Settings",
+      height: 500,
+      width: 600,
+    });
+    webview.once("tauri://created", function () {
+      console.log("view window successfully created");
+    });
+    webview.once("tauri://error", function (e) {
+      console.log(e);
+    });
+  }, []);
+
   return (
     <Box
       sx={(theme) => ({
@@ -101,6 +134,10 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
             {roomId} &middot; {language?.flag} — {isReady ? "ready" : "not"}
           </Text>
           <Icon icon="tabler:drag-drop" width="18" data-tauri-drag-region />
+          <ActionIcon onClick={openSettingsWindow}>
+            <Icon icon="tabler:settings" />
+          </ActionIcon>
+
           <ActionIcon onClick={onGoBack}>
             <Icon icon="bi:arrow-left" />
           </ActionIcon>
