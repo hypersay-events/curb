@@ -51,15 +51,19 @@ export class Translator extends EventEmitter {
     });
 
     this.emit("translation", {
-      text: translation,
+      roomName: this.room.id,
+      sourceLanguage: message.lang,
       targetLang: this.targetLang,
+      text: (translation || "").trim(),
+      timestampStart: message.timestampStart,
+      timestampEnd: message.timestampEnd,
     } as Translation);
 
     await this.captionDBService.saveCaption({
       roomName: this.room.id,
       sourceLanguage: message.lang,
       targetLanguage: this.targetLang,
-      text: translation || "",
+      text: (translation || "").trim(),
       timestampStart: message.timestampStart,
       timestampEnd: message.timestampEnd,
     });
