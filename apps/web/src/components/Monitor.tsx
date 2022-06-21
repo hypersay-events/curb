@@ -1,5 +1,5 @@
 import { Badge, Box, Group, Stack, Text } from "@mantine/core";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Translation, useMonitor } from "../hooks/useMonitor";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useListState } from "@mantine/hooks";
@@ -61,7 +61,7 @@ export const TranslationLines: React.FC<MonitorProps> = ({
     <Stack ref={parent} spacing={10}>
       {lines.map((line) => {
         if (!line) return null;
-        const date = new Date(line.timestampStart);
+        const date = new Date(line.timestampEnd);
         return (
           <Group key={line.timestampStart} noWrap align="start">
             <Box style={{ flexGrow: 1 }}>

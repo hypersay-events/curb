@@ -2,20 +2,19 @@ import {
   ActionIcon,
   Anchor,
   AppShell,
-  Box,
-  Button,
   Center,
   Container,
   Footer,
   Group,
   Header,
+  ScrollArea,
   Stack,
   Text,
 } from "@mantine/core";
 import { IconArrowNarrowLeft } from "@tabler/icons";
 import { useRouter } from "next/router";
 import { CaptionerInput } from "../../components/Captions/CaptionInput";
-import { Monitor, Status, TranslationLines } from "../../components/Monitor";
+import { Status, TranslationLines } from "../../components/Monitor";
 
 export default function Room() {
   const router = useRouter();
