@@ -50,13 +50,7 @@ export default function Room() {
         </Header>
       }
       footer={
-        <Footer
-          height={200}
-          p="md"
-          sx={(theme) => ({
-            // backgroundColor: theme.colors.gray[9],
-          })}
-        >
+        <Footer height={200} p="md">
           <Stack align="stretch">
             <CaptionerInput roomName={router.query.room as string} />
             <Text color="dimmed" size="sm" align="right">

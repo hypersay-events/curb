@@ -1,4 +1,4 @@
-import { Badge, Box, Group, Text } from "@mantine/core";
+import { Badge, Box, Group, Stack, Text } from "@mantine/core";
 import { useEffect } from "react";
 import { Translation, useMonitor } from "../hooks/useMonitor";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
@@ -47,7 +47,7 @@ export const TranslationLines: React.FC<MonitorProps> = ({
 
   // const [translationLines, setTranslationLines] = useState<Translation[]>([]);
   const { translation } = useMonitor(roomName, language);
-  const [parent] = useAutoAnimate<HTMLUListElement>(/* optional config */);
+  const [parent] = useAutoAnimate<HTMLDivElement>(/* optional config */);
 
   useEffect(
     () => linesHandlers.append(translation as Translation),
@@ -58,20 +58,12 @@ export const TranslationLines: React.FC<MonitorProps> = ({
   console.log({ lines });
 
   return (
-    <Box
-      component="ul"
-      ref={parent}
-      style={{
-        listStyleType: "none",
-        margin: 0,
-        padding: 0,
-      }}
-    >
+    <Stack ref={parent} spacing={10}>
       {lines.map((line) => {
         if (!line) return null;
         const date = new Date(line.timestampStart);
         return (
-          <Group key={line.timestampStart} noWrap>
+          <Group key={line.timestampStart} noWrap align="start">
             <Box style={{ flexGrow: 1 }}>
               <Text
                 component="span"
@@ -97,6 +89,6 @@ export const TranslationLines: React.FC<MonitorProps> = ({
           </Group>
         );
       })}
-    </Box>
+    </Stack>
   );
 };
