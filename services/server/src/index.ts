@@ -27,6 +27,7 @@ Container.register<Logger>("Logger", {
 });
 
 const serverStart = async () => {
+  logger.debug(process.env.DATABASE_URL);
   const requestLogEnabled = config.logger?.enableRequestsLogging || false;
   const server = fastify({
     logger,

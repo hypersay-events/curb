@@ -14,10 +14,10 @@ export class PrismaService extends PrismaClient {
       ],
     });
     this.$on("query" as any, (e: any) => {
-      logger.trace("Query: " + e.query);
-      logger.trace("Params: " + e.params);
-      logger.trace("Duration: " + e.duration + "ms");
-      logger.trace("================================");
+      logger.debug("Query: " + e.query);
+      logger.debug("Params: " + e.params);
+      logger.debug("Duration: " + e.duration + "ms");
+      logger.debug("================================");
     });
   }
 }
