@@ -17,7 +17,13 @@ function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
   return (
     <MantineProvider
-      theme={{ colorScheme: "dark", primaryColor: "red" }}
+      theme={{
+        colorScheme: "dark",
+        primaryColor: "red",
+        fontFamily: `Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif`,
+      }}
       withGlobalStyles
       withNormalizeCSS
     >

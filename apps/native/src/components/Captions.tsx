@@ -1,19 +1,20 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Icon } from "@iconify/react";
-import { ActionIcon, Box, Collapse, Group, Stack, Text } from "@mantine/core";
+import { ActionIcon, Box, Group, Stack, Text } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 import { appWindow } from "@tauri-apps/api/window";
 import { useLines } from "../hooks/useCaptionLines";
 import { SocketContext } from "./SocketProvider";
 import { TARGET_LANGS } from "./Welcome";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import CaptionLine from "./CaptionLine";
 
 export interface CaptionsParams {
   onGoBack: () => void;
 }
 
 const STEP = 0.1;
-const DEFAULT_FONT_SIZE = 3;
+export const DEFAULT_FONT_SIZE = 3;
 
 const FIRST_LINERS = [
   "It was a bright cold day in April, and the clocks were striking thirteen. [test]",
@@ -120,44 +121,12 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
         >
           {showExampleLine ? (
             <Box>
-              <Text
-                component="span"
-                sx={(theme) => ({
-                  display: "inline",
-                  fontSize: `${fontSize}vw`,
-                  fontWeight: "bold",
-                  lineHeight: "110%",
-                  backgroundColor: theme.colors.gray[9],
-                  boxShadow: `0.2em 0 0 ${theme.colors.gray[9]},-0.2em 0 0 ${theme.colors.gray[9]}`,
-                  color: isWindowHover ? "inherit" : "white",
-                  transition: "color 0.5s ease",
-                  // borderRadius: theme.radius.md,
-                })}
-                data-tauri-drag-region
-              >
-                {exampleLine}
-              </Text>
+              <CaptionLine fontSize={fontSize} text={exampleLine} />
             </Box>
           ) : null}
           {lines.map((line) => (
             <Box key={line}>
-              <Text
-                component="span"
-                sx={(theme) => ({
-                  display: "inline",
-                  fontSize: `${fontSize}vw`,
-                  fontWeight: "bold",
-                  lineHeight: "110%",
-                  backgroundColor: theme.colors.gray[9],
-                  boxShadow: `0.2em 0 0 ${theme.colors.gray[9]},-0.2em 0 0 ${theme.colors.gray[9]}`,
-                  color: isWindowHover ? "inherit" : "white",
-                  transition: "color 0.5s ease",
-                  // borderRadius: theme.radius.md,
-                })}
-                data-tauri-drag-region
-              >
-                {line}
-              </Text>
+              <CaptionLine fontSize={fontSize} text={line} />
             </Box>
           ))}
         </Box>

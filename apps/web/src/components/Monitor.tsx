@@ -70,8 +70,8 @@ export const TranslationLines: React.FC<MonitorProps> = ({
                 sx={(theme) => ({
                   display: "inline",
                   fontSize: theme.fontSizes.xl,
-                  fontWeight: "bold",
-                  lineHeight: "110%",
+                  fontWeight: 700,
+                  lineHeight: "1.20em",
                   backgroundColor: theme.colors.gray[9],
                   boxShadow: `0.2em 0 0 ${theme.colors.gray[9]},-0.2em 0 0 ${theme.colors.gray[9]}`,
                 })}
