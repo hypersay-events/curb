@@ -39,8 +39,11 @@ export class Translator extends EventEmitter {
   translateMessage = async (message: Message) => {
     if (this.targetLang === "original") {
       this.emit("translation", {
+        roomName: this.room.id,
         text: message.text,
         targetLang: this.targetLang,
+        timestampStart: message.timestampStart,
+        timestampEnd: message.timestampEnd,
       } as Translation);
       return;
     }

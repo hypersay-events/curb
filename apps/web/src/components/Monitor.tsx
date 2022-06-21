@@ -1,9 +1,8 @@
-import { Badge, Text } from "@mantine/core";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
-import { useMonitor } from "../hooks/useMonitor";
-import { useTemporaryState } from "../hooks/useTemporaryState";
+import { Badge, Box, Group, Stack, Text } from "@mantine/core";
+import { useEffect, useRef } from "react";
+import { Translation, useMonitor } from "../hooks/useMonitor";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { useListState } from "@mantine/hooks";
 
 interface MonitorProps {
   roomName: string;
@@ -22,7 +21,7 @@ export const Monitor: React.FC<MonitorProps> = ({
   return (
     <Badge>
       <p>{isConnected ? "connected" : "disconnected"}</p>
-      <p>{translation}</p>
+      <p>{translation?.text}</p>
     </Badge>
   );
 };
@@ -40,27 +39,56 @@ export const Status: React.FC<MonitorProps> = ({
   );
 };
 
-export const Translation: React.FC<MonitorProps> = ({
+export const TranslationLines: React.FC<MonitorProps> = ({
   roomName,
   language = "original",
 }) => {
+  const [lines, linesHandlers] = useListState<Translation>();
+
+  // const [translationLines, setTranslationLines] = useState<Translation[]>([]);
   const { translation } = useMonitor(roomName, language);
+  const [parent] = useAutoAnimate<HTMLDivElement>(/* optional config */);
+
+  useEffect(
+    () => linesHandlers.append(translation as Translation),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [translation]
+  );
+
+  console.log({ lines });
 
   return (
-    <Text
-      component="span"
-      sx={(theme) => ({
-        display: "inline",
-        fontSize: theme.fontSizes.xl,
-        fontWeight: "bold",
-        lineHeight: "110%",
-        backgroundColor: theme.colors.gray[9],
-        boxShadow: `0.2em 0 0 ${theme.colors.gray[9]},-0.2em 0 0 ${theme.colors.gray[9]}`,
-        // borderRadius: theme.radius.md,
+    <Stack ref={parent} spacing={10}>
+      {lines.map((line) => {
+        if (!line) return null;
+        const date = new Date(line.timestampEnd);
+        return (
+          <Group key={line.timestampStart} noWrap align="start">
+            <Box style={{ flexGrow: 1 }}>
+              <Text
+                component="span"
+                sx={(theme) => ({
+                  display: "inline",
+                  fontSize: theme.fontSizes.xl,
+                  fontWeight: "bold",
+                  lineHeight: "110%",
+                  backgroundColor: theme.colors.gray[9],
+                  boxShadow: `0.2em 0 0 ${theme.colors.gray[9]},-0.2em 0 0 ${theme.colors.gray[9]}`,
+                })}
+              >
+                {line.text}
+              </Text>
+            </Box>
+            <Text
+              color="dimmed"
+              size="xs"
+              style={{ whiteSpace: "nowrap", overflow: "visible" }}
+            >
+              {date.toLocaleString()}
+            </Text>
+          </Group>
+        );
       })}
-      data-tauri-drag-region
-    >
-      {translation || "..."}
-    </Text>
+    </Stack>
   );
 };
