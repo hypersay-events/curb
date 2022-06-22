@@ -1,19 +1,15 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Icon } from "@iconify/react";
 import { ActionIcon, Box, Group, Stack, Text } from "@mantine/core";
-import { useHotkeys, useLocalStorage } from "@mantine/hooks";
+import { useHotkeys } from "@mantine/hooks";
 import { useLines } from "../hooks/useCaptionLines";
 import { appWindow, WebviewWindow } from "@tauri-apps/api/window";
-import {
-  DEFAULT_BG_COLOR,
-  DEFAULT_FONT_SIZE,
-  DEFAULT_TEXT_COLOR,
-  STEP,
-} from "./Settings";
+import { STEP } from "./Settings";
 import { SocketContext } from "./SocketProvider";
 import { TARGET_LANGS } from "./Welcome";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import CaptionLine from "./CaptionLine";
+import { useCaptionsTheme } from "../hooks/useCaptionsTheme";
 
 export interface CaptionsParams {
   onGoBack: () => void;
@@ -36,6 +32,8 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
     []
   );
 
+  const { captionsTheme, setFontSize } = useCaptionsTheme();
+
   // const pickLiner = Math.floor(Math.random() * FIRST_LINERS.length);
   const [parentRef] = useAutoAnimate<HTMLDivElement>(/* optional config */);
 
@@ -56,7 +54,7 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
     ["mod+ArrowDown", () => setFontSize((old) => old - STEP)],
     ["mod+=", () => setFontSize((old) => old + STEP)],
     ["mod+-", () => setFontSize((old) => old - STEP)],
-    ["mod+0", () => setFontSize(DEFAULT_FONT_SIZE)],
+    ["mod+0", () => setFontSize(captionsTheme.FontSize)],
   ]);
 
   useEffect(() => {
@@ -72,28 +70,13 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
 
   const language = TARGET_LANGS.find((l) => l.value === targetLang);
 
-  const [fontSize, setFontSize] = useLocalStorage({
-    key: "font-size",
-    defaultValue: DEFAULT_FONT_SIZE,
-  });
-
-  const [bgColor] = useLocalStorage({
-    key: "background-color",
-    defaultValue: DEFAULT_BG_COLOR,
-  });
-
-  const [textColor] = useLocalStorage({
-    key: "text-color",
-    defaultValue: DEFAULT_TEXT_COLOR,
-  });
-
   const openSettingsWindow = useCallback(() => {
     console.log("called");
     const webview = new WebviewWindow("settings", {
       url: "settings.html",
       title: "Settings",
+      width: 800,
       height: 500,
-      width: 600,
     });
     webview.once("tauri://created", function () {
       console.log("view window successfully created");
@@ -132,29 +115,32 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
             alignSelf: "flex-end",
             backgroundColor: theme.colors.gray[9],
             zIndex: 1,
+            justifyContent: "space-between",
+            width: "100%",
           })}
+          pl="sm"
           spacing={5}
           data-tauri-drag-region
         >
-          <ActionIcon onClick={openSettingsWindow}>
-            <Icon icon="tabler:settings" width="18" />
-          </ActionIcon>
+          <Group spacing={5}>
+            <ActionIcon onClick={onGoBack}>
+              <Icon icon="bi:arrow-left" />
+            </ActionIcon>
+            <Text size="sm">
+              {roomId} &middot; {language?.flag} — {isReady ? "ready" : "not"}
+            </Text>
+          </Group>
+          <Group spacing={5}>
+            <ActionIcon onClick={openSettingsWindow}>
+              <Icon icon="tabler:settings" />
+            </ActionIcon>
 
-          <Text size="sm">
-            {roomId} &middot; {language?.flag} — {isReady ? "ready" : "not"}
-          </Text>
-          <Icon icon="tabler:drag-drop" width="18" data-tauri-drag-region />
-          <ActionIcon onClick={openSettingsWindow}>
-            <Icon icon="tabler:settings" />
-          </ActionIcon>
+            <Icon icon="tabler:drag-drop" width="18" data-tauri-drag-region />
 
-          <ActionIcon onClick={onGoBack}>
-            <Icon icon="bi:arrow-left" />
-          </ActionIcon>
-
-          <ActionIcon onClick={() => appWindow.close()}>
-            <Icon icon="tabler:x" width="18" />
-          </ActionIcon>
+            <ActionIcon onClick={() => appWindow.close()}>
+              <Icon icon="tabler:x" width="18" />
+            </ActionIcon>
+          </Group>
         </Group>
         <Box
           style={{
@@ -168,12 +154,12 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
         >
           {showExampleLine ? (
             <Box>
-              <CaptionLine fontSize={fontSize} text={exampleLine} />
+              <CaptionLine text={exampleLine} />
             </Box>
           ) : null}
           {lines.map((line) => (
             <Box key={line}>
-              <CaptionLine fontSize={fontSize} text={line} />
+              <CaptionLine text={line} />
             </Box>
           ))}
         </Box>

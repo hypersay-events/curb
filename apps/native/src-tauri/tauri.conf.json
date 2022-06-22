@@ -45,7 +45,7 @@
     "bundle": {
       "active": true,
       "category": "DeveloperTool",
-      "copyright": "",
+      "copyright": "Hypersay Events, 2022",
       "deb": {
         "depends": []
       },

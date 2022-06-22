@@ -1,26 +1,21 @@
 import {
-  Box,
   Button,
   Center,
   ColorInput,
-  DEFAULT_THEME,
   Group,
   Paper,
   Slider,
   Stack,
-  Switch,
   Text,
+  useMantineTheme,
 } from "@mantine/core";
 import { MarksProps } from "@mantine/core/lib/components/Slider/Marks/Marks";
-import { useLocalStorage } from "@mantine/hooks";
 import { useState } from "react";
 import { FIRST_LINERS } from "./Captions";
 import { appWindow } from "@tauri-apps/api/window";
+import { DEFAULT, useCaptionsTheme } from "../hooks/useCaptionsTheme";
 
 export const STEP = 0.1;
-export const DEFAULT_FONT_SIZE = 3;
-export const DEFAULT_TEXT_COLOR = "#ffffff";
-export const DEFAULT_BG_COLOR = "#000000";
 
 export const Settings = () => {
   // const [showOnTop, setShowOnTop] = useLocalStorage({
@@ -28,24 +23,24 @@ export const Settings = () => {
   //   defaultValue: true,
   // });
 
+  const theme = useMantineTheme();
+  const {
+    captionsTheme,
+    setTextColor,
+    setFontSize,
+    setTextBackground,
+    setTextShadow,
+    setTextStroke,
+    setTextWeight,
+    setBionicReading,
+    setLineHeight,
+    setMode,
+    setWindowBackground,
+  } = useCaptionsTheme();
+
   const [previewLine, setPreviewLine] = useState(
     FIRST_LINERS[Math.floor(Math.random() * FIRST_LINERS.length)]
   );
-
-  const [fontSize, setFontSize] = useLocalStorage({
-    key: "font-size",
-    defaultValue: DEFAULT_FONT_SIZE,
-  });
-
-  const [bgColor, setBgColor] = useLocalStorage({
-    key: "background-color",
-    defaultValue: DEFAULT_BG_COLOR,
-  });
-
-  const [textColor, setTextColor] = useLocalStorage({
-    key: "text-color",
-    defaultValue: DEFAULT_TEXT_COLOR,
-  });
 
   const FONTSIZE_MARKS: MarksProps["marks"] = [
     { value: 2, label: "small" },
@@ -70,34 +65,50 @@ export const Settings = () => {
         <Group>
           <ColorInput
             label="Text color"
-            defaultValue={textColor}
+            value={captionsTheme.TextColor}
             onChange={setTextColor}
-            withPicker={false}
-            format="hex"
+            format="rgba"
             swatches={[
-              ...DEFAULT_THEME.colors.dark,
-              ...DEFAULT_THEME.colors.yellow,
-              ...DEFAULT_THEME.colors.orange,
-              ...DEFAULT_THEME.colors.red,
-              ...DEFAULT_THEME.colors.green,
-              ...DEFAULT_THEME.colors.blue,
-              ...DEFAULT_THEME.colors.indigo,
+              theme.fn.rgba("#ffffff", 1),
+              theme.fn.rgba("#868e96", 1),
+              theme.fn.rgba("#25262b", 1),
+              theme.fn.rgba("#000000", 1),
+              theme.fn.rgba("#fa5252", 1),
+              theme.fn.rgba("#e64980", 1),
+              theme.fn.rgba("#be4bdb", 1),
+              theme.fn.rgba("#7950f2", 1),
+              theme.fn.rgba("#4c6ef5", 1),
+              theme.fn.rgba("#228be6", 1),
+              theme.fn.rgba("#15aabf", 1),
+              theme.fn.rgba("#12b886", 1),
+              theme.fn.rgba("#40c057", 1),
+              theme.fn.rgba("#82c91e", 1),
+              theme.fn.rgba("#fab005", 1),
+              theme.fn.rgba("#fd7e14", 1),
             ]}
           />
           <ColorInput
             label="Background color"
-            defaultValue={bgColor}
-            onChange={setBgColor}
-            withPicker={false}
-            format="hex"
+            value={captionsTheme.TextBackground}
+            onChange={setTextBackground}
+            format="rgba"
             swatches={[
-              ...DEFAULT_THEME.colors.dark,
-              ...DEFAULT_THEME.colors.yellow,
-              ...DEFAULT_THEME.colors.orange,
-              ...DEFAULT_THEME.colors.red,
-              ...DEFAULT_THEME.colors.green,
-              ...DEFAULT_THEME.colors.blue,
-              ...DEFAULT_THEME.colors.indigo,
+              theme.fn.rgba("#ffffff", 1),
+              theme.fn.rgba("#868e96", 1),
+              theme.fn.rgba("#25262b", 1),
+              theme.fn.rgba("#000000", 1),
+              theme.fn.rgba("#fa5252", 1),
+              theme.fn.rgba("#e64980", 1),
+              theme.fn.rgba("#be4bdb", 1),
+              theme.fn.rgba("#7950f2", 1),
+              theme.fn.rgba("#4c6ef5", 1),
+              theme.fn.rgba("#228be6", 1),
+              theme.fn.rgba("#15aabf", 1),
+              theme.fn.rgba("#12b886", 1),
+              theme.fn.rgba("#40c057", 1),
+              theme.fn.rgba("#82c91e", 1),
+              theme.fn.rgba("#fab005", 1),
+              theme.fn.rgba("#fd7e14", 1),
             ]}
           />
         </Group>
@@ -107,7 +118,7 @@ export const Settings = () => {
           <Slider
             style={{ flexGrow: 1 }}
             // labelAlwaysOn
-            defaultValue={fontSize}
+            defaultValue={captionsTheme.FontSize}
             min={2}
             max={5}
             label={(fontSize) =>
@@ -125,12 +136,12 @@ export const Settings = () => {
             component="span"
             style={{
               display: "inline",
-              fontSize: `${fontSize}vw`,
+              fontSize: `${captionsTheme.FontSize}vw`,
               fontWeight: "bold",
               lineHeight: "110%",
-              backgroundColor: bgColor,
-              boxShadow: `0.2em 0 0 ${bgColor},-0.2em 0 0 ${bgColor}`,
-              color: textColor,
+              backgroundColor: captionsTheme.TextBackground,
+              boxShadow: `0.2em 0 0 ${captionsTheme.TextBackground},-0.2em 0 0 ${captionsTheme.TextBackground}`,
+              color: captionsTheme.TextColor,
               transition: "color 0.5s ease",
               // borderRadius: theme.radius.md,
             }}
