@@ -1,4 +1,4 @@
-import { Badge, Box, Group, Stack, Text } from "@mantine/core";
+import { Badge, Box, Divider, Group, Stack, Text } from "@mantine/core";
 import { useEffect, useRef } from "react";
 import { Translation, useMonitor } from "../hooks/useMonitor";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
@@ -48,9 +48,16 @@ export const TranslationLines: React.FC<MonitorProps> = ({
   // const [translationLines, setTranslationLines] = useState<Translation[]>([]);
   const { translation } = useMonitor(roomName, language);
   const [parent] = useAutoAnimate<HTMLDivElement>(/* optional config */);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(
-    () => linesHandlers.append(translation as Translation),
+    () => {
+      linesHandlers.append(translation as Translation);
+      setTimeout(
+        () => ref.current?.scrollIntoView({ behavior: "smooth" }),
+        500
+      );
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [translation]
   );
@@ -68,12 +75,15 @@ export const TranslationLines: React.FC<MonitorProps> = ({
               <Text
                 component="span"
                 sx={(theme) => ({
+                  color: theme.white,
                   display: "inline",
                   fontSize: theme.fontSizes.xl,
                   fontWeight: 700,
                   lineHeight: "1.20em",
                   backgroundColor: theme.colors.gray[9],
                   boxShadow: `0.2em 0 0 ${theme.colors.gray[9]},-0.2em 0 0 ${theme.colors.gray[9]}`,
+                  animation: "line-highlight 3s linear",
+                  animationPlayState: "running",
                 })}
               >
                 {line.text}
@@ -89,6 +99,18 @@ export const TranslationLines: React.FC<MonitorProps> = ({
           </Group>
         );
       })}
+      <Divider
+        ref={ref}
+        my="sm"
+        size={2}
+        variant="dotted"
+        // color="red"
+        label="End of transcript"
+      />
+      {/* <Box
+        
+        sx={(theme) => ({ borderTop: `1px solid ${theme.colors.red[7]}` })}
+      /> */}
     </Stack>
   );
 };

@@ -1,12 +1,10 @@
 import {
   ActionIcon,
   Anchor,
-  AppShell,
+  Box,
   Center,
   Container,
-  Footer,
   Group,
-  Header,
   ScrollArea,
   Stack,
   Text,
@@ -20,60 +18,74 @@ export default function Room() {
   const router = useRouter();
 
   return (
-    <AppShell
-      fixed
-      header={
-        <Header height={50} p={6}>
-          <Group style={{ justifyContent: "space-between" }}>
-            <Group>
-              <ActionIcon
-                onClick={() => {
-                  router.back();
-                }}
-                size="sm"
-                color="gray"
-                variant="hover"
-              >
-                <IconArrowNarrowLeft />
-              </ActionIcon>
-
-              <Text size="xl" weight="bold">
-                Room{" "}
-                <Text component="span" color="red" size="xl" weight="bold">
-                  {router.query.room}
-                </Text>
-              </Text>
-            </Group>
-            <Status roomName={router.query.room as string} />
-          </Group>
-        </Header>
-      }
-      footer={
-        <Footer height={200} p="md">
-          <Stack align="stretch">
-            <CaptionerInput roomName={router.query.room as string} />
-            <Text color="dimmed" size="sm" align="right">
-              created by{" "}
-              <Anchor
-                href="https://hypersay.events"
-                target="hypersay_events"
-                color="gray"
-              >
-                Hypersay Events
-              </Anchor>
-            </Text>
-          </Stack>
-        </Footer>
-      }
+    <Box
+      style={{
+        display: "grid",
+        height: "100vh",
+        width: "100vw",
+        gridTemplateRows: "auto 1fr auto",
+      }}
     >
-      <Center style={{ width: "100%", height: "100%" }}>
-        <Container style={{ width: "100%", height: "100%" }}>
+      {/* Header */}
+      <Group
+        p="md"
+        sx={(theme) => ({
+          justifyContent: "space-between",
+          borderBottom: `1px solid ${theme.colors.gray[8]}`,
+        })}
+      >
+        <Group>
+          <ActionIcon
+            onClick={() => {
+              router.back();
+            }}
+            size="sm"
+            color="gray"
+            variant="hover"
+          >
+            <IconArrowNarrowLeft />
+          </ActionIcon>
+
+          <Text size="xl" weight="bold">
+            Room{" "}
+            <Text component="span" color="red" size="xl" weight="bold">
+              {router.query.room}
+            </Text>
+          </Text>
+        </Group>
+        <Status roomName={router.query.room as string} />
+      </Group>
+      <ScrollArea>
+        <Container
+          style={{
+            width: "100%",
+          }}
+          p="md"
+        >
           <TranslationLines
             roomName={router.query.room as string}
             language={router.query.lang as string}
           />
         </Container>
-      </Center>
-    </AppShell>
+      </ScrollArea>
+      {/* Captioner area */}
+      <Stack
+        align="stretch"
+        p="md"
+        sx={(theme) => ({ borderTop: `1px solid ${theme.colors.gray[8]}` })}
+      >
+        <CaptionerInput roomName={router.query.room as string} />
+        <Text color="dimmed" size="sm" align="right">
+          created by{" "}
+          <Anchor
+            href="https://hypersay.events"
+            target="hypersay_events"
+            color="gray"
+          >
+            Hypersay Events
+          </Anchor>
+        </Text>
+      </Stack>
+    </Box>
   );
 }

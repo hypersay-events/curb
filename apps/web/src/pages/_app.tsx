@@ -1,15 +1,4 @@
-import {
-  ActionIcon,
-  Anchor,
-  AppShell,
-  Button,
-  Center,
-  Footer,
-  Header,
-  MantineProvider,
-  Text,
-} from "@mantine/core";
-import { IconArrowNarrowLeft, IconBackhoe } from "@tabler/icons";
+import { Global, MantineProvider } from "@mantine/core";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 
@@ -27,6 +16,14 @@ function MyApp({ Component, pageProps }: AppProps) {
       withGlobalStyles
       withNormalizeCSS
     >
+      <Global
+        styles={(theme) => ({
+          "@keyframes line-highlight": {
+            "0%": { color: theme.colors.red[7] },
+            "100%": { color: theme.white },
+          },
+        })}
+      />
       <Component {...pageProps} />
     </MantineProvider>
   );
