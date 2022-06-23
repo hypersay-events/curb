@@ -1,5 +1,5 @@
-import { Button, Group, Select } from "@mantine/core";
-import { useCallback, useEffect, useState } from "react";
+import { Box, Button, Group, Table, Text } from "@mantine/core";
+import React, { useCallback, useEffect, useState } from "react";
 import { sdk } from "../business/client";
 
 export const SubtitleDownloader: React.FC<{ roomName: string }> = ({
@@ -15,15 +15,15 @@ export const SubtitleDownloader: React.FC<{ roomName: string }> = ({
   }, [roomName]);
 
   const downloadSubtitles = useCallback(
-    async (format: string) => {
+    async (format: string, language: string) => {
       const res = await sdk.downloadSubtitles({
         format,
-        language: selectedLang || "",
+        language,
         roomName,
       });
       var content = res.content;
       var filename = `${roomName}${
-        selectedLang !== "original" ? `.${selectedLang}` : ""
+        language !== "original" ? `.${language}` : ""
       }.${format}`;
 
       var blob = new Blob([content], {
@@ -34,25 +34,45 @@ export const SubtitleDownloader: React.FC<{ roomName: string }> = ({
       link.setAttribute("download", filename);
       link.click();
     },
-    [roomName, selectedLang]
+    [roomName]
   );
   return (
-    <Group>
-      <Select
-        value={selectedLang}
-        onChange={(l) => setSelectedLang(l)}
-        placeholder="Download subtitles"
-        data={[
+    <Table highlightOnHover verticalSpacing="sm" horizontalSpacing="sm">
+      <thead>
+        <tr>
+          <th>Language</th>
+          <th>SRT</th>
+          <th>WebVTT</th>
+        </tr>
+      </thead>
+      <tbody>
+        {[
           { value: "original", label: "original" },
           ...availableLanguages.map((l) => ({ value: l, label: l })),
-        ]}
-      ></Select>
-      {selectedLang ? (
-        <>
-          <Button onClick={() => downloadSubtitles("srt")}>SRT</Button>
-          <Button onClick={() => downloadSubtitles("vtt")}>WebVTT</Button>
-        </>
-      ) : null}
-    </Group>
+        ].map((lang) => (
+          <tr key={lang.label}>
+            <td>
+              <Text weight={800}>{lang.label}</Text>
+            </td>
+            <td>
+              <Button
+                onClick={() => downloadSubtitles("srt", lang.value)}
+                size="xs"
+              >
+                Download SRT
+              </Button>
+            </td>
+            <td>
+              <Button
+                onClick={() => downloadSubtitles("vtt", lang.value)}
+                size="xs"
+              >
+                Download WebVTT
+              </Button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
   );
 };
