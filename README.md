@@ -1,4 +1,4 @@
-# curb
+# CurbCut
 
 Captions and subtitles system
 
