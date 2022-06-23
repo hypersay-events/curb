@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { DestinationStream, LoggerOptions } from "pino";
 import { loadEnv } from "../utilities/loadEnv";
 
@@ -38,13 +39,21 @@ interface TranslationServicesOptions {
   };
 }
 
+interface DBOptions {
+  url?: string;
+}
+
 export interface Config {
+  db: Prisma.Datasource;
   translationServices: TranslationServicesOptions;
   logger: LoggerConfig;
   port?: number;
 }
 
 const defaultConfig: Config = {
+  db: {
+    url: process.env.DATABASE_URL,
+  },
   logger: {
     options: {
       level: process.env.LOG_LEVEL || "debug",

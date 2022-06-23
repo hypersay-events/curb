@@ -19,6 +19,6 @@ model Caption {
   text           String
   sourceLanguage String
   targetLanguage String?
-  timestampStart BigInt?
+  timestampStart BigInt
   timestampEnd   BigInt?
 }

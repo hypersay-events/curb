@@ -9,6 +9,7 @@ import { container as Container } from "tsyringe";
 import getLogger from "./utilities/logger";
 import { Logger } from "pino";
 import fastifyCors from "@fastify/cors";
+import omit from "lodash/omit";
 
 const configManager = createConfigManager({
   configurations: {
@@ -27,7 +28,7 @@ Container.register<Logger>("Logger", {
 });
 
 const serverStart = async () => {
-  logger.debug(process.env.DATABASE_URL);
+  logger.debug(omit(config, ["logger.destination"]));
   const requestLogEnabled = config.logger?.enableRequestsLogging || false;
   const server = fastify({
     logger,
