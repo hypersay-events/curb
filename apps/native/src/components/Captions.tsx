@@ -84,6 +84,7 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
     webview.once("tauri://error", function (e) {
       console.log(e);
     });
+    webview.setFocus();
   }, []);
 
   return (
