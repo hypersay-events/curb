@@ -2,7 +2,6 @@ import {
   ActionIcon,
   Anchor,
   Box,
-  Center,
   Container,
   Group,
   ScrollArea,
@@ -13,9 +12,11 @@ import { IconArrowNarrowLeft } from "@tabler/icons";
 import { useRouter } from "next/router";
 import { CaptionerInput } from "../../components/Captions/CaptionInput";
 import { Status, TranslationLines } from "../../components/Monitor";
+import { SubtitleDownloader } from "../../components/SubtitleDownloader";
 
 export default function Room() {
   const router = useRouter();
+  const roomName = router.query.room as string;
 
   return (
     <Box
@@ -49,11 +50,11 @@ export default function Room() {
           <Text size="xl" weight="bold">
             Room{" "}
             <Text component="span" color="red" size="xl" weight="bold">
-              {router.query.room}
+              {roomName}
             </Text>
           </Text>
         </Group>
-        <Status roomName={router.query.room as string} />
+        <Status roomName={roomName} />
       </Group>
       <ScrollArea>
         <Container
@@ -63,7 +64,7 @@ export default function Room() {
           p="md"
         >
           <TranslationLines
-            roomName={router.query.room as string}
+            roomName={roomName}
             language={router.query.lang as string}
           />
         </Container>
@@ -74,17 +75,20 @@ export default function Room() {
         p="md"
         sx={(theme) => ({ borderTop: `1px solid ${theme.colors.gray[8]}` })}
       >
-        <CaptionerInput roomName={router.query.room as string} />
-        <Text color="dimmed" size="sm" align="right">
-          created by{" "}
-          <Anchor
-            href="https://hypersay.events"
-            target="hypersay_events"
-            color="gray"
-          >
-            Hypersay Events
-          </Anchor>
-        </Text>
+        <CaptionerInput roomName={roomName} />
+        <Group sx={{ justifyContent: "space-between" }}>
+          <SubtitleDownloader roomName={roomName} />
+          <Text color="dimmed" size="sm" align="right">
+            created by{" "}
+            <Anchor
+              href="https://hypersay.events"
+              target="hypersay_events"
+              color="gray"
+            >
+              Hypersay Events
+            </Anchor>
+          </Text>
+        </Group>
       </Stack>
     </Box>
   );

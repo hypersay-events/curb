@@ -1,37 +1,19 @@
 import {
   Breadcrumbs,
   Button,
-  Container,
   Group,
   Select,
   Stack,
   Text,
   Textarea,
-  TextInput,
   UnstyledButton,
 } from "@mantine/core";
 import dayjs from "dayjs";
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { useCallback, useEffect, useState } from "react";
+import { sdk } from "../../business/client";
+import { INPUT_LANGUAGES } from "../../business/languageList";
 import { useTemporaryState } from "../../hooks/useTemporaryState";
 import { useRecordStartTime } from "./hooks";
-
-const languages = ["en", "it", "ro", "fr"];
-
-export const INPUT_LANGUAGES = [
-  { value: "en", label: "English", flag: "🇬🇧" },
-  { value: "it", label: "Italian", flag: "🇮🇹" },
-  { value: "ro", label: "Romanian", flag: "🇷🇴" },
-  { value: "fr", label: "French", flag: "🇫🇷" },
-];
-
-const NEXT_PUBLIC_CAPTIONS_ENDPOINT =
-  process.env.NEXT_PUBLIC_CAPTIONS_ENDPOINT || "http://localhost:4554";
 
 export const CaptionerInput: React.FC<{
   roomName?: string;
@@ -60,29 +42,13 @@ export const CaptionerInput: React.FC<{
         const l = language;
         const timestampStart = startTime.getTime();
         cleanAll();
-        await fetch(`${NEXT_PUBLIC_CAPTIONS_ENDPOINT}/caption`, {
-          method: "POST",
-          body: JSON.stringify({
-            roomName,
-            lang: l,
-            text,
-            timestampStart,
-            timestampEnd: +new Date(),
-          }),
-          headers: {
-            "content-type": "application/json",
-          },
+        await sdk.addCaption({
+          roomName,
+          lang: l,
+          text,
+          timestampStart,
         });
-        // @todo call API
-        // await sdk.TranscriptAppendManual({
-        //   data: {
-        //     streamId: streamId,
-        //     languageCode: l,
-        //     timestampStart,
-        //     timestampEnd: +new Date(),
-        //     transcript: text,
-        //   },
-        // });
+
         setFeedbackMessage("Subtitle sent!");
       } catch (e) {
         console.error(e);
