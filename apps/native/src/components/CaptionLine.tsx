@@ -1,5 +1,7 @@
 import { Text } from "@mantine/core";
 import { useCaptionsTheme } from "../hooks/useCaptionsTheme";
+import { textVide } from "text-vide";
+import { useEffect, useState } from "react";
 
 interface ICaptionLine {
   text: string;
@@ -31,12 +33,24 @@ const getShadow = (size: number) => {
 
 export const CaptionLine: React.FC<ICaptionLine> = ({ text }) => {
   const { captionsTheme } = useCaptionsTheme();
+  const [localtext, setLocalText] = useState(text);
 
-  // TODO: try SVG text
+  useEffect(() => {
+    if (captionsTheme.BionicReading) {
+      const videtext = textVide(text, [
+        `<span style={{ fontWeight: ${captionsTheme.TextWeight * 1.2}}}>`,
+        "</span>",
+      ]);
+      setLocalText(videtext);
+    } else {
+      setLocalText(text);
+    }
+  }, [captionsTheme.BionicReading, captionsTheme.TextWeight, text]);
 
   return (
     <Text
-      component="span"
+      // component="span"
+      dangerouslySetInnerHTML={{ __html: localtext }}
       style={{
         display: "inline",
         fontSize: `${captionsTheme.FontSize}vw`,
@@ -52,9 +66,7 @@ export const CaptionLine: React.FC<ICaptionLine> = ({ text }) => {
         transition: "color 0.5s ease",
       }}
       data-tauri-drag-region
-    >
-      {text}
-    </Text>
+    />
   );
 };
 

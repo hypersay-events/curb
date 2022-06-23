@@ -1,5 +1,6 @@
 import {
   AlphaSlider,
+  Anchor,
   Box,
   Button,
   Center,
@@ -87,7 +88,7 @@ export const Settings = () => {
       }}
       p="lg"
     >
-      <Stack spacing={20}>
+      <Stack spacing={20} style={{ minHeight: "100%" }}>
         <Text size="lg" color="white" component="h1" mb="lg">
           Settings
         </Text>
@@ -251,6 +252,11 @@ export const Settings = () => {
                     precision={2}
                   />
                 </Group>
+                <Switch
+                  label="Enable Bionic Reading"
+                  checked={captionsTheme.BionicReading}
+                  onChange={(e) => setBionicReading(e.currentTarget.checked)}
+                />
               </Stack>
             </>
           ) : null}
@@ -273,13 +279,16 @@ export const Settings = () => {
         >
           <CaptionLine text={previewLine} />
         </Center>
-
-        {/* <Switch
-          label="Enable Bionic Reading"
-          checked={captionsTheme.BionicReading}
-          onChange={(e) => setBionicReading(e.currentTarget.checked)}
-        /> */}
-
+        {captionsTheme.BionicReading ? (
+          <Text color="dimmed">
+            Bionic Reading is an experimental mode that speeds up reading by
+            helping you focus on the first letters in a word.{" "}
+            <Anchor href="https://bionic-reading.com/" target="_blank">
+              read more here
+            </Anchor>
+          </Text>
+        ) : null}
+        <Box style={{ flexGrow: 1 }} />
         <Button
           onClick={() => appWindow.close()}
           style={{ alignSelf: "flex-start" }}

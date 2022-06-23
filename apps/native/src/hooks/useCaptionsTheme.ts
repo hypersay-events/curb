@@ -8,6 +8,7 @@ export type CaptionStylePresets =
   | "noBackground"
   | "whiteBlue"
   | "yellowBlue"
+  | "bionic"
   | "custom";
 
 export type CaptionStyle = {
@@ -18,12 +19,12 @@ export type CaptionStyle = {
   TextStroke: number;
   TextWeight: number;
   LineHeight: number;
+  BionicReading: boolean;
 };
 
 export type CaptionsTheme = CaptionStyle & {
   FontSize: number;
   WindowOpacity: number;
-  BionicReading: boolean;
   Mode: "cc" | "transcript";
 };
 
@@ -36,6 +37,7 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     TextStroke: 0,
     TextWeight: 700,
     LineHeight: 1,
+    BionicReading: false,
   },
   {
     StyleId: "yellowBlack",
@@ -45,6 +47,7 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     TextStroke: 0,
     TextWeight: 700,
     LineHeight: 1,
+    BionicReading: false,
   },
   {
     StyleId: "blackYellow",
@@ -54,6 +57,7 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     TextStroke: 0,
     TextWeight: 700,
     LineHeight: 1,
+    BionicReading: false,
   },
   {
     StyleId: "whiteBlue",
@@ -63,6 +67,7 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     TextStroke: 0,
     TextWeight: 700,
     LineHeight: 1,
+    BionicReading: false,
   },
   {
     StyleId: "yellowBlue",
@@ -72,6 +77,7 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     TextStroke: 0,
     TextWeight: 700,
     LineHeight: 1,
+    BionicReading: false,
   },
   {
     StyleId: "noBackground",
@@ -81,6 +87,17 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     TextStroke: 3,
     TextWeight: 700,
     LineHeight: 1,
+    BionicReading: false,
+  },
+  {
+    StyleId: "bionic",
+    StyleLabel: "Bionic (exp)",
+    TextColor: "rgba(255, 255, 255, 1)",
+    TextBackground: "rgba(0, 0, 0, 1)",
+    TextStroke: 0,
+    TextWeight: 400,
+    LineHeight: 1,
+    BionicReading: true,
   },
   {
     StyleId: "custom",
@@ -90,6 +107,7 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     TextStroke: 0,
     TextWeight: 700,
     LineHeight: 1,
+    BionicReading: false,
   },
 ];
 
@@ -173,6 +191,8 @@ export const useCaptionsTheme = () => {
     if (newStyle.TextStroke !== undefined) setTextStroke(newStyle.TextStroke);
     if (newStyle.TextWeight !== undefined) setTextWeight(newStyle.TextWeight);
     if (newStyle.LineHeight !== undefined) setLineHeight(newStyle.LineHeight);
+    if (newStyle.BionicReading !== undefined)
+      setBionicReading(newStyle.BionicReading);
   };
 
   const OVERRIDE: Partial<CaptionsTheme> = {
