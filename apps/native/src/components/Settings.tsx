@@ -1,26 +1,23 @@
 import {
+  AlphaSlider,
+  Box,
   Button,
   Center,
   Chip,
-  Chips,
   ColorInput,
   Group,
   Paper,
-  ScrollArea,
   Slider,
   Stack,
+  Switch,
   Text,
   useMantineTheme,
 } from "@mantine/core";
 import { MarksProps } from "@mantine/core/lib/components/Slider/Marks/Marks";
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 import { FIRST_LINERS } from "./Captions";
 import { appWindow } from "@tauri-apps/api/window";
-import {
-  CaptionStylePresets,
-  CAPTION_STYLES,
-  useCaptionsTheme,
-} from "../hooks/useCaptionsTheme";
+import { CAPTION_STYLES, useCaptionsTheme } from "../hooks/useCaptionsTheme";
 import CaptionLine from "./CaptionLine";
 
 export const STEP = 0.1;
@@ -36,14 +33,12 @@ export const Settings = () => {
     captionsTheme,
     setCaptionStyle,
     setFontSize,
-    setTextWeight,
-    setLineHeight,
+    setWindowOpacity,
     setBionicReading,
     setMode,
-    setWindowBackground,
   } = useCaptionsTheme();
 
-  const [previewLine, setPreviewLine] = useState(
+  const [previewLine] = useState(
     FIRST_LINERS[Math.floor(Math.random() * FIRST_LINERS.length)]
   );
 
@@ -54,8 +49,8 @@ export const Settings = () => {
     { value: 5, label: "massive" },
   ];
 
-  const FONTWEIGHT_MARKS: MarksProps["marks"] = [
-    { value: 200, label: "thin" },
+  const TEXTWEIGHT_MARKS: MarksProps["marks"] = [
+    { value: 100, label: "thin" },
     { value: 300, label: "normal" },
     { value: 500, label: "bold" },
     { value: 700, label: "bolder" },
@@ -92,114 +87,187 @@ export const Settings = () => {
       }}
       p="lg"
     >
-      <Stack spacing="xl" align="start">
-        <Text size="lg" color="white">
+      <Stack spacing={20}>
+        <Text size="lg" color="white" component="h1" mb="lg">
           Settings
         </Text>
-
-        <Text>Caption Styles</Text>
-
-        <Group spacing={10}>
-          {CAPTION_STYLES.map((k) => {
-            const capTheme = CAPTION_STYLES.find(
-              (i) => i.StyleId === k.StyleId
-            );
-            return (
-              <Chip
-                key={k.StyleId}
-                value={k.StyleId}
-                checked={k.StyleId === captionsTheme.StyleId}
-                variant={
-                  capTheme?.StyleId === "noBackground" ? "outline" : "filled"
-                }
-                color="gray"
-                styles={{
-                  iconWrapper: { color: capTheme?.TextColor },
-                  checked: {
-                    color: capTheme?.TextColor,
-                    background: `${capTheme?.TextBackground} !important`,
-                  },
-                  filled: {
-                    color: capTheme?.TextColor,
-                    background: capTheme?.TextBackground,
-                    fontWeight: "bold",
-                  },
-                  outline: {
-                    fontWeight: "bold",
-                  },
-                }}
-                onChange={() =>
-                  setCaptionStyle({
-                    ...capTheme,
-                  })
-                }
-              >
-                {k.StyleLabel}
-              </Chip>
-            );
-          })}
-        </Group>
-
-        {captionsTheme.StyleId === "custom" ? (
-          <Group>
-            <ColorInput
-              label="Text color"
-              value={captionsTheme.TextColor}
-              onChange={(e) => setCaptionStyle({ TextColor: e })}
-              format="rgba"
-              swatches={swatches}
-            />
-            <ColorInput
-              label="Background color"
-              value={captionsTheme.TextBackground}
-              onChange={(e) => setCaptionStyle({ TextBackground: e })}
-              format="rgba"
-              swatches={swatches}
-            />
-          </Group>
-        ) : null}
-
-        <Group style={{ width: 400 }}>
-          <Text size="sm">Font size</Text>
+        <Box
+          style={{
+            display: "grid",
+            width: "100%",
+            gridTemplateColumns: "auto 1fr",
+            gap: "3em",
+          }}
+          pr="lg"
+        >
+          {/* Text Size */}
+          <Text size="sm">Text size</Text>
           <Slider
             style={{ flexGrow: 1 }}
             // labelAlwaysOn
             defaultValue={captionsTheme.FontSize}
             min={2}
             max={5}
-            label={(fontSize) =>
-              FONTSIZE_MARKS.find((mark) => mark.value === fontSize)?.label ||
-              `${fontSize.toFixed(1)}vw`
-            }
+            // label={(fontSize) =>
+            //   FONTSIZE_MARKS.find((mark) => mark.value === fontSize)?.label ||
+            //   `${fontSize.toFixed(1)}vw`
+            // }
             step={STEP}
-            styles={{ markLabel: { display: "none" } }}
+            // styles={{ markLabel: { display: "none" } }}
             onChange={setFontSize}
             marks={FONTSIZE_MARKS}
+            precision={1}
           />
-        </Group>
-        {/* <Group style={{ width: 400 }}>
-          <Text size="sm">Font weight</Text>
-          <Slider
-            style={{ flexGrow: 1 }}
-            // labelAlwaysOn
-            defaultValue={captionsTheme.FontSize}
-            min={2}
-            max={5}
-            label={(fontSize) =>
-              FONTSIZE_MARKS.find((mark) => mark.value === fontSize)?.label ||
-              `${fontSize.toFixed(1)}vw`
-            }
-            step={STEP}
-            styles={{ markLabel: { display: "none" } }}
-            onChange={setTextWeight}
-            marks={FONTWEIGHT_MARKS}
+
+          {/* Window Opacity */}
+          <Text size="sm">Window Opacity</Text>
+          <AlphaSlider
+            color="rgba(0,0,0,1)"
+            value={captionsTheme.WindowOpacity}
+            onChange={setWindowOpacity}
+            size="sm"
           />
-        </Group> */}
+
+          {/* Caption Styles */}
+          <Text size="sm">Caption Styles</Text>
+          <Box>
+            <Group spacing={10}>
+              {CAPTION_STYLES.map((k) => {
+                const capTheme = CAPTION_STYLES.find(
+                  (i) => i.StyleId === k.StyleId
+                );
+
+                console.log({ capTheme });
+                return (
+                  <Chip
+                    key={k.StyleId}
+                    value={k.StyleId}
+                    checked={k.StyleId === captionsTheme.StyleId}
+                    // variant={
+                    //   capTheme?.StyleId === "noBackground" ? "outline" : "filled"
+                    // }
+                    // color="gray"
+                    styles={{
+                      iconWrapper: { color: capTheme?.TextColor },
+                      // checked: {
+                      //   color: capTheme?.TextColor,
+                      //   background: `${capTheme?.TextBackground} !important`,
+                      // },
+                      // filled: {
+                      //   color: capTheme?.TextColor,
+                      //   background: capTheme?.TextBackground,
+                      //   fontWeight: "bold",
+                      // },
+                      outline: {
+                        fontWeight: "bold",
+                      },
+                    }}
+                    onChange={() => {
+                      console.log("send style", { capTheme });
+                      setCaptionStyle({
+                        ...capTheme,
+                      });
+                    }}
+                  >
+                    {k.StyleLabel}
+                  </Chip>
+                );
+              })}
+            </Group>
+          </Box>
+
+          {/* Custom */}
+          {captionsTheme.StyleId === "custom" ? (
+            <>
+              <Text size="sm">Custom Style</Text>
+              <Stack spacing={30}>
+                <Group>
+                  <ColorInput
+                    label="Text color"
+                    value={captionsTheme.TextColor}
+                    onChange={(e) => setCaptionStyle({ TextColor: e })}
+                    format="rgba"
+                    swatches={swatches}
+                  />
+                  <ColorInput
+                    label="Background color"
+                    value={captionsTheme.TextBackground}
+                    onChange={(e) => setCaptionStyle({ TextBackground: e })}
+                    format="rgba"
+                    swatches={swatches}
+                  />
+                </Group>
+                <Group style={{ width: 400 }}>
+                  <Text size="sm">Text weight</Text>
+                  <Slider
+                    style={{ flexGrow: 1 }}
+                    defaultValue={captionsTheme.TextWeight}
+                    min={100}
+                    max={900}
+                    // label={(size) =>
+                    //   TEXTWEIGHT_MARKS.find((mark) => mark.value === size)?.label ||
+                    //   size.toFixed(1)
+                    // }
+                    step={10}
+                    // styles={{ markLabel: { display: "none" } }}
+                    onChange={(e) => setCaptionStyle({ TextWeight: e })}
+                    marks={TEXTWEIGHT_MARKS}
+                    precision={0}
+                  />
+                </Group>
+                <Group style={{ width: 400 }}>
+                  <Text size="sm">Text stroke</Text>
+                  <Slider
+                    style={{ flexGrow: 1 }}
+                    defaultValue={captionsTheme.TextStroke}
+                    min={0}
+                    max={10}
+                    // label={(size) =>
+                    //   TEXTWEIGHT_MARKS.find((mark) => mark.value === size)?.label ||
+                    //   size.toFixed(1)
+                    // }
+                    step={1}
+                    // styles={{ markLabel: { display: "none" } }}
+                    onChange={(e) => setCaptionStyle({ TextStroke: e })}
+                    // marks={TEXTWEIGHT_MARKS}
+                    precision={0}
+                  />
+                </Group>
+                <Group style={{ width: 400 }}>
+                  <Text size="sm">Line spacing</Text>
+                  <Slider
+                    style={{ flexGrow: 1 }}
+                    defaultValue={captionsTheme.LineHeight}
+                    min={1}
+                    max={2}
+                    // label={(size) =>
+                    //   TEXTWEIGHT_MARKS.find((mark) => mark.value === size)?.label ||
+                    //   size.toFixed(1)
+                    // }
+                    step={0.1}
+                    // styles={{ markLabel: { display: "none" } }}
+                    onChange={(e) => setCaptionStyle({ LineHeight: e })}
+                    // marks={TEXTWEIGHT_MARKS}
+                    precision={2}
+                  />
+                </Group>
+              </Stack>
+            </>
+          ) : null}
+        </Box>
+
         <Center
           style={{
             flexGrow: 1,
             border: `1px solid ${theme.colors.gray[7]}`,
             borderRadius: theme.radius.lg,
+            background: `repeating-linear-gradient(
+              45deg,
+              #606dbc,
+              #606dbc 10px,
+              #465298 10px,
+              #465298 20px
+            )`,
           }}
           p="lg"
         >
@@ -207,11 +275,17 @@ export const Settings = () => {
         </Center>
 
         {/* <Switch
-          label="Show captions on top"
-          checked={showOnTop}
-          onChange={(event) => setShowOnTop(event.currentTarget.checked)}
+          label="Enable Bionic Reading"
+          checked={captionsTheme.BionicReading}
+          onChange={(e) => setBionicReading(e.currentTarget.checked)}
         /> */}
-        <Button onClick={() => appWindow.close()}>Done</Button>
+
+        <Button
+          onClick={() => appWindow.close()}
+          style={{ alignSelf: "flex-start" }}
+        >
+          Done
+        </Button>
       </Stack>
     </Paper>
   );

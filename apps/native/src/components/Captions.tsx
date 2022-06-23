@@ -76,7 +76,7 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
       url: "settings.html",
       title: "Settings",
       width: 800,
-      height: 500,
+      height: 600,
     });
     webview.once("tauri://created", function () {
       console.log("view window successfully created");
@@ -91,7 +91,9 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
     <Box
       sx={(theme) => ({
         position: "relative",
-        backgroundColor: isWindowHover ? theme.colors.gray[9] : "transparent",
+        backgroundColor: isWindowHover
+          ? theme.colors.gray[9]
+          : `rgba(0,0,0,${captionsTheme.WindowOpacity})`,
         backdropFilter: "blur(5px)",
         transition: "background-color 0.5s ease",
         height: "100vh",

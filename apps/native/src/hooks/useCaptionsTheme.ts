@@ -15,15 +15,14 @@ export type CaptionStyle = {
   StyleLabel: string;
   TextColor: MantineColor;
   TextBackground: MantineColor;
-  TextShadow: string;
-  TextStroke: string;
+  TextStroke: number;
+  TextWeight: number;
+  LineHeight: number;
 };
 
 export type CaptionsTheme = CaptionStyle & {
   FontSize: number;
-  TextWeight: "thin" | "normal" | "bold" | "bolder" | "black";
-  LineHeight: 1 | 1.5 | 2;
-  WindowBackground: MantineColor;
+  WindowOpacity: number;
   BionicReading: boolean;
   Mode: "cc" | "transcript";
 };
@@ -34,70 +33,77 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     StyleLabel: "White / Black",
     TextColor: "rgba(255, 255, 255, 1)",
     TextBackground: "rgba(0, 0, 0, 1)",
-    TextShadow: "transparent",
-    TextStroke: "",
+    TextStroke: 0,
+    TextWeight: 700,
+    LineHeight: 1,
   },
   {
     StyleId: "yellowBlack",
     StyleLabel: "Yellow / Black",
     TextColor: "rgba(255, 225, 0, 1)",
     TextBackground: "rgba(0, 0, 0, 1)",
-    TextShadow: "transparent",
-    TextStroke: "",
+    TextStroke: 0,
+    TextWeight: 700,
+    LineHeight: 1,
   },
   {
     StyleId: "blackYellow",
     StyleLabel: "Black / Yellow",
     TextColor: "rgba(0, 0, 0, 1)",
     TextBackground: "rgba(255, 225, 0, 1)",
-    TextShadow: "transparent",
-    TextStroke: "",
+    TextStroke: 0,
+    TextWeight: 700,
+    LineHeight: 1,
   },
   {
     StyleId: "whiteBlue",
     StyleLabel: "White / Blue",
     TextColor: "rgba(255, 255, 255, 1)",
     TextBackground: "rgba(56, 65, 224, 1)",
-    TextShadow: "transparent",
-    TextStroke: "",
+    TextStroke: 0,
+    TextWeight: 700,
+    LineHeight: 1,
   },
   {
     StyleId: "yellowBlue",
     StyleLabel: "Yellow / Blue",
     TextColor: "rgba(255, 225, 0, 1)",
     TextBackground: "rgba(56, 65, 224, 1)",
-    TextShadow: "transparent",
-    TextStroke: "",
+    TextStroke: 0,
+    TextWeight: 700,
+    LineHeight: 1,
   },
   {
     StyleId: "noBackground",
     StyleLabel: "No Background",
     TextColor: "rgba(255, 255, 255, 1)",
     TextBackground: "transparent",
-    TextShadow: "rgba(0,0,0,.5)",
-    TextStroke: "",
+    TextStroke: 3,
+    TextWeight: 700,
+    LineHeight: 1,
   },
   {
     StyleId: "custom",
     StyleLabel: "Custom",
     TextColor: "rgba(255, 255, 255, 1)",
     TextBackground: "rgba(0, 0, 0, 1)",
-    TextShadow: "transparent",
-    TextStroke: "",
+    TextStroke: 0,
+    TextWeight: 700,
+    LineHeight: 1,
   },
 ];
 
 export const DEFAULT: CaptionsTheme = {
+  // ...CAPTION_STYLES.find((i) => i.StyleId === "whiteBlack"),
   StyleId: "whiteBlack",
   StyleLabel: "White / Black",
   TextColor: "rgba(255, 255, 255, 1)",
   TextBackground: "rgba(0, 0, 0, 1)",
-  TextShadow: "",
-  TextStroke: "",
-  FontSize: 3,
-  TextWeight: "bold",
+  TextStroke: 0,
+  TextWeight: 700,
   LineHeight: 1,
-  WindowBackground: "transparent",
+  FontSize: 3,
+  WindowOpacity: 0,
   BionicReading: false,
   Mode: "cc",
 };
@@ -128,14 +134,9 @@ export const useCaptionsTheme = () => {
     defaultValue: DEFAULT.TextBackground,
   });
 
-  const [textShadow, setTextShadow] = useLocalStorage({
-    key: "text-shadow",
-    defaultValue: DEFAULT.TextBackground,
-  });
-
   const [textStroke, setTextStroke] = useLocalStorage({
     key: "text-stroke",
-    defaultValue: DEFAULT.TextBackground,
+    defaultValue: DEFAULT.TextStroke,
   });
 
   const [textWeight, setTextWeight] = useLocalStorage({
@@ -148,9 +149,9 @@ export const useCaptionsTheme = () => {
     defaultValue: DEFAULT.LineHeight,
   });
 
-  const [windowBackground, setWindowBackground] = useLocalStorage({
-    key: "window-background",
-    defaultValue: DEFAULT.WindowBackground,
+  const [windowOpacity, setWindowOpacity] = useLocalStorage({
+    key: "window-opacity",
+    defaultValue: DEFAULT.WindowOpacity,
   });
 
   const [bionicReading, setBionicReading] = useLocalStorage({
@@ -164,13 +165,14 @@ export const useCaptionsTheme = () => {
   });
 
   const setCaptionStyle = (newStyle: Partial<CaptionStyle>) => {
-    console.log({ newStyle });
+    console.log("apply style", { newStyle });
     if (newStyle.StyleId) setStyleId(newStyle.StyleId);
     if (newStyle.StyleLabel) setStyleLabel(newStyle.StyleLabel);
     if (newStyle.TextColor) setTextColor(newStyle.TextColor);
     if (newStyle.TextBackground) setTextBackground(newStyle.TextBackground);
-    if (newStyle.TextShadow) setTextShadow(newStyle.TextShadow);
-    if (newStyle.TextStroke) setTextStroke(newStyle.TextStroke);
+    if (newStyle.TextStroke !== undefined) setTextStroke(newStyle.TextStroke);
+    if (newStyle.TextWeight !== undefined) setTextWeight(newStyle.TextWeight);
+    if (newStyle.LineHeight !== undefined) setLineHeight(newStyle.LineHeight);
   };
 
   const OVERRIDE: Partial<CaptionsTheme> = {
@@ -179,11 +181,10 @@ export const useCaptionsTheme = () => {
     TextColor: textColor,
     TextBackground: textBackground,
     TextStroke: textStroke,
-    TextShadow: textShadow,
     FontSize: fontSize,
     TextWeight: textWeight,
     LineHeight: lineHeight,
-    WindowBackground: windowBackground,
+    WindowOpacity: windowOpacity,
     BionicReading: bionicReading,
     Mode: mode,
   };
@@ -198,11 +199,10 @@ export const useCaptionsTheme = () => {
     setFontSize,
     setTextColor,
     setTextBackground,
-    setTextShadow,
     setTextStroke,
     setTextWeight,
     setLineHeight,
-    setWindowBackground,
+    setWindowOpacity,
     setBionicReading,
     setMode,
   };
