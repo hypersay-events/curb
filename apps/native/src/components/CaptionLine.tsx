@@ -53,7 +53,7 @@ export const CaptionLine: React.FC<ICaptionLine> = ({ text }) => {
       dangerouslySetInnerHTML={{ __html: localtext }}
       style={{
         display: "inline",
-        fontSize: `${captionsTheme.FontSize}vw`,
+        fontSize: `clamp(18px, ${captionsTheme.FontSize}vw, 200px)`,
         fontWeight: captionsTheme.TextWeight,
         textShadow:
           captionsTheme.TextStroke > 0

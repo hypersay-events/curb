@@ -37,7 +37,7 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
   // const pickLiner = Math.floor(Math.random() * FIRST_LINERS.length);
   const [parentRef] = useAutoAnimate<HTMLDivElement>(/* optional config */);
 
-  const linesTimeout = captionsTheme.Mode === "cc" ? 10 * 1000 : 0;
+  const linesTimeout = captionsTheme.Mode === "cc" ? 10 * 1000 : 60 * 60 * 1000;
 
   const [lines, addLine] = useLines("", linesTimeout);
 
