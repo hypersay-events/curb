@@ -8,6 +8,8 @@ import {
   ColorInput,
   Group,
   Paper,
+  Radio,
+  RadioGroup,
   Slider,
   Stack,
   Switch,
@@ -18,7 +20,11 @@ import { MarksProps } from "@mantine/core/lib/components/Slider/Marks/Marks";
 import { useState } from "react";
 import { FIRST_LINERS } from "./Captions";
 import { appWindow } from "@tauri-apps/api/window";
-import { CAPTION_STYLES, useCaptionsTheme } from "../hooks/useCaptionsTheme";
+import {
+  CaptionsTheme,
+  CAPTION_STYLES,
+  useCaptionsTheme,
+} from "../hooks/useCaptionsTheme";
 import CaptionLine from "./CaptionLine";
 
 export const STEP = 0.1;
@@ -85,10 +91,11 @@ export const Settings = () => {
         height: "100vh",
         width: "100vw",
         overflow: "auto",
+        borderRadius: 0,
       }}
       p="lg"
     >
-      <Stack spacing={20} style={{ minHeight: "100%" }} mt={10}>
+      <Stack spacing={10} style={{ minHeight: "100%" }} mt={10}>
         {/* <Text size="lg" color="white" component="h1" mb="lg">
           Settings
         </Text> */}
@@ -128,6 +135,40 @@ export const Settings = () => {
             onChange={setWindowOpacity}
             size="sm"
           />
+          <Text size="sm">Mode</Text>
+          <RadioGroup
+            value={captionsTheme.Mode}
+            onChange={(e) => setMode(e as CaptionsTheme["Mode"])}
+            mt={-15}
+
+            // label="Select your favorite framework/library"
+            // description="This is anonymous"
+            // required
+          >
+            <Radio
+              value="cc"
+              label={
+                <Stack spacing={0}>
+                  <Text style={{ lineHeight: "100%" }}>Subtitles</Text>
+                  <Text color="dimmed" size="xs">
+                    Text disappears after 10s
+                  </Text>
+                </Stack>
+              }
+              mr={20}
+            />
+            <Radio
+              value="transcript"
+              label={
+                <Stack spacing={0}>
+                  <Text style={{ lineHeight: "100%" }}>Transcript</Text>
+                  <Text color="dimmed" size="xs">
+                    Text is kept permanently on screen
+                  </Text>
+                </Stack>
+              }
+            />
+          </RadioGroup>
 
           {/* Caption Styles */}
           <Text size="sm">Caption Styles</Text>
