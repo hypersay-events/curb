@@ -306,7 +306,6 @@ export const Settings = () => {
         <Center
           style={{
             flexGrow: 1,
-            border: `1px solid ${theme.colors.gray[7]}`,
             borderRadius: theme.radius.lg,
             background: `repeating-linear-gradient(
               45deg,
@@ -315,9 +314,17 @@ export const Settings = () => {
               #465298 10px,
               #465298 20px
             )`,
+            overflow: "hidden",
+            position: "relative",
           }}
           p="lg"
         >
+          <Box
+            style={{
+              backgroundColor: `rgba(0,0,0,${captionsTheme.WindowOpacity})`,
+              ...theme.fn.cover(),
+            }}
+          />
           <CaptionLine text={previewLine} />
         </Center>
         {captionsTheme.BionicReading ? (
