@@ -95,7 +95,7 @@ export const Settings = () => {
       }}
       p="lg"
     >
-      <Stack spacing={10} style={{ minHeight: "100%" }} mt={10}>
+      <Stack spacing={20} style={{ minHeight: "100%" }} mt={10}>
         {/* <Text size="lg" color="white" component="h1" mb="lg">
           Settings
         </Text> */}
@@ -104,7 +104,7 @@ export const Settings = () => {
             display: "grid",
             width: "100%",
             gridTemplateColumns: "auto 1fr",
-            gap: "3em",
+            gap: "2em",
           }}
           pr="lg"
         >
@@ -336,7 +336,7 @@ export const Settings = () => {
             </Anchor>
           </Text>
         ) : null}
-        <Box style={{ flexGrow: 1 }} />
+
         <Button
           onClick={() => appWindow.close()}
           style={{ alignSelf: "flex-start" }}

@@ -64,6 +64,7 @@ export const CaptionLine: React.FC<ICaptionLine> = ({ text }) => {
         boxShadow: `0.2em 0 0 ${captionsTheme.TextBackground},-0.2em 0 0 ${captionsTheme.TextBackground}`,
         color: captionsTheme.TextColor,
         transition: "color 0.5s ease",
+        zIndex: 1,
       }}
       data-tauri-drag-region
     />
