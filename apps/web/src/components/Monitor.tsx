@@ -62,8 +62,6 @@ export const TranslationLines: React.FC<MonitorProps> = ({
     [translation]
   );
 
-  console.log({ lines });
-
   return (
     <Stack ref={parent} spacing={10}>
       {lines.map((line) => {
