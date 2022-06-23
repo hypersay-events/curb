@@ -88,10 +88,10 @@ export const Settings = () => {
       }}
       p="lg"
     >
-      <Stack spacing={20} style={{ minHeight: "100%" }}>
-        <Text size="lg" color="white" component="h1" mb="lg">
+      <Stack spacing={20} style={{ minHeight: "100%" }} mt={10}>
+        {/* <Text size="lg" color="white" component="h1" mb="lg">
           Settings
-        </Text>
+        </Text> */}
         <Box
           style={{
             display: "grid",
@@ -114,7 +114,7 @@ export const Settings = () => {
             //   `${fontSize.toFixed(1)}vw`
             // }
             step={STEP}
-            // styles={{ markLabel: { display: "none" } }}
+            styles={{ label: { display: "none" } }}
             onChange={setFontSize}
             marks={FONTSIZE_MARKS}
             precision={1}
