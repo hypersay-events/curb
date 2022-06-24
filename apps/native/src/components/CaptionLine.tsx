@@ -37,6 +37,7 @@ export const CaptionLine: React.FC<ICaptionLine> = ({ text }) => {
 
   useEffect(() => {
     if (captionsTheme.BionicReading) {
+      // @ts-ignore
       const videtext = textVide(text, [
         `<span style={{ fontWeight: ${captionsTheme.TextWeight * 1.2}}}>`,
         "</span>",
