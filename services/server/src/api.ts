@@ -1,6 +1,6 @@
 import { FastifyPluginAsync, RouteShorthandOptions } from "fastify";
 import fp from "fastify-plugin";
-import { RoomsManager } from "./RoomsManager";
+import { ExportType, RoomsManager } from "./RoomsManager";
 
 const opts: RouteShorthandOptions = {
   schema: {
@@ -30,7 +30,7 @@ const api: FastifyPluginAsync<ApiOptions> = async (
       roomName: string;
       lang?: string;
       text: string;
-      timestampStart?: number;
+      timestampStart: number;
       timestampEnd?: number;
     };
   }>("/caption", opts, async (request, _reply) => {
@@ -42,6 +42,29 @@ const api: FastifyPluginAsync<ApiOptions> = async (
       timestampEnd: request.body.timestampEnd,
     });
     return { status: 200 };
+  });
+
+  fastify.get<{
+    Querystring: {
+      roomName: string;
+      language?: string;
+      format: ExportType;
+    };
+  }>("/export", async (request, reply) => {
+    const exported = await roomsManager.export(request.query);
+    reply.header("Content-Type", `text/${request.query.format}; charset=utf-8`);
+    reply.send(exported);
+  });
+
+  fastify.get<{
+    Querystring: {
+      roomName: string;
+    };
+  }>("/listAvailableTranslations", async (request, reply) => {
+    const languages = await roomsManager.getRoomAvailableLanguages({
+      roomName: request.query.roomName,
+    });
+    reply.send(languages);
   });
 };
 

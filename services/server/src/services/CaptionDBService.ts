@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Caption, Prisma } from "@prisma/client";
 import { singleton } from "tsyringe";
 import { PrismaService } from "./PrismaService";
 
@@ -10,5 +10,51 @@ export default class CaptionDBService {
     return this.prisma.caption.create({
       data,
     });
+  }
+
+  /**
+   * List captions in a specifica language. If no language is specified, orginal caprions are returned
+   */
+  async listCaptions(opt: {
+    roomName: string;
+    language?: string;
+  }): Promise<{ captions: Caption[]; startAt: number }> {
+    const { roomName, language = null } = opt;
+
+    const captions = await this.prisma.caption.findMany({
+      where: {
+        roomName,
+        targetLanguage: language,
+      },
+      orderBy: {
+        timestampStart: "asc",
+      },
+    });
+    let startAt: number;
+    if (!language) {
+      startAt = Number(captions?.[0].timestampStart || 0);
+    } else {
+      const first = await this.prisma.caption.findFirst({
+        where: {
+          roomName,
+        },
+        orderBy: {
+          timestampStart: "asc",
+        },
+      });
+      startAt = Number(first?.timestampStart || 0);
+    }
+
+    return { captions, startAt };
+  }
+
+  async listAvailableLanguages(roomName: string): Promise<string[]> {
+    const grouped = await this.prisma.caption.groupBy({
+      by: ["targetLanguage"],
+      where: {
+        roomName,
+      },
+    });
+    return grouped.map((g) => g.targetLanguage).filter((l): l is string => !!l);
   }
 }

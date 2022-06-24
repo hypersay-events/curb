@@ -3,6 +3,7 @@ import { Config } from "./config/default";
 import { Room } from "./Room";
 import CaptionDBService from "./services/CaptionDBService";
 import { Translator } from "./Translator";
+import { captionsToSrt, captionsToWebVTT } from "./utilities/captionConverter";
 
 interface RoomWithTranslators {
   room: Room;
@@ -14,6 +15,8 @@ interface RoomWithTranslators {
     }
   >;
 }
+
+export type ExportType = "csv" | "srt" | "vtt";
 
 @singleton()
 export class RoomsManager {
@@ -66,5 +69,28 @@ export class RoomsManager {
       room.langs[opt.targetLang].translator.destroy();
       delete room.langs[opt.targetLang];
     }
+  }
+
+  async export(opt: {
+    roomName: string;
+    language?: string;
+    format: ExportType;
+  }): Promise<string> {
+    const { captions, startAt } = await this.captionDBService.listCaptions({
+      roomName: opt.roomName,
+      language: opt.language,
+    });
+    switch (opt.format) {
+      case "srt":
+        return captionsToSrt(captions, startAt);
+      case "vtt":
+        return captionsToWebVTT(captions, startAt);
+      default:
+        return "";
+    }
+  }
+
+  async getRoomAvailableLanguages(opt: { roomName: string }) {
+    return this.captionDBService.listAvailableLanguages(opt.roomName);
   }
 }

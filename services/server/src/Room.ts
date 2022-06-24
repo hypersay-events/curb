@@ -5,7 +5,7 @@ import CaptionDBService from "./services/CaptionDBService";
 export interface Message {
   text: string;
   lang: string;
-  timestampStart?: number;
+  timestampStart: number;
   timestampEnd?: number;
 }
 
