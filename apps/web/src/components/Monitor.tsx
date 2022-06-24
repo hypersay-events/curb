@@ -10,7 +10,7 @@ interface MonitorProps {
 }
 
 const NEXT_PUBLIC_CAPTIONS_ENDPOINT =
-  process.env.NEXT_PUBLIC_CAPTIONS_ENDPOINT || "http://localhost:4664";
+  process.env.NEXT_PUBLIC_CAPTIONS_ENDPOINT || "http://localhost:4554";
 
 export const Monitor: React.FC<MonitorProps> = ({
   roomName,

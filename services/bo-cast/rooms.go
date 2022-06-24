@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"path"
@@ -18,7 +17,7 @@ type Room struct {
 	LinesChan chan string
 }
 
-var Rooms = make(map[string]Room)
+var Rooms = make(map[string]*Room)
 
 func LoadRooms() {
 	files, err := ioutil.ReadDir("./files")
@@ -58,8 +57,8 @@ func LoadRooms() {
 			lines = append(lines, strings.Join(lineItems, "\n"))
 		}
 
-		room := Room{Language: lang, Current: 0, Lines: lines, LinesChan: make(chan string, 1)}
-		Rooms[roomName] = room
+		room := Room{Language: lang, Current: 0, Lines: lines, LinesChan: make(chan string)}
+		Rooms[roomName] = &room
 		log.Printf("Loaded room %s (language: %s)\n", roomName, lang)
 	}
 }
@@ -69,18 +68,17 @@ func (r *Room) GetNextLine() string {
 		log.Println("Tried to start broadcasting before room is initialised")
 		return ""
 	}
-
 	line := r.Lines[r.Current]
 	r.Current = (r.Current + 1) % len(r.Lines)
-	return fmt.Sprintf("%d/%d. %s", r.Current, len(r.Lines), line)
+	return line
 }
 
 func (r *Room) StartBroadcasting() {
-	for i := 0; i < 1000; i++ {
+	defer close(r.LinesChan)
+	log.Printf("Starting broadcast for: %s/\n", r.Language)
+	for {
 		line := r.GetNextLine()
-		multiplier := time.Duration(len(r.GetNextLine()) / 25) // 1 second per 25 characters
-		timer := time.NewTimer(multiplier * time.Second)
-		<-timer.C
 		r.LinesChan <- line
+		time.Sleep(time.Duration(len(line)/15) * time.Second) // 1 second per 15 characters
 	}
 }

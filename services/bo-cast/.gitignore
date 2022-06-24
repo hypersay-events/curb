@@ -1,0 +1,12 @@
+bo-cast
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+/vendor/
+/Godeps/
+
