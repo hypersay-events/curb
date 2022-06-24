@@ -1,22 +1,21 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Icon } from "@iconify/react";
 import { ActionIcon, Box, Group, Stack, Text } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
-import { appWindow } from "@tauri-apps/api/window";
 import { useLines } from "../hooks/useCaptionLines";
+import { appWindow, WebviewWindow } from "@tauri-apps/api/window";
+import { STEP } from "./Settings";
 import { SocketContext } from "./SocketProvider";
 import { TARGET_LANGS } from "./Welcome";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import CaptionLine from "./CaptionLine";
+import { useCaptionsTheme } from "../hooks/useCaptionsTheme";
 
 export interface CaptionsParams {
   onGoBack: () => void;
 }
 
-const STEP = 0.1;
-export const DEFAULT_FONT_SIZE = 3;
-
-const FIRST_LINERS = [
+export const FIRST_LINERS = [
   "It was a bright cold day in April, and the clocks were striking thirteen. [test]",
   "As Gregor Samsa awoke one morning from uneasy dreams he found himself transformed in his bed into a gigantic insect.  [test]",
   "I write this sitting in the kitchen sink. [test]",
@@ -26,7 +25,6 @@ const FIRST_LINERS = [
 
 export const Captions = function Captions({ onGoBack }: CaptionsParams) {
   const [isWindowHover, setIsWindowHover] = useState(false);
-  const [fontSize, setFontSize] = useState(DEFAULT_FONT_SIZE);
   const { socket, roomId, targetLang, isReady } = useContext(SocketContext);
   const [showExampleLine, setShowExampleLine] = useState(true);
   const exampleLine = useMemo(
@@ -34,10 +32,14 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
     []
   );
 
+  const { captionsTheme, setFontSize } = useCaptionsTheme();
+
   // const pickLiner = Math.floor(Math.random() * FIRST_LINERS.length);
   const [parentRef] = useAutoAnimate<HTMLDivElement>(/* optional config */);
 
-  const [lines, addLine] = useLines();
+  const linesTimeout = captionsTheme.Mode === "cc" ? 10 * 1000 : 60 * 60 * 1000;
+
+  const [lines, addLine] = useLines("", linesTimeout);
 
   useEffect(() => {
     appWindow.listen("tauri://focus", () => {
@@ -54,7 +56,7 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
     ["mod+ArrowDown", () => setFontSize((old) => old - STEP)],
     ["mod+=", () => setFontSize((old) => old + STEP)],
     ["mod+-", () => setFontSize((old) => old - STEP)],
-    ["mod+0", () => setFontSize(DEFAULT_FONT_SIZE)],
+    ["mod+0", () => setFontSize(captionsTheme.FontSize)],
   ]);
 
   useEffect(() => {
@@ -70,11 +72,30 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
 
   const language = TARGET_LANGS.find((l) => l.value === targetLang);
 
+  const openSettingsWindow = useCallback(() => {
+    console.log("called");
+    const webview = new WebviewWindow("settings", {
+      url: "settings.html",
+      title: "Settings",
+      width: 800,
+      height: 600,
+    });
+    webview.once("tauri://created", function () {
+      console.log("view window successfully created");
+    });
+    webview.once("tauri://error", function (e) {
+      console.log(e);
+    });
+    webview.setFocus();
+  }, []);
+
   return (
     <Box
       sx={(theme) => ({
         position: "relative",
-        backgroundColor: isWindowHover ? theme.colors.gray[9] : "transparent",
+        backgroundColor: isWindowHover
+          ? theme.colors.gray[9]
+          : `rgba(0,0,0,${captionsTheme.WindowOpacity})`,
         backdropFilter: "blur(5px)",
         transition: "background-color 0.5s ease",
         height: "100vh",
@@ -85,29 +106,46 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
     >
       <Stack
         align="stretch"
-        style={{ height: "100%", position: "relative" }}
+        style={{
+          height: "100%",
+          position: "relative",
+        }}
         data-tauri-drag-region
       >
+        {/* Menu */}
         <Group
-          sx={{
+          sx={(theme) => ({
             opacity: isWindowHover ? 1 : 0,
             transition: "opacity 0.5s ease",
             alignSelf: "flex-end",
-          }}
+            backgroundColor: theme.colors.gray[9],
+            zIndex: 1,
+            justifyContent: "space-between",
+            width: "100%",
+          })}
+          pl="sm"
           spacing={5}
           data-tauri-drag-region
         >
-          <Text size="sm">
-            {roomId} &middot; {language?.flag} — {isReady ? "ready" : "not"}
-          </Text>
-          <Icon icon="tabler:drag-drop" width="18" data-tauri-drag-region />
-          <ActionIcon onClick={onGoBack}>
-            <Icon icon="bi:arrow-left" />
-          </ActionIcon>
+          <Group spacing={5}>
+            <ActionIcon onClick={onGoBack}>
+              <Icon icon="bi:arrow-left" />
+            </ActionIcon>
+            <Text size="sm">
+              {roomId} &middot; {language?.flag} — {isReady ? "ready" : "not"}
+            </Text>
+          </Group>
+          <Group spacing={5}>
+            <ActionIcon onClick={openSettingsWindow}>
+              <Icon icon="tabler:settings" />
+            </ActionIcon>
 
-          <ActionIcon onClick={() => appWindow.close()}>
-            <Icon icon="tabler:x" width="18" />
-          </ActionIcon>
+            <Icon icon="tabler:drag-drop" width="18" data-tauri-drag-region />
+
+            <ActionIcon onClick={() => appWindow.close()}>
+              <Icon icon="tabler:x" width="18" />
+            </ActionIcon>
+          </Group>
         </Group>
         <Box
           style={{
@@ -121,12 +159,12 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
         >
           {showExampleLine ? (
             <Box>
-              <CaptionLine fontSize={fontSize} text={exampleLine} />
+              <CaptionLine text={exampleLine} />
             </Box>
           ) : null}
           {lines.map((line) => (
             <Box key={line}>
-              <CaptionLine fontSize={fontSize} text={line} />
+              <CaptionLine text={line} />
             </Box>
           ))}
         </Box>
