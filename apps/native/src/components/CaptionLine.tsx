@@ -1,7 +1,9 @@
 import { Text } from "@mantine/core";
-import { useCaptionsTheme } from "../hooks/useCaptionsTheme";
+// import { useCaptionsTheme } from "../hooks/useCaptionsTheme";
 import { textVide } from "text-vide";
 import { useEffect, useState } from "react";
+import { useAtom, useAtomValue } from "jotai";
+import { CaptionsTheme, storedThemeAtom } from "../hooks/useCaptionsTheme";
 
 interface ICaptionLine {
   text: string;
@@ -32,21 +34,27 @@ const getShadow = (size: number) => {
 };
 
 export const CaptionLine: React.FC<ICaptionLine> = ({ text }) => {
-  const { captionsTheme } = useCaptionsTheme();
+  const [captionsTheme] = useAtom(storedThemeAtom);
+  // const { captionsTheme } = useCaptionsTheme();
   const [localtext, setLocalText] = useState(text);
 
+  // console.log({ captionsTheme });
+
   useEffect(() => {
-    if (captionsTheme.BionicReading) {
+    if ((captionsTheme as CaptionsTheme)?.BionicReading) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const videtext = textVide(text, [
-        `<span style={{ fontWeight: ${captionsTheme.TextWeight * 1.2}}}>`,
+        `<span style={{ fontWeight: ${
+          (captionsTheme as CaptionsTheme)?.TextWeight || 1 * 1.2
+        }}}>`,
         "</span>",
       ]);
       setLocalText(videtext);
     } else {
       setLocalText(text);
     }
-  }, [captionsTheme.BionicReading, captionsTheme.TextWeight, text]);
+  }, [captionsTheme, captionsTheme.TextWeight, text]);
 
   return (
     <Text
@@ -54,16 +62,16 @@ export const CaptionLine: React.FC<ICaptionLine> = ({ text }) => {
       dangerouslySetInnerHTML={{ __html: localtext }}
       style={{
         display: "inline",
-        fontSize: `clamp(18px, ${captionsTheme.FontSize}vw, 200px)`,
-        fontWeight: captionsTheme.TextWeight,
+        fontSize: `clamp(18px, ${captionsTheme?.FontSize}vw, 200px)`,
+        fontWeight: captionsTheme?.TextWeight,
         textShadow:
-          captionsTheme.TextStroke > 0
-            ? getShadow(captionsTheme.TextStroke)
+          captionsTheme?.TextStroke || 0 > 0
+            ? getShadow(captionsTheme?.TextStroke as number)
             : "",
-        lineHeight: `${captionsTheme.LineHeight * 1.2}em`,
-        backgroundColor: captionsTheme.TextBackground,
-        boxShadow: `0.2em 0 0 ${captionsTheme.TextBackground},-0.2em 0 0 ${captionsTheme.TextBackground}`,
-        color: captionsTheme.TextColor,
+        lineHeight: `${captionsTheme?.LineHeight || 1 * 1.2}em`,
+        backgroundColor: captionsTheme?.TextBackground,
+        boxShadow: `0.2em 0 0 ${captionsTheme?.TextBackground},-0.2em 0 0 ${captionsTheme?.TextBackground}`,
+        color: captionsTheme?.TextColor,
         transition: "color 0.5s ease",
         zIndex: 1,
       }}

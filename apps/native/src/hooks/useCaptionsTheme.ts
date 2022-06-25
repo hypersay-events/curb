@@ -1,5 +1,7 @@
 import { MantineColor } from "@mantine/core";
-import { useLocalStorage } from "@mantine/hooks";
+import { atom, useAtom } from "jotai";
+import { useEffect, useMemo, useState } from "react";
+import { Store } from "tauri-plugin-store-api";
 
 export type CaptionStylePresets =
   | "whiteBlack"
@@ -112,7 +114,6 @@ export const CAPTION_STYLES: CaptionStyle[] = [
 ];
 
 export const DEFAULT: CaptionsTheme = {
-  // ...CAPTION_STYLES.find((i) => i.StyleId === "whiteBlack"),
   StyleId: "whiteBlack",
   StyleLabel: "White / Black",
   TextColor: "rgba(255, 255, 255, 1)",
@@ -126,104 +127,35 @@ export const DEFAULT: CaptionsTheme = {
   Mode: "cc",
 };
 
-export const useCaptionsTheme = () => {
-  const [fontSize, setFontSize] = useLocalStorage({
-    key: "font-size",
-    defaultValue: DEFAULT.FontSize,
-  });
+const atomThemeAsyncStorage = (
+  key: string,
+  initialValue: Partial<CaptionsTheme>
+) => {
+  const baseAtom = atom(initialValue);
+  console.log("initialValue", { initialValue });
 
-  const [styleId, setStyleId] = useLocalStorage({
-    key: "style-id",
-    defaultValue: DEFAULT.StyleId,
-  });
+  const store = new Store(".jotai.dat");
 
-  const [styleLabel, setStyleLabel] = useLocalStorage({
-    key: "style-label",
-    defaultValue: DEFAULT.StyleLabel,
-  });
-
-  const [textColor, setTextColor] = useLocalStorage({
-    key: "text-color",
-    defaultValue: DEFAULT.TextColor,
-  });
-
-  const [textBackground, setTextBackground] = useLocalStorage({
-    key: "text-background",
-    defaultValue: DEFAULT.TextBackground,
-  });
-
-  const [textStroke, setTextStroke] = useLocalStorage({
-    key: "text-stroke",
-    defaultValue: DEFAULT.TextStroke,
-  });
-
-  const [textWeight, setTextWeight] = useLocalStorage({
-    key: "text-weight",
-    defaultValue: DEFAULT.TextWeight,
-  });
-
-  const [lineHeight, setLineHeight] = useLocalStorage({
-    key: "line-height",
-    defaultValue: DEFAULT.LineHeight,
-  });
-
-  const [windowOpacity, setWindowOpacity] = useLocalStorage({
-    key: "window-opacity",
-    defaultValue: DEFAULT.WindowOpacity,
-  });
-
-  const [bionicReading, setBionicReading] = useLocalStorage({
-    key: "bionic-reading",
-    defaultValue: DEFAULT.BionicReading,
-  });
-
-  const [mode, setMode] = useLocalStorage({
-    key: "mode",
-    defaultValue: DEFAULT.Mode,
-  });
-
-  const setCaptionStyle = (newStyle: Partial<CaptionStyle>) => {
-    console.log("apply style", { newStyle });
-    if (newStyle.StyleId) setStyleId(newStyle.StyleId);
-    if (newStyle.StyleLabel) setStyleLabel(newStyle.StyleLabel);
-    if (newStyle.TextColor) setTextColor(newStyle.TextColor);
-    if (newStyle.TextBackground) setTextBackground(newStyle.TextBackground);
-    if (newStyle.TextStroke !== undefined) setTextStroke(newStyle.TextStroke);
-    if (newStyle.TextWeight !== undefined) setTextWeight(newStyle.TextWeight);
-    if (newStyle.LineHeight !== undefined) setLineHeight(newStyle.LineHeight);
-    if (newStyle.BionicReading !== undefined)
-      setBionicReading(newStyle.BionicReading);
+  baseAtom.onMount = (setValue) => {
+    (async () => {
+      const item = await store.get(key);
+      setValue(JSON.parse(item as string));
+    })();
   };
-
-  const OVERRIDE: Partial<CaptionsTheme> = {
-    StyleId: styleId,
-    StyleLabel: styleLabel,
-    TextColor: textColor,
-    TextBackground: textBackground,
-    TextStroke: textStroke,
-    FontSize: fontSize,
-    TextWeight: textWeight,
-    LineHeight: lineHeight,
-    WindowOpacity: windowOpacity,
-    BionicReading: bionicReading,
-    Mode: mode,
-  };
-
-  const captionsTheme = { ...DEFAULT, ...OVERRIDE };
-
-  return {
-    captionsTheme,
-    setCaptionStyle,
-    setStyleId,
-    setStyleLabel,
-    setFontSize,
-    setTextColor,
-    setTextBackground,
-    setTextStroke,
-    setTextWeight,
-    setLineHeight,
-    setWindowOpacity,
-    setBionicReading,
-    setMode,
-  };
+  const derivedAtom = atom(
+    (get) => get(baseAtom),
+    (get, set, update) => {
+      const preValue = get(baseAtom);
+      const nextValue =
+        typeof update === "function" ? update(get(baseAtom)) : update;
+      const updatedValue = { ...preValue, ...nextValue };
+      set(baseAtom, updatedValue);
+      store
+        .set(key, JSON.stringify(updatedValue))
+        .catch((error) => console.log(error));
+    }
+  );
+  return derivedAtom;
 };
+
+export const storedThemeAtom = atomThemeAsyncStorage("jotaitheme", DEFAULT);

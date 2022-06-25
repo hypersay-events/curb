@@ -9,7 +9,8 @@ import { SocketContext } from "./SocketProvider";
 import { TARGET_LANGS } from "./Welcome";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import CaptionLine from "./CaptionLine";
-import { useCaptionsTheme } from "../hooks/useCaptionsTheme";
+import { DEFAULT, storedThemeAtom } from "../hooks/useCaptionsTheme";
+import { useAtom } from "jotai";
 
 export interface CaptionsParams {
   onGoBack: () => void;
@@ -32,12 +33,15 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
     []
   );
 
-  const { captionsTheme, setFontSize } = useCaptionsTheme();
+  const [captionsTheme, setCaptionsTheme] = useAtom(storedThemeAtom);
+
+  // const { captionsTheme, updateCaptionsTheme } = useCaptionsTheme();
 
   // const pickLiner = Math.floor(Math.random() * FIRST_LINERS.length);
   const [parentRef] = useAutoAnimate<HTMLDivElement>(/* optional config */);
 
-  const linesTimeout = captionsTheme.Mode === "cc" ? 10 * 1000 : 60 * 60 * 1000;
+  const linesTimeout =
+    captionsTheme?.Mode === "cc" ? 10 * 1000 : 60 * 60 * 1000;
 
   const [lines, addLine] = useLines("", linesTimeout);
 
@@ -52,11 +56,35 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
   }, []);
 
   useHotkeys([
-    ["mod+ArrowUp", () => setFontSize((old) => old + STEP)],
-    ["mod+ArrowDown", () => setFontSize((old) => old - STEP)],
-    ["mod+=", () => setFontSize((old) => old + STEP)],
-    ["mod+-", () => setFontSize((old) => old - STEP)],
-    ["mod+0", () => setFontSize(captionsTheme.FontSize)],
+    [
+      "mod+ArrowUp",
+      () =>
+        setCaptionsTheme({
+          FontSize: (captionsTheme?.FontSize || 0) + STEP,
+        }),
+    ],
+    [
+      "mod+ArrowDown",
+      () =>
+        setCaptionsTheme({
+          FontSize: (captionsTheme?.FontSize || 0) - STEP,
+        }),
+    ],
+    [
+      "mod+=",
+      () =>
+        setCaptionsTheme({
+          FontSize: (captionsTheme?.FontSize || 0) + STEP,
+        }),
+    ],
+    [
+      "mod+-",
+      () =>
+        setCaptionsTheme({
+          FontSize: (captionsTheme?.FontSize || 0) - STEP,
+        }),
+    ],
+    ["mod+0", () => setCaptionsTheme({ FontSize: DEFAULT.FontSize })],
   ]);
 
   useEffect(() => {
@@ -73,7 +101,7 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
   const language = TARGET_LANGS.find((l) => l.value === targetLang);
 
   const openSettingsWindow = useCallback(() => {
-    console.log("called");
+    // console.log("called");
     const webview = new WebviewWindow("settings", {
       url: "settings.html",
       title: "Settings",
@@ -89,13 +117,15 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
     webview.setFocus();
   }, []);
 
+  console.log("captions:", { captionsTheme });
+
   return (
     <Box
       sx={(theme) => ({
         position: "relative",
         backgroundColor: isWindowHover
           ? theme.colors.gray[9]
-          : `rgba(0,0,0,${captionsTheme.WindowOpacity})`,
+          : `rgba(0,0,0,${captionsTheme?.WindowOpacity})`,
         backdropFilter: "blur(5px)",
         transition: "background-color 0.5s ease",
         height: "100vh",

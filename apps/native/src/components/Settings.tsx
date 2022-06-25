@@ -23,9 +23,10 @@ import { appWindow } from "@tauri-apps/api/window";
 import {
   CaptionsTheme,
   CAPTION_STYLES,
-  useCaptionsTheme,
+  storedThemeAtom,
 } from "../hooks/useCaptionsTheme";
 import CaptionLine from "./CaptionLine";
+import { useAtom } from "jotai";
 
 export const STEP = 0.1;
 
@@ -36,14 +37,8 @@ export const Settings = () => {
   // });
 
   const theme = useMantineTheme();
-  const {
-    captionsTheme,
-    setCaptionStyle,
-    setFontSize,
-    setWindowOpacity,
-    setBionicReading,
-    setMode,
-  } = useCaptionsTheme();
+  const [captionsTheme, setCaptionsTheme] = useAtom(storedThemeAtom);
+  // const { captionsTheme, updateCaptionsTheme } = useCaptionsTheme();
 
   const [previewLine] = useState(
     FIRST_LINERS[Math.floor(Math.random() * FIRST_LINERS.length)]
@@ -83,7 +78,7 @@ export const Settings = () => {
     theme.fn.rgba("#fd7e14", 1),
   ];
 
-  console.log({ captionsTheme });
+  console.log("settings:", { captionsTheme });
 
   return (
     <Paper
@@ -113,7 +108,7 @@ export const Settings = () => {
           <Slider
             style={{ flexGrow: 1 }}
             // labelAlwaysOn
-            defaultValue={captionsTheme.FontSize}
+            defaultValue={captionsTheme?.FontSize}
             min={2}
             max={5}
             // label={(fontSize) =>
@@ -122,7 +117,7 @@ export const Settings = () => {
             // }
             step={STEP}
             styles={{ label: { display: "none" } }}
-            onChange={setFontSize}
+            onChange={(e) => setCaptionsTheme({ FontSize: e })}
             marks={FONTSIZE_MARKS}
             precision={1}
           />
@@ -131,14 +126,19 @@ export const Settings = () => {
           <Text size="sm">Window Opacity</Text>
           <AlphaSlider
             color="rgba(0,0,0,1)"
-            value={captionsTheme.WindowOpacity}
-            onChange={setWindowOpacity}
+            value={captionsTheme?.WindowOpacity as number}
+            onChange={(e) => setCaptionsTheme({ WindowOpacity: e })}
             size="sm"
           />
           <Text size="sm">Mode</Text>
           <RadioGroup
-            value={captionsTheme.Mode}
-            onChange={(e) => setMode(e as CaptionsTheme["Mode"])}
+            value={captionsTheme?.Mode}
+            onChange={(e) =>
+              setCaptionsTheme({
+                // ...captionsTheme,
+                Mode: e as CaptionsTheme["Mode"],
+              })
+            }
             mt={-15}
 
             // label="Select your favorite framework/library"
@@ -179,12 +179,12 @@ export const Settings = () => {
                   (i) => i.StyleId === k.StyleId
                 );
 
-                console.log({ capTheme });
+                // console.log({ capTheme });
                 return (
                   <Chip
                     key={k.StyleId}
                     value={k.StyleId}
-                    checked={k.StyleId === captionsTheme.StyleId}
+                    checked={k.StyleId === captionsTheme?.StyleId}
                     // variant={
                     //   capTheme?.StyleId === "noBackground" ? "outline" : "filled"
                     // }
@@ -205,8 +205,8 @@ export const Settings = () => {
                       },
                     }}
                     onChange={() => {
-                      console.log("send style", { capTheme });
-                      setCaptionStyle({
+                      // console.log("send style", { capTheme });
+                      setCaptionsTheme({
                         ...capTheme,
                       });
                     }}
@@ -219,22 +219,22 @@ export const Settings = () => {
           </Box>
 
           {/* Custom */}
-          {captionsTheme.StyleId === "custom" ? (
+          {captionsTheme?.StyleId === "custom" ? (
             <>
               <Text size="sm">Custom Style</Text>
               <Stack spacing={30}>
                 <Group>
                   <ColorInput
                     label="Text color"
-                    value={captionsTheme.TextColor}
-                    onChange={(e) => setCaptionStyle({ TextColor: e })}
+                    value={captionsTheme?.TextColor}
+                    onChange={(e) => setCaptionsTheme({ TextColor: e })}
                     format="rgba"
                     swatches={swatches}
                   />
                   <ColorInput
                     label="Background color"
-                    value={captionsTheme.TextBackground}
-                    onChange={(e) => setCaptionStyle({ TextBackground: e })}
+                    value={captionsTheme?.TextBackground}
+                    onChange={(e) => setCaptionsTheme({ TextBackground: e })}
                     format="rgba"
                     swatches={swatches}
                   />
@@ -252,7 +252,7 @@ export const Settings = () => {
                     // }
                     step={10}
                     // styles={{ markLabel: { display: "none" } }}
-                    onChange={(e) => setCaptionStyle({ TextWeight: e })}
+                    onChange={(e) => setCaptionsTheme({ TextWeight: e })}
                     marks={TEXTWEIGHT_MARKS}
                     precision={0}
                   />
@@ -270,7 +270,7 @@ export const Settings = () => {
                     // }
                     step={1}
                     // styles={{ markLabel: { display: "none" } }}
-                    onChange={(e) => setCaptionStyle({ TextStroke: e })}
+                    onChange={(e) => setCaptionsTheme({ TextStroke: e })}
                     // marks={TEXTWEIGHT_MARKS}
                     precision={0}
                   />
@@ -288,15 +288,19 @@ export const Settings = () => {
                     // }
                     step={0.1}
                     // styles={{ markLabel: { display: "none" } }}
-                    onChange={(e) => setCaptionStyle({ LineHeight: e })}
+                    onChange={(e) => setCaptionsTheme({ LineHeight: e })}
                     // marks={TEXTWEIGHT_MARKS}
                     precision={2}
                   />
                 </Group>
                 <Switch
                   label="Enable Bionic Reading"
-                  checked={captionsTheme.BionicReading}
-                  onChange={(e) => setBionicReading(e.currentTarget.checked)}
+                  checked={captionsTheme?.BionicReading || false}
+                  onChange={(e) =>
+                    setCaptionsTheme({
+                      BionicReading: e.currentTarget.checked,
+                    })
+                  }
                 />
               </Stack>
             </>
@@ -321,13 +325,13 @@ export const Settings = () => {
         >
           <Box
             style={{
-              backgroundColor: `rgba(0,0,0,${captionsTheme.WindowOpacity})`,
+              backgroundColor: `rgba(0,0,0,${captionsTheme?.WindowOpacity})`,
               ...theme.fn.cover(),
             }}
           />
           <CaptionLine text={previewLine} />
         </Center>
-        {captionsTheme.BionicReading ? (
+        {captionsTheme?.BionicReading ? (
           <Text color="dimmed">
             Bionic Reading is an experimental mode that speeds up reading by
             helping you focus on the first letters in a word.{" "}

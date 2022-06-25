@@ -15,10 +15,12 @@
     "@mantine/core": "^4.2.9",
     "@mantine/hooks": "^4.2.9",
     "@tauri-apps/api": "^1.0.0",
+    "jotai": "^1.7.2",
     "path": "^0.12.7",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "socket.io-client": "^4.5.1",
+    "tauri-plugin-store-api": "github:tauri-apps/tauri-plugin-store",
     "text-vide": "^1.5.0"
   },
   "devDependencies": {
