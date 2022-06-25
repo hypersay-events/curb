@@ -34,7 +34,7 @@ const getShadow = (size: number) => {
 };
 
 export const CaptionLine: React.FC<ICaptionLine> = ({ text }) => {
-  const [captionsTheme] = useAtom(storedThemeAtom);
+  const captionsTheme = useAtomValue(storedThemeAtom);
   // const { captionsTheme } = useCaptionsTheme();
   const [localtext, setLocalText] = useState(text);
 
