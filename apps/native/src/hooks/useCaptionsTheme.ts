@@ -1,5 +1,6 @@
 import { MantineColor } from "@mantine/core";
 import { atom, useAtom } from "jotai";
+import React from "react";
 import { useEffect, useMemo, useState } from "react";
 import { Store } from "tauri-plugin-store-api";
 
