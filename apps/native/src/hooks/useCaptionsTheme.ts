@@ -1,5 +1,4 @@
 import { MantineColor } from "@mantine/core";
-import { useLocalStorage } from "@mantine/hooks";
 import { atomWithStorage } from "jotai/utils";
 
 export type CaptionStylePresets =

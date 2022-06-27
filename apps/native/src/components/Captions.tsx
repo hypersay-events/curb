@@ -9,11 +9,7 @@ import { SocketContext } from "./SocketProvider";
 import { TARGET_LANGS } from "./Welcome";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import CaptionLine from "./CaptionLine";
-import {
-  DEFAULT,
-  storedThemeAtom,
-  useCaptionsTheme,
-} from "../hooks/useCaptionsTheme";
+import { DEFAULT, storedThemeAtom } from "../hooks/useCaptionsTheme";
 import { useAtom } from "jotai";
 
 export interface CaptionsParams {
