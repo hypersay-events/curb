@@ -9,4 +9,4 @@ bo-cast
 go.work
 /vendor/
 /Godeps/
-
+.ssh/

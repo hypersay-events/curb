@@ -14,5 +14,6 @@ func main() {
 		go ProcessLines(roomName, room)
 	}
 
+	InitSsh()
 	wg.Wait()
 }
