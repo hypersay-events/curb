@@ -9,7 +9,12 @@ import { SocketContext } from "./SocketProvider";
 import { TARGET_LANGS } from "./Welcome";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import CaptionLine from "./CaptionLine";
-import { useCaptionsTheme } from "../hooks/useCaptionsTheme";
+import {
+  DEFAULT,
+  storedThemeAtom,
+  useCaptionsTheme,
+} from "../hooks/useCaptionsTheme";
+import { useAtom } from "jotai";
 
 export interface CaptionsParams {
   onGoBack: () => void;
@@ -32,7 +37,8 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
     []
   );
 
-  const { captionsTheme, setFontSize } = useCaptionsTheme();
+  const [captionsTheme, setCaptionsTheme] = useAtom(storedThemeAtom);
+  // const { captionsTheme, setFontSize } = useCaptionsTheme();
 
   // const pickLiner = Math.floor(Math.random() * FIRST_LINERS.length);
   const [parentRef] = useAutoAnimate<HTMLDivElement>(/* optional config */);
@@ -52,11 +58,46 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
   }, []);
 
   useHotkeys([
-    ["mod+ArrowUp", () => setFontSize((old) => old + STEP)],
-    ["mod+ArrowDown", () => setFontSize((old) => old - STEP)],
-    ["mod+=", () => setFontSize((old) => old + STEP)],
-    ["mod+-", () => setFontSize((old) => old - STEP)],
-    ["mod+0", () => setFontSize(captionsTheme.FontSize)],
+    [
+      "mod+ArrowUp",
+      () =>
+        setCaptionsTheme({
+          ...captionsTheme,
+          FontSize: captionsTheme.FontSize + STEP,
+        }),
+    ],
+    [
+      "mod+ArrowDown",
+      () =>
+        setCaptionsTheme({
+          ...captionsTheme,
+          FontSize: captionsTheme.FontSize - STEP,
+        }),
+    ],
+    [
+      "mod+=",
+      () =>
+        setCaptionsTheme({
+          ...captionsTheme,
+          FontSize: captionsTheme.FontSize + STEP,
+        }),
+    ],
+    [
+      "mod+-",
+      () =>
+        setCaptionsTheme({
+          ...captionsTheme,
+          FontSize: captionsTheme.FontSize - STEP,
+        }),
+    ],
+    [
+      "mod+0",
+      () =>
+        setCaptionsTheme({
+          ...captionsTheme,
+          FontSize: DEFAULT.FontSize,
+        }),
+    ],
   ]);
 
   useEffect(() => {

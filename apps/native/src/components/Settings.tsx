@@ -23,9 +23,10 @@ import { appWindow } from "@tauri-apps/api/window";
 import {
   CaptionsTheme,
   CAPTION_STYLES,
-  useCaptionsTheme,
+  storedThemeAtom,
 } from "../hooks/useCaptionsTheme";
 import CaptionLine from "./CaptionLine";
+import { useAtom } from "jotai";
 
 export const STEP = 0.1;
 
@@ -36,14 +37,16 @@ export const Settings = () => {
   // });
 
   const theme = useMantineTheme();
-  const {
-    captionsTheme,
-    setCaptionStyle,
-    setFontSize,
-    setWindowOpacity,
-    setBionicReading,
-    setMode,
-  } = useCaptionsTheme();
+  // const {
+  //   captionsTheme,
+  //   setCaptionStyle,
+  //   setFontSize,
+  //   setWindowOpacity,
+  //   setBionicReading,
+  //   setMode,
+  // } = useCaptionsTheme();
+
+  const [captionsTheme, setCaptionsTheme] = useAtom(storedThemeAtom);
 
   const [previewLine] = useState(
     FIRST_LINERS[Math.floor(Math.random() * FIRST_LINERS.length)]
@@ -122,7 +125,9 @@ export const Settings = () => {
             // }
             step={STEP}
             styles={{ label: { display: "none" } }}
-            onChange={setFontSize}
+            onChange={(e) =>
+              setCaptionsTheme({ ...captionsTheme, FontSize: e })
+            }
             marks={FONTSIZE_MARKS}
             precision={1}
           />
@@ -132,13 +137,20 @@ export const Settings = () => {
           <AlphaSlider
             color="rgba(0,0,0,1)"
             value={captionsTheme.WindowOpacity}
-            onChange={setWindowOpacity}
+            onChange={(e) =>
+              setCaptionsTheme({ ...captionsTheme, WindowOpacity: e })
+            }
             size="sm"
           />
           <Text size="sm">Mode</Text>
           <RadioGroup
             value={captionsTheme.Mode}
-            onChange={(e) => setMode(e as CaptionsTheme["Mode"])}
+            onChange={(e) =>
+              setCaptionsTheme({
+                ...captionsTheme,
+                Mode: e as CaptionsTheme["Mode"],
+              })
+            }
             mt={-15}
 
             // label="Select your favorite framework/library"
@@ -206,7 +218,8 @@ export const Settings = () => {
                     }}
                     onChange={() => {
                       console.log("send style", { capTheme });
-                      setCaptionStyle({
+                      setCaptionsTheme({
+                        ...captionsTheme,
                         ...capTheme,
                       });
                     }}
@@ -227,14 +240,18 @@ export const Settings = () => {
                   <ColorInput
                     label="Text color"
                     value={captionsTheme.TextColor}
-                    onChange={(e) => setCaptionStyle({ TextColor: e })}
+                    onChange={(e) =>
+                      setCaptionsTheme({ ...captionsTheme, TextColor: e })
+                    }
                     format="rgba"
                     swatches={swatches}
                   />
                   <ColorInput
                     label="Background color"
                     value={captionsTheme.TextBackground}
-                    onChange={(e) => setCaptionStyle({ TextBackground: e })}
+                    onChange={(e) =>
+                      setCaptionsTheme({ ...captionsTheme, TextBackground: e })
+                    }
                     format="rgba"
                     swatches={swatches}
                   />
@@ -252,7 +269,9 @@ export const Settings = () => {
                     // }
                     step={10}
                     // styles={{ markLabel: { display: "none" } }}
-                    onChange={(e) => setCaptionStyle({ TextWeight: e })}
+                    onChange={(e) =>
+                      setCaptionsTheme({ ...captionsTheme, TextWeight: e })
+                    }
                     marks={TEXTWEIGHT_MARKS}
                     precision={0}
                   />
@@ -270,7 +289,9 @@ export const Settings = () => {
                     // }
                     step={1}
                     // styles={{ markLabel: { display: "none" } }}
-                    onChange={(e) => setCaptionStyle({ TextStroke: e })}
+                    onChange={(e) =>
+                      setCaptionsTheme({ ...captionsTheme, TextStroke: e })
+                    }
                     // marks={TEXTWEIGHT_MARKS}
                     precision={0}
                   />
@@ -288,7 +309,9 @@ export const Settings = () => {
                     // }
                     step={0.1}
                     // styles={{ markLabel: { display: "none" } }}
-                    onChange={(e) => setCaptionStyle({ LineHeight: e })}
+                    onChange={(e) =>
+                      setCaptionsTheme({ ...captionsTheme, LineHeight: e })
+                    }
                     // marks={TEXTWEIGHT_MARKS}
                     precision={2}
                   />
@@ -296,7 +319,12 @@ export const Settings = () => {
                 <Switch
                   label="Enable Bionic Reading"
                   checked={captionsTheme.BionicReading}
-                  onChange={(e) => setBionicReading(e.currentTarget.checked)}
+                  onChange={(e) =>
+                    setCaptionsTheme({
+                      ...captionsTheme,
+                      BionicReading: e.currentTarget.checked,
+                    })
+                  }
                 />
               </Stack>
             </>
