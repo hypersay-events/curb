@@ -13,4 +13,7 @@ export default defineConfig({
       },
     },
   },
+  define: {
+    "process.env": process.env, // to fix a requirement from sanitize-html package
+  },
 });
