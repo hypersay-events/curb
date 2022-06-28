@@ -99,6 +99,18 @@ export const CaptionerInput: React.FC<{
           data={INPUT_LANGUAGES}
           placeholder="input language"
           style={{ width: "fit-content" }}
+          styles={(theme) => ({
+            input: {
+              // color: "#ffffff !important",
+              fontWeight: "bold",
+              backgroundColor: language
+                ? ""
+                : theme.fn.darken(theme.colors.red[8], 0),
+              "::placeholder": {
+                color: "rgba(255,255,255,0.5)",
+              },
+            },
+          })}
         />
         <Breadcrumbs separator="•" style={{ alignItems: "center" }}>
           <Text>
@@ -144,6 +156,21 @@ export const CaptionerInput: React.FC<{
           size="xl"
           style={{ flexGrow: 1 }}
           radius="md"
+          // variant="filled"
+          styles={(theme) => ({
+            input: {
+              "::placeholder": {
+                color: "rgba(255,255,255,0.5)",
+              },
+            },
+            filledVariant: {
+              color: "#ffffff !important",
+              fontWeight: "bold",
+              backgroundColor: language
+                ? theme.fn.darken(theme.colors.red[8], 0)
+                : "",
+            },
+          })}
         />
 
         <Button
