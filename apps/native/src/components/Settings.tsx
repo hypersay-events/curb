@@ -86,8 +86,6 @@ export const Settings = () => {
     theme.fn.rgba("#fd7e14", 1),
   ];
 
-  console.log({ captionsTheme });
-
   return (
     <Paper
       style={{
@@ -190,8 +188,6 @@ export const Settings = () => {
                 const capTheme = CAPTION_STYLES.find(
                   (i) => i.StyleId === k.StyleId
                 );
-
-                console.log({ capTheme });
                 return (
                   <Chip
                     key={k.StyleId}
@@ -217,7 +213,6 @@ export const Settings = () => {
                       },
                     }}
                     onChange={() => {
-                      console.log("send style", { capTheme });
                       setCaptionsTheme({
                         ...captionsTheme,
                         ...capTheme,
