@@ -1,7 +1,8 @@
 import { Text } from "@mantine/core";
-import { useCaptionsTheme } from "../hooks/useCaptionsTheme";
+import { storedThemeAtom } from "../hooks/useCaptionsTheme";
 import { textVide } from "text-vide";
 import { useEffect, useState } from "react";
+import { useAtom } from "jotai";
 
 interface ICaptionLine {
   text: string;
@@ -32,7 +33,7 @@ const getShadow = (size: number) => {
 };
 
 export const CaptionLine: React.FC<ICaptionLine> = ({ text }) => {
-  const { captionsTheme } = useCaptionsTheme();
+  const [captionsTheme] = useAtom(storedThemeAtom);
   const [localtext, setLocalText] = useState(text);
 
   useEffect(() => {

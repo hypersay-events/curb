@@ -1,5 +1,5 @@
 import { MantineColor } from "@mantine/core";
-import { useLocalStorage } from "@mantine/hooks";
+import { atomWithStorage } from "jotai/utils";
 
 export type CaptionStylePresets =
   | "whiteBlack"
@@ -126,104 +126,7 @@ export const DEFAULT: CaptionsTheme = {
   Mode: "cc",
 };
 
-export const useCaptionsTheme = () => {
-  const [fontSize, setFontSize] = useLocalStorage({
-    key: "font-size",
-    defaultValue: DEFAULT.FontSize,
-  });
-
-  const [styleId, setStyleId] = useLocalStorage({
-    key: "style-id",
-    defaultValue: DEFAULT.StyleId,
-  });
-
-  const [styleLabel, setStyleLabel] = useLocalStorage({
-    key: "style-label",
-    defaultValue: DEFAULT.StyleLabel,
-  });
-
-  const [textColor, setTextColor] = useLocalStorage({
-    key: "text-color",
-    defaultValue: DEFAULT.TextColor,
-  });
-
-  const [textBackground, setTextBackground] = useLocalStorage({
-    key: "text-background",
-    defaultValue: DEFAULT.TextBackground,
-  });
-
-  const [textStroke, setTextStroke] = useLocalStorage({
-    key: "text-stroke",
-    defaultValue: DEFAULT.TextStroke,
-  });
-
-  const [textWeight, setTextWeight] = useLocalStorage({
-    key: "text-weight",
-    defaultValue: DEFAULT.TextWeight,
-  });
-
-  const [lineHeight, setLineHeight] = useLocalStorage({
-    key: "line-height",
-    defaultValue: DEFAULT.LineHeight,
-  });
-
-  const [windowOpacity, setWindowOpacity] = useLocalStorage({
-    key: "window-opacity",
-    defaultValue: DEFAULT.WindowOpacity,
-  });
-
-  const [bionicReading, setBionicReading] = useLocalStorage({
-    key: "bionic-reading",
-    defaultValue: DEFAULT.BionicReading,
-  });
-
-  const [mode, setMode] = useLocalStorage({
-    key: "mode",
-    defaultValue: DEFAULT.Mode,
-  });
-
-  const setCaptionStyle = (newStyle: Partial<CaptionStyle>) => {
-    console.log("apply style", { newStyle });
-    if (newStyle.StyleId) setStyleId(newStyle.StyleId);
-    if (newStyle.StyleLabel) setStyleLabel(newStyle.StyleLabel);
-    if (newStyle.TextColor) setTextColor(newStyle.TextColor);
-    if (newStyle.TextBackground) setTextBackground(newStyle.TextBackground);
-    if (newStyle.TextStroke !== undefined) setTextStroke(newStyle.TextStroke);
-    if (newStyle.TextWeight !== undefined) setTextWeight(newStyle.TextWeight);
-    if (newStyle.LineHeight !== undefined) setLineHeight(newStyle.LineHeight);
-    if (newStyle.BionicReading !== undefined)
-      setBionicReading(newStyle.BionicReading);
-  };
-
-  const OVERRIDE: Partial<CaptionsTheme> = {
-    StyleId: styleId,
-    StyleLabel: styleLabel,
-    TextColor: textColor,
-    TextBackground: textBackground,
-    TextStroke: textStroke,
-    FontSize: fontSize,
-    TextWeight: textWeight,
-    LineHeight: lineHeight,
-    WindowOpacity: windowOpacity,
-    BionicReading: bionicReading,
-    Mode: mode,
-  };
-
-  const captionsTheme = { ...DEFAULT, ...OVERRIDE };
-
-  return {
-    captionsTheme,
-    setCaptionStyle,
-    setStyleId,
-    setStyleLabel,
-    setFontSize,
-    setTextColor,
-    setTextBackground,
-    setTextStroke,
-    setTextWeight,
-    setLineHeight,
-    setWindowOpacity,
-    setBionicReading,
-    setMode,
-  };
-};
+export const storedThemeAtom = atomWithStorage<CaptionsTheme>(
+  "jotaitheme",
+  DEFAULT
+);

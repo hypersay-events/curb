@@ -1,4 +1,4 @@
-import { Box, Global, MantineProvider } from "@mantine/core";
+import { Global, MantineProvider } from "@mantine/core";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import Settings from "./components/Settings";
