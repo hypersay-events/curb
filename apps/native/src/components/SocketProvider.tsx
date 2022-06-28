@@ -22,7 +22,6 @@ export const SocketProvider: React.FC<{
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    console.log("Connecting...", roomId, targetLang);
     const socket = io(
       `${VITE_CAPTIONS_ENDPOINT}/?targetLang=${targetLang}&roomName=${roomId}`
     );

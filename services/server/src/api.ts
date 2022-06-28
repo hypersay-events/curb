@@ -32,6 +32,8 @@ const api: FastifyPluginAsync<ApiOptions> = async (
       text: string;
       timestampStart: number;
       timestampEnd?: number;
+      transient?: boolean;
+      skipTranslate?: boolean;
     };
   }>("/caption", opts, async (request, _reply) => {
     const room = roomsManager.getOrCreateRoom(request.body.roomName);
@@ -40,6 +42,8 @@ const api: FastifyPluginAsync<ApiOptions> = async (
       text: request.body.text,
       timestampStart: request.body.timestampStart,
       timestampEnd: request.body.timestampEnd,
+      transient: request.body.transient,
+      skipTranslate: request.body.skipTranslate,
     });
     return { status: 200 };
   });

@@ -7,6 +7,8 @@ export interface Message {
   lang: string;
   timestampStart: number;
   timestampEnd?: number;
+  transient?: boolean;
+  skipTranslate?: boolean;
 }
 
 @autoInjectable()
@@ -22,12 +24,14 @@ export class Room extends EventEmitter {
 
   async addMessage(message: Message) {
     this.emit("message", message);
-    await this.captionDBService.saveCaption({
-      roomName: this.id,
-      sourceLanguage: message.lang,
-      text: message.text,
-      timestampStart: message.timestampStart,
-      timestampEnd: message.timestampEnd,
-    });
+    if (message.transient !== true) {
+      await this.captionDBService.saveCaption({
+        roomName: this.id,
+        sourceLanguage: message.lang,
+        text: message.text,
+        timestampStart: message.timestampStart,
+        timestampEnd: message.timestampEnd,
+      });
+    }
   }
 }
