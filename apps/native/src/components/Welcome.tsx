@@ -12,6 +12,8 @@ import {
 } from "@mantine/core";
 import imgUrl from "./hypersay-events-live-subtitles.svg";
 
+import TARGET_LANGS from "../languages";
+
 type onSubmitEventType =
   | React.MouseEvent<HTMLButtonElement>
   | React.FormEvent<HTMLFormElement>;
@@ -19,13 +21,6 @@ type onSubmitEventType =
 export interface WelcomeParams {
   setRoomIdAndLanguage: (roomId: string, targetLang: string) => void;
 }
-
-export const TARGET_LANGS = [
-  { value: "en", label: "English", flag: "🇬🇧" },
-  { value: "ro", label: "Romanian", flag: "🇷🇴" },
-  { value: "it", label: "Italian", flag: "🇮🇹" },
-  { value: "uk", label: "Ukrainian", flag: "🇺🇦" },
-];
 
 function Welcome({ setRoomIdAndLanguage }: WelcomeParams) {
   const [roomId, setRoomId] = useState("");
