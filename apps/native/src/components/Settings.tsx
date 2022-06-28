@@ -23,10 +23,12 @@ import { appWindow } from "@tauri-apps/api/window";
 import {
   CaptionsTheme,
   CAPTION_STYLES,
+  DEFAULT,
   storedThemeAtom,
 } from "../hooks/useCaptionsTheme";
 import CaptionLine from "./CaptionLine";
 import { useAtom } from "jotai";
+import { Icon } from "@iconify/react";
 
 export const STEP = 0.1;
 
@@ -364,13 +366,24 @@ export const Settings = () => {
             </Anchor>
           </Text>
         ) : null}
-
-        <Button
-          onClick={() => appWindow.close()}
-          style={{ alignSelf: "flex-start" }}
-        >
-          Done
-        </Button>
+        <Group style={{ width: "100%", justifyContent: "space-between" }}>
+          <Button
+            onClick={() => setCaptionsTheme(DEFAULT)}
+            style={{ alignSelf: "flex-start" }}
+            leftIcon={<Icon icon="tabler:refresh" width={20} height={20} />}
+            color="gray"
+            // variant="white"
+            disabled={JSON.stringify(DEFAULT) === JSON.stringify(captionsTheme)}
+          >
+            Reset theme
+          </Button>
+          <Button
+            onClick={() => appWindow.close()}
+            style={{ alignSelf: "flex-start" }}
+          >
+            Done
+          </Button>
+        </Group>
       </Stack>
     </Paper>
   );
