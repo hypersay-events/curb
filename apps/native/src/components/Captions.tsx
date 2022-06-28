@@ -12,6 +12,8 @@ import CaptionLine from "./CaptionLine";
 import { DEFAULT, storedThemeAtom } from "../hooks/useCaptionsTheme";
 import { useAtom } from "jotai";
 
+import llamaBase64 from "./llama.json";
+
 export interface CaptionsParams {
   onGoBack: () => void;
 }
@@ -93,6 +95,13 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
           ...captionsTheme,
           FontSize: DEFAULT.FontSize,
         }),
+    ],
+    [
+      "mod+L",
+      () =>
+        addLine(
+          `<img src="${llamaBase64}" style="height: 3em; transform: scaleX(-1)"/>`
+        ),
     ],
   ]);
 
