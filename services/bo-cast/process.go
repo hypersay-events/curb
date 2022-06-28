@@ -22,8 +22,8 @@ type Caption struct {
 func ProcessLines(name string, room *Room) {
 	for text := range room.LinesChan {
 		caption, err := json.Marshal(Caption{
-			TimestampStart: time.Now().Unix() * 10000,
-			TimestampEnd:   time.Now().Unix()*10000 + int64(len(text)*100),
+			TimestampStart: time.Now().Unix() * 1000,
+			TimestampEnd:   time.Now().Unix()*1000 + int64(len(text)*100),
 			RoomName:       name,
 			Lang:           room.Language,
 			Text:           text,
