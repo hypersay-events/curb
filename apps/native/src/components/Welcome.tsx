@@ -24,7 +24,7 @@ export interface WelcomeParams {
 
 function Welcome({ setRoomIdAndLanguage }: WelcomeParams) {
   const [roomId, setRoomId] = useState("");
-  const [targetLang, setTargetLang] = useState("uk");
+  const [targetLang, setTargetLang] = useState("en");
 
   const onRoomIdChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {

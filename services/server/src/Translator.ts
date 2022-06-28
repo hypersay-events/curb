@@ -37,7 +37,7 @@ export class Translator extends EventEmitter {
   }
 
   translateMessage = async (message: Message) => {
-    if (this.targetLang === "original") {
+    if (this.targetLang === "original" || this.targetLang === message.lang) {
       this.emit("translation", {
         roomName: this.room.id,
         text: message.text,
@@ -47,6 +47,11 @@ export class Translator extends EventEmitter {
       } as Translation);
       return;
     }
+
+    if (message.skipTranslate) {
+      return;
+    }
+
     const translation = await this.translationService.translate({
       targetLanguage: this.targetLang,
       sourceLanguage: message.lang,
@@ -62,13 +67,15 @@ export class Translator extends EventEmitter {
       timestampEnd: message.timestampEnd,
     } as Translation);
 
-    await this.captionDBService.saveCaption({
-      roomName: this.room.id,
-      sourceLanguage: message.lang,
-      targetLanguage: this.targetLang,
-      text: (translation || "").trim(),
-      timestampStart: message.timestampStart,
-      timestampEnd: message.timestampEnd,
-    });
+    if (message.transient !== true) {
+      await this.captionDBService.saveCaption({
+        roomName: this.room.id,
+        sourceLanguage: message.lang,
+        targetLanguage: this.targetLang,
+        text: (translation || "").trim(),
+        timestampStart: message.timestampStart,
+        timestampEnd: message.timestampEnd,
+      });
+    }
   };
 }

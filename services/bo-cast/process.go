@@ -15,6 +15,8 @@ type Caption struct {
 	RoomName       string `json:"roomName"`
 	Lang           string `json:"lang"`
 	Text           string `json:"text"`
+	Transient      bool   `json:"transient"`
+	SkipTranslate  bool   `json:"skipTranslate"`
 }
 
 func ProcessLines(name string, room *Room) {
@@ -25,6 +27,8 @@ func ProcessLines(name string, room *Room) {
 			RoomName:       name,
 			Lang:           room.Language,
 			Text:           text,
+			Transient:      true,
+			SkipTranslate:  false,
 		})
 
 		if err != nil {
