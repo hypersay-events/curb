@@ -96,7 +96,7 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
       "mod+L",
       () =>
         addLine(
-          `<img src="${llamaBase64}" style="height: 5em; transform: scaleX(-1)"/>`
+          `<img src="${llamaBase64}" style="height: 3em; transform: scaleX(-1)"/>`
         ),
     ],
   ]);
