@@ -57,23 +57,24 @@ func InitSsh() {
 						status += fmt.Sprintf("%s: %d / %d\n", roomName, room.Current, len(room.Lines))
 					}
 					wish.Println(s, status)
-					pty, _, active := s.Pty()
+					// pty, _, active := s.Pty()
 
-					if !active {
-						wish.Println(s, "Terminal inactive")
-					}
+					// if !active {
+					// 	wish.Println(s, "Terminal inactive")
+					// }
 
-					wish.Println(s, pty.Term)
-					c := make(chan ssh.Signal, 1)
-					s.Signals(c)
+					// wish.Println(s, pty.Term)
+					// c := make(chan ssh.Signal, 1)
+					// s.Signals(c)
 
-					go func() {
-						io.Copy(os.Stdin, s) // stdin
-					}()
-					// io.Copy(s, os.Stdout) // stdout
-					data := make([]byte, 600)
-					n, err := s.Read(data)
-					wish.Println(s, "Storage:", string(data[:n]), err)
+					// go func() {
+					// 	io.Copy(os.Stdin, s) // stdin
+					// }()
+					// // io.Copy(s, os.Stdout) // stdout
+					// data := make([]byte, 600)
+					// n, err := s.Read(data)
+					// wish.Println(s, "Storage:", string(data[:n]), err)
+
 					h(s)
 				}
 			},
