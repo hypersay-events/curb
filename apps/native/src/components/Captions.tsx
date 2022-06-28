@@ -115,7 +115,6 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
   const language = TARGET_LANGS.find((l) => l.value === targetLang);
 
   const openSettingsWindow = useCallback(() => {
-    console.log("called");
     const webview = new WebviewWindow("settings", {
       url: "settings.html",
       title: "Settings",
