@@ -51,6 +51,7 @@ export const TARGET_LANGS: Language[] = [
       "Ana are mere (mesaj de test)",
       "Salut! (mesaj de test)",
       "Bun venit (mesaj de test)",
+      "Meandrele concretului sfidează recursul la universalitate (mesaj de test)",
     ],
   },
   {
