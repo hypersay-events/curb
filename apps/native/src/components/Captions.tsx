@@ -206,8 +206,8 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
               <CaptionLine text={exampleLine} />
             </Box>
           ) : null}
-          {lines.map((line) => (
-            <Box key={line}>
+          {lines.map((line, idx) => (
+            <Box key={idx}>
               <CaptionLine text={line} />
             </Box>
           ))}

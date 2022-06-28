@@ -3,10 +3,19 @@ import { storedThemeAtom } from "../hooks/useCaptionsTheme";
 import { textVide } from "text-vide";
 import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
+import sanitizeHtml from "sanitize-html";
 
 interface ICaptionLine {
   text: string;
 }
+
+const htmlUnescapes: Record<string, string> = {
+  "&amp;": "&",
+  "&lt;": "<",
+  "&gt;": ">",
+  "&quot;": '"',
+  "&#39;": "'",
+};
 
 const getShadow = (size: number) => {
   const color = "rgba(0,0,0,1)"; /* black outline */
@@ -34,18 +43,38 @@ const getShadow = (size: number) => {
 
 export const CaptionLine: React.FC<ICaptionLine> = ({ text }) => {
   const [captionsTheme] = useAtom(storedThemeAtom);
-  const [localtext, setLocalText] = useState(text);
+  const [localtext, setLocalText] = useState("");
 
   useEffect(() => {
-    if (captionsTheme.BionicReading) {
-      // @ts-ignore
-      const videtext = textVide(text, [
-        `<span style={{ fontWeight: ${captionsTheme.TextWeight * 1.2}}}>`,
-        "</span>",
-      ]);
+    if (true || captionsTheme.BionicReading) {
+      const unescaped = text.replace(
+        /&(?:amp|lt|gt|quot|#39);/g,
+        (e) => htmlUnescapes[e] || ""
+      );
+
+      console.log(unescaped);
+      const videtext = textVide(
+        sanitizeHtml(unescaped, {
+          allowedTags: [],
+          allowedAttributes: {},
+          allowedIframeHostnames: [],
+        }),
+        // @ts-ignore
+        [
+          `<span style={{ fontWeight: ${captionsTheme.TextWeight * 1.2}}}>`,
+          "</span>",
+        ]
+      );
+      console.log(videtext);
       setLocalText(videtext);
     } else {
-      setLocalText(text);
+      setLocalText(
+        sanitizeHtml(text, {
+          allowedTags: ["b", "i", "em", "strong"],
+          allowedAttributes: {},
+          allowedIframeHostnames: [],
+        })
+      );
     }
   }, [captionsTheme.BionicReading, captionsTheme.TextWeight, text]);
 
