@@ -6,7 +6,7 @@ import { useLines } from "../hooks/useCaptionLines";
 import { appWindow, WebviewWindow } from "@tauri-apps/api/window";
 import { STEP } from "./Settings";
 import { SocketContext } from "./SocketProvider";
-import { TARGET_LANGS } from "./Welcome";
+import { englishFirstLiners, TARGET_LANGS } from "../languages";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import CaptionLine from "./CaptionLine";
 import { DEFAULT, storedThemeAtom } from "../hooks/useCaptionsTheme";
@@ -18,27 +18,23 @@ export interface CaptionsParams {
   onGoBack: () => void;
 }
 
-export const FIRST_LINERS = [
-  "It was a bright cold day in April, and the clocks were striking thirteen. [test]",
-  "As Gregor Samsa awoke one morning from uneasy dreams he found himself transformed in his bed into a gigantic insect.  [test]",
-  "I write this sitting in the kitchen sink. [test]",
-  "Ships at a distance have every man’s wish on board. [test]",
-  "The story so far: in the beginning, the universe was created. This has made a lot of people very angry and been widely regarded as a bad move. [test]",
-];
-
 export const Captions = function Captions({ onGoBack }: CaptionsParams) {
   const [isWindowHover, setIsWindowHover] = useState(false);
   const { socket, roomId, targetLang, isReady } = useContext(SocketContext);
   const [showExampleLine, setShowExampleLine] = useState(true);
-  const exampleLine = useMemo(
-    () => FIRST_LINERS[Math.floor(Math.random() * FIRST_LINERS.length)],
-    []
-  );
+  const [exampleLine, setExampleLine] = useState("");
+
+  useEffect(() => {
+    const firstLiners =
+      TARGET_LANGS.find((l) => l.value === (targetLang || "en"))?.firstLiners ||
+      englishFirstLiners;
+    setExampleLine(firstLiners[Math.floor(Math.random() * firstLiners.length)]);
+  }, [targetLang]);
 
   const [captionsTheme, setCaptionsTheme] = useAtom(storedThemeAtom);
   // const { captionsTheme, setFontSize } = useCaptionsTheme();
 
-  // const pickLiner = Math.floor(Math.random() * FIRST_LINERS.length);
+  // const pickLiner = Math.floor(Math.random() * firstLiners.length);
   const [parentRef] = useAutoAnimate<HTMLDivElement>(/* optional config */);
 
   const linesTimeout = captionsTheme.Mode === "cc" ? 10 * 1000 : 60 * 60 * 1000;
@@ -100,7 +96,7 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
       "mod+L",
       () =>
         addLine(
-          `<img src="${llamaBase64}" style="height: 3em; transform: scaleX(-1)"/>`
+          `<img src="${llamaBase64}" style="height: 5em; transform: scaleX(-1)"/>`
         ),
     ],
   ]);
@@ -178,7 +174,8 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
               <Icon icon="bi:arrow-left" />
             </ActionIcon>
             <Text size="sm">
-              {roomId} &middot; {language?.flag} — {isReady ? "ready" : "not"}
+              {roomId} &middot; {language?.flag} —{" "}
+              {isReady ? "ready" : "not ready"}
             </Text>
           </Group>
           <Group spacing={5}>
@@ -197,11 +194,13 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
           style={{
             position: "absolute",
             bottom: 0,
+            width: "100%",
           }}
           px="lg"
           pb="lg"
           data-tauri-drag-region
           ref={parentRef}
+          dir={language?.dir === "rtl" ? "rtl" : "ltr"}
         >
           {showExampleLine ? (
             <Box>

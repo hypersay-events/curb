@@ -18,7 +18,7 @@ import {
 } from "@mantine/core";
 import { MarksProps } from "@mantine/core/lib/components/Slider/Marks/Marks";
 import { useState } from "react";
-import { FIRST_LINERS } from "./Captions";
+import { englishFirstLiners } from "../languages";
 import { appWindow } from "@tauri-apps/api/window";
 import {
   CaptionsTheme,
@@ -49,7 +49,7 @@ export const Settings = () => {
   const [captionsTheme, setCaptionsTheme] = useAtom(storedThemeAtom);
 
   const [previewLine] = useState(
-    FIRST_LINERS[Math.floor(Math.random() * FIRST_LINERS.length)]
+    englishFirstLiners[Math.floor(Math.random() * englishFirstLiners.length)]
   );
 
   const FONTSIZE_MARKS: MarksProps["marks"] = [
