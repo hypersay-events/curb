@@ -30,6 +30,6 @@ jobs:
         run: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags="-w -s" -v -o bo-cast-windows-amd64.exe .
       - name: Release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
         with:
           files: bo-cast-*
+        # if: startsWith(github.ref, 'refs/tags/')
