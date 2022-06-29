@@ -6,6 +6,7 @@ require (
 	github.com/asticode/go-astisub v0.21.0
 	github.com/charmbracelet/wish v0.5.0
 	github.com/gliderlabs/ssh v0.3.4
+	github.com/joho/godotenv v1.4.0
 	golang.org/x/crypto v0.0.0-20220307211146-efcb8507fb70
 )
 
