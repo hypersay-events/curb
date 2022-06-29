@@ -94,7 +94,7 @@ func InitSsh() {
 
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
-	log.Printf("Starting SSH server on %s port %d", host, port)
+	log.Printf("Starting SSH server on %s:%d", host, port)
 	go func() {
 		if err = s.ListenAndServe(); err != nil {
 			log.Fatalln(err)
