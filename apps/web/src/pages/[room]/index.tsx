@@ -69,10 +69,7 @@ export default function Room() {
             }}
             p="md"
           >
-            <TranslationLines
-              roomName={roomName}
-              language={router.query.lang as string}
-            />
+            <TranslationLines roomName={roomName} />
           </Container>
         </ScrollArea>
         {/* Captioner area */}
