@@ -1,0 +1,35 @@
+name: Bo-Cast Go Binary Release
+
+on:
+  push:
+    paths:
+      - 'services/bo-cast/**'
+
+defaults:
+  run:
+    shell: bash
+    working-directory: services/bo-cast
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '>=1.18.3'
+      - run: go version
+      - name: Build Linux amd64
+        run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -v -o bo-cast-linux-arm64 .
+      - name: Build Mac amd64
+        run: CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags="-w -s" -v -o bo-cast-darwin-amd64 .
+      - name: Build Mac arm64
+        run: CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -ldflags="-w -s" -v -o bo-cast-darwin-arm64 .
+      - name: Windows
+        run: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags="-w -s" -v -o bo-cast-windows-amd64.exe .
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: bo-cast-*
