@@ -36,8 +36,10 @@ func ProcessLines(name string, room *Room) {
 			continue
 		}
 
-		resp, err := http.Post("https://hse-curbcut.fly.dev/caption", "application/json", bytes.NewBuffer(caption))
-		// resp, err := http.Post("http://localhost:4554/caption", "application/json", bytes.NewBuffer(caption))
+		resp, err := http.Post(
+			GetEnvWithFallback("CURBCUT_CAPTIONS_ENDPOINT", "http://localhost:4554/caption"),
+			"application/json",
+			bytes.NewBuffer(caption))
 
 		if err != nil {
 			log.Printf("Error posting caption: %s\n", err.Error())

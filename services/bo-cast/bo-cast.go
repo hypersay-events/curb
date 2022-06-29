@@ -2,9 +2,12 @@ package main
 
 import (
 	"sync"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	godotenv.Load()
 	LoadRooms()
 	var wg sync.WaitGroup
 
@@ -14,6 +17,8 @@ func main() {
 		go ProcessLines(roomName, room)
 	}
 
-	InitSsh()
+	if GetEnvWithFallback("CURBCUT_SSH_SERVER_ENABLED", "false") == "true" {
+		InitSsh()
+	}
 	wg.Wait()
 }

@@ -20,7 +20,8 @@ type Room struct {
 var Rooms = make(map[string]*Room)
 
 func LoadRooms() {
-	files, err := ioutil.ReadDir("./files")
+	srtDir := GetEnvWithFallback("CURBCUT_SRT_PATH", ".")
+	files, err := ioutil.ReadDir(srtDir)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,7 +39,7 @@ func LoadRooms() {
 		roomName := name[0 : len(name)-4]
 		lang := roomName[len(roomName)-2:]
 
-		srt, err := astisub.OpenFile(path.Join("./files", name))
+		srt, err := astisub.OpenFile(path.Join(srtDir, name))
 
 		if err != nil {
 			log.Printf("Could not open %s, %v\n", name, err)

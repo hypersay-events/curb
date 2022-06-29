@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
 
@@ -16,15 +17,16 @@ import (
 	gossh "golang.org/x/crypto/ssh"
 )
 
-const (
-	host = "localhost"
-	port = 23234
-)
-
 func InitSsh() {
+	host := GetEnvWithFallback("CURBCUT_SSH_SERVER_HOST", "localhost")
+	port, err := strconv.ParseInt(GetEnvWithFallback("CURBCUT_SSH_SERVER_PORT", "31337"), 10, 32)
+	if err != nil {
+		port = 31337
+	}
+
 	s, err := wish.NewServer(
 		wish.WithAddress(fmt.Sprintf("%s:%d", host, port)),
-		wish.WithHostKeyPath(".ssh/bo-cast-key"),
+		wish.WithHostKeyPath(GetEnvWithFallback("CURBCUT_SSH_SERVER_KEY", ".ssh/bo-cast-key")),
 		// wish.WithAuthorizedKeys(".ssh/authorized_keys"),
 		wish.WithPublicKeyAuth(func(ctx ssh.Context, key ssh.PublicKey) bool {
 			return true
@@ -38,11 +40,16 @@ func InitSsh() {
 					dinu, _, _, _, _ := ssh.ParseAuthorizedKey(
 						[]byte("ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPtY6Y1JNS6Q4XClWGYwH+bIEjgICd5bUqM3b1Du0rd3"),
 					)
+					macdinu, _, _, _, _ := ssh.ParseAuthorizedKey(
+						[]byte("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDbcpY2FSclHlus7I71tDdeiWEKYbxAJZBbpi3CzW5UcJI7Vlh2W1B5Eo7pf2gVp47tq0UG6n5e+jTYzWWWsL5HMEH9rAkhhJrZy4YVkit95L/3XKHWJGB6SYL0h+XCEqRisEmvmz/T5A6y4bfRzFo8DErvT56AWjeGrg4xEtH7z94PtJ0ipLjQMFdpAtZu00koq07gh/+Hk1JqSNpZBm6zTQULj26dFimUXItqPMdZAEq0jXIOJbI9NgiStSXOr42twOqbAQM6+YTmKGvAsKYxAhVipQY+Kg0j6swukDmDvnQQd3rUpjkOOBGJ0Qwijfn+Ak27OnxFVyGenyiLzh21"),
+					)
 					switch {
 					case ssh.KeysEqual(s.PublicKey(), fabrizio):
 						wish.Println(s, "Hey, Fabrizio!")
 					case ssh.KeysEqual(s.PublicKey(), dinu):
 						wish.Println(s, "Hey, Dinu!")
+					case ssh.KeysEqual(s.PublicKey(), macdinu):
+						wish.Println(s, "Hey, MacDinu!")
 					default:
 						wish.Println(s, "Hey, I don't know who you are!")
 						authorizedKey := gossh.MarshalAuthorizedKey(s.PublicKey())
