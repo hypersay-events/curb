@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'services/bo-cast/**'
+      - '.github/workflows/publish-native-release.yaml'
 
 defaults:
   run:
@@ -32,6 +33,10 @@ jobs:
         run: CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -ldflags="-w -s" -v -o bo-cast-${{ steps.tag.outputs.release_tag }}-darwin-arm64 .
       - name: Windows
         run: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags="-w -s" -v -o bo-cast-${{ steps.tag.outputs.release_tag }}-windows-amd64.exe .
+      - name: List all files
+        run: echo "All files list:" && ls -al
+      - name: List assets
+        run: echo "Executables" && ls -al bo-cast-*
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
