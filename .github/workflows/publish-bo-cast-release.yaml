@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - 'services/bo-cast/**'
-      - '.github/workflows/publish-native-release.yaml'
+      - '.github/workflows/publish-bo-cast-release.yaml'
 
 defaults:
   run:
