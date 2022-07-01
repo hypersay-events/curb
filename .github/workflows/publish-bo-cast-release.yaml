@@ -26,7 +26,7 @@ jobs:
           go-version: '>=1.18.3'
       - run: go version
       - name: Build Linux amd64
-        run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -v -o bo-cast-${{ steps.tag.outputs.release_tag }}-linux-arm64 .
+        run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -v -o bo-cast-${{ steps.tag.outputs.release_tag }}-linux-amd64 .
       - name: Build Mac amd64
         run: CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags="-w -s" -v -o bo-cast-${{ steps.tag.outputs.release_tag }}-darwin-amd64 .
       - name: Build Mac arm64
