@@ -49,13 +49,6 @@ const api: FastifyPluginAsync<ApiOptions> = async (
       return { error: "language" };
     }
 
-    console.log(
-      "Math.abs(request.body.timestampStart - Date.now())",
-      request.body.timestampStart,
-      Date.now(),
-      Math.abs(request.body.timestampStart - Date.now())
-    );
-
     if (
       typeof request.body.timestampStart !== "number" ||
       Math.abs(request.body.timestampStart - Date.now()) >= 12 * 60 * 60 * 1000

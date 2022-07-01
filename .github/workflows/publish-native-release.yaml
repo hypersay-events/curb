@@ -6,6 +6,7 @@ on:
       - production
     paths:
       - "apps/native/**"
+      - '.github/workflows/publish-native-release.yaml'
 
 defaults:
   run:
