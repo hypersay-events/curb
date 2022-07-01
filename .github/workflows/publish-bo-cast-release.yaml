@@ -1,38 +1,59 @@
 name: Bo-Cast Go Binary Release
 
 on:
-  release:
-    types: [created]
   push:
     paths:
       - 'services/bo-cast/**'
       - '.github/workflows/publish-bo-cast-release.yaml'
 
+defaults:
+  run:
+    shell: bash
+    working-directory: services/bo-cast
+
 jobs:
-  release:
-    name: Release Go Binary
+  build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        goos: [linux, windows, darwin]
-        goarch: ["386", amd64, arm64]
-        exclude:
-          - goarch: "386"
-            goos: darwin
-          - goarch: "386"
-            goos: linux
-          - goarch: "386"
-            goos: windows
-          - goarch: arm64
-            goos: windows
     steps:
-    - uses: actions/checkout@v3
-    - uses: wangyoucao577/go-release-action@v1.29
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        goos: ${{ matrix.goos }}
-        goarch: ${{ matrix.goarch }}
-        goversion: "https://dl.google.com/go/go1.13.1.linux-amd64.tar.gz"
-        project_path: "services/bo-cast/"
-        ldflags: "-w -s"
-        binary_name: "bocast"
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Generate release tag
+        id: tag
+        run: |
+          echo "::set-output name=release_tag::BoCast-$(date +"%Y-%m-%d-%H-%M")"
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '>=1.18.3'
+      - run: go version
+      - name: Build Linux amd64
+        run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -v -o bo-cast-${{ steps.tag.outputs.release_tag }}-linux-arm64 .
+      - name: Build Mac amd64
+        run: CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags="-w -s" -v -o bo-cast-${{ steps.tag.outputs.release_tag }}-darwin-amd64 .
+      - name: Build Mac arm64
+        run: CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -ldflags="-w -s" -v -o bo-cast-${{ steps.tag.outputs.release_tag }}-darwin-arm64 .
+      - name: Windows
+        run: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags="-w -s" -v -o bo-cast-${{ steps.tag.outputs.release_tag }}-windows-amd64.exe .
+      - name: List all files
+        run: echo "All files list:" && ls -al
+      - name: List assets
+        run: echo "Executables" && ls -al bo-cast-*
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag.outputs.release_tag }}
+          release_name: Release ${{ steps.tag.outputs.release_tag }}
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./bo-cast-${{ steps.tag.outputs.release_tag }}-linux-arm64
+          asset_name: bo-cast-${{ steps.tag.outputs.release_tag }}-linux-arm64
+          asset_content_type: application/octet-stream
+
