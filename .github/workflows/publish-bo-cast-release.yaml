@@ -1,6 +1,8 @@
 name: Bo-Cast Go Binary Release
 
 on:
+  release:
+    types: [created]
   push:
     paths:
       - 'services/bo-cast/**'
