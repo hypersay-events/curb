@@ -12,43 +12,29 @@ defaults:
     working-directory: services/bo-cast
 
 jobs:
-  build:
+  releases-matrix:
+    name: Release Go Binary
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, windows, darwin]
+        goarch: ["386", amd64, arm64]
+        exclude:
+          - goarch: "386"
+            goos: darwin
+          - goarch: "386"
+            goos: linux
+          - goarch: "386"
+            goos: windows
+          - goarch: arm64
+            goos: windows
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Generate release tag
-        id: tag
-        run: |
-          echo "::set-output name=release_tag::UserBuild_$(date +"%Y.%m.%d_%H-%M")"
-      - uses: actions/setup-go@v3
-        with:
-          go-version: '>=1.18.3'
-      - run: go version
-      - name: Build Linux amd64
-        run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -v -o bo-cast-${{ steps.tag.outputs.release_tag }}-linux-arm64 .
-      - name: Build Mac amd64
-        run: CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags="-w -s" -v -o bo-cast-${{ steps.tag.outputs.release_tag }}-darwin-amd64 .
-      - name: Build Mac arm64
-        run: CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -ldflags="-w -s" -v -o bo-cast-${{ steps.tag.outputs.release_tag }}-darwin-arm64 .
-      - name: Windows
-        run: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags="-w -s" -v -o bo-cast-${{ steps.tag.outputs.release_tag }}-windows-amd64.exe .
-      - name: List all files
-        run: echo "All files list:" && ls -al
-      - name: List assets
-        run: echo "Executables" && ls -al bo-cast-*
-      - name: Build
-        run: echo ${{ github.sha }} > Release.txt
-      - name: Test
-        run: cat Release.txt
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.tag.outputs.release_tag }}
-          files: |
-            Release.txt
-            bo-cast-${{ steps.tag.outputs.release_tag }}-linux-arm64
-            bo-cast-${{ steps.tag.outputs.release_tag }}-darwin-amd64
-            bo-cast-${{ steps.tag.outputs.release_tag }}-darwin-arm64
-            bo-cast-${{ steps.tag.outputs.release_tag }}-windows-amd64.exe
-
+    - uses: actions/checkout@v3
+    - uses: wangyoucao577/go-release-action@v1.29
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        goos: ${{ matrix.goos }}
+        goarch: ${{ matrix.goarch }}
+        goversion: "https://dl.google.com/go/go1.13.1.linux-amd64.tar.gz"
+        project_path: "."
+        binary_name: "bo-cast"
