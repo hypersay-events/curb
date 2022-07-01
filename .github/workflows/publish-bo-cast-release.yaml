@@ -47,13 +47,49 @@ jobs:
           release_name: Release ${{ steps.tag.outputs.release_tag }}
           draft: false
           prerelease: false
-      - name: Upload Release Asset
+      - name: Upload linux-amd64 Executable
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./services/bo-cast/bo-cast-${{ steps.tag.outputs.release_tag }}-*
+          asset_path: ./services/bo-cast/bo-cast-${{ steps.tag.outputs.release_tag }}-linux-amd64
+          asset_name: bo-cast-${{ steps.tag.outputs.release_tag }}-linux-amd64
+          asset_content_type: application/octet-stream
+      - name: Upload linux-arm64 Executable
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./services/bo-cast/bo-cast-${{ steps.tag.outputs.release_tag }}-linux-arm64
           asset_name: bo-cast-${{ steps.tag.outputs.release_tag }}-linux-arm64
+          asset_content_type: application/octet-stream
+      - name: Upload darwin-amd64 Executable
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./services/bo-cast/bo-cast-${{ steps.tag.outputs.release_tag }}-darwin-amd64
+          asset_name: bo-cast-${{ steps.tag.outputs.release_tag }}-darwin-amd64
+          asset_content_type: application/octet-stream
+      - name: Upload darwin-arm64 Executable
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./services/bo-cast/bo-cast-${{ steps.tag.outputs.release_tag }}-darwin-arm64
+          asset_name: bo-cast-${{ steps.tag.outputs.release_tag }}-darwin-arm64
+          asset_content_type: application/octet-stream
+      - name: Upload windows-amd64 Executable
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./services/bo-cast/bo-cast-${{ steps.tag.outputs.release_tag }}-windows-amd64
+          asset_name: bo-cast-${{ steps.tag.outputs.release_tag }}-windows-amd64
           asset_content_type: application/octet-stream
 
