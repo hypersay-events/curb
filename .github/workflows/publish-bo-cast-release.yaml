@@ -1,0 +1,88 @@
+name: Bo-Cast Go Binary Release
+
+on:
+  push:
+    branches:
+      - production
+    paths:
+      - 'services/bo-cast/**'
+      - '.github/workflows/publish-bo-cast-release.yaml'
+
+defaults:
+  run:
+    shell: bash
+    working-directory: services/bo-cast
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Generate release tag
+        id: tag
+        run: |
+          echo "::set-output name=release_tag::bo-cast-$(date +"%Y-%m-%d-%H-%M")"
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '>=1.18.3'
+      - run: go version
+      - name: Build Linux amd64
+        run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -v -o ${{ steps.tag.outputs.release_tag }}-linux-amd64 .
+      - name: Build Mac amd64
+        run: CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags="-w -s" -v -o ${{ steps.tag.outputs.release_tag }}-darwin-amd64 .
+      - name: Build Mac arm64
+        run: CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -ldflags="-w -s" -v -o ${{ steps.tag.outputs.release_tag }}-darwin-arm64 .
+      - name: Windows
+        run: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags="-w -s" -v -o ${{ steps.tag.outputs.release_tag }}-windows-amd64.exe .
+      - name: List all files
+        run: echo "All files list:" && ls -al
+      - name: List assets
+        run: echo "Executables" && ls -al bo-cast-*
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag.outputs.release_tag }}
+          release_name: Release ${{ steps.tag.outputs.release_tag }}
+          draft: false
+          prerelease: false
+      - name: Upload linux-amd64 Executable
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./services/bo-cast/${{ steps.tag.outputs.release_tag }}-linux-amd64
+          asset_name: ${{ steps.tag.outputs.release_tag }}-linux-amd64
+          asset_content_type: application/octet-stream
+      - name: Upload darwin-amd64 Executable
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./services/bo-cast/${{ steps.tag.outputs.release_tag }}-darwin-amd64
+          asset_name: ${{ steps.tag.outputs.release_tag }}-darwin-amd64
+          asset_content_type: application/octet-stream
+      - name: Upload darwin-arm64 Executable
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./services/bo-cast/${{ steps.tag.outputs.release_tag }}-darwin-arm64
+          asset_name: ${{ steps.tag.outputs.release_tag }}-darwin-arm64
+          asset_content_type: application/octet-stream
+      - name: Upload windows-amd64 Executable
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./services/bo-cast/${{ steps.tag.outputs.release_tag }}-windows-amd64
+          asset_name: ${{ steps.tag.outputs.release_tag }}-windows-amd64
+          asset_content_type: application/octet-stream
+

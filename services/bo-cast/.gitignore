@@ -1,4 +1,5 @@
 bo-cast
+bo-cast-*
 *.exe
 *.exe~
 *.dll
