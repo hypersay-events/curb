@@ -46,26 +46,27 @@ export const CaptionLine: React.FC<ICaptionLine> = ({ text }) => {
   const [localtext, setLocalText] = useState("");
 
   useEffect(() => {
-    if (true || captionsTheme.BionicReading) {
+    if (captionsTheme.BionicReading) {
       const unescaped = text.replace(
         /&(?:amp|lt|gt|quot|#39);/g,
         (e) => htmlUnescapes[e] || ""
       );
 
-      console.log(unescaped);
-      const videtext = textVide(
-        sanitizeHtml(unescaped, {
-          allowedTags: [],
-          allowedAttributes: {},
-          allowedIframeHostnames: [],
-        }),
-        // @ts-ignore
-        [
-          `<span style={{ fontWeight: ${captionsTheme.TextWeight * 1.2}}}>`,
-          "</span>",
-        ]
+      const sanitized = sanitizeHtml(unescaped, {
+        allowedTags: [],
+        allowedAttributes: {},
+        allowedIframeHostnames: [],
+      });
+      const videtext = unescaped.replace(/[\w\s,?!]+/g, (fragement) =>
+        textVide(
+          fragement,
+          // @ts-ignore
+          [
+            `<span style={{ fontWeight: ${captionsTheme.TextWeight * 1.2}}}>`,
+            "</span>",
+          ]
+        )
       );
-      console.log(videtext);
       setLocalText(videtext);
     } else {
       setLocalText(
