@@ -122,10 +122,10 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
       height: 600,
     });
     webview.once("tauri://created", function () {
-      console.log("view window successfully created");
+      console.info("view window successfully created");
     });
     webview.once("tauri://error", function (e) {
-      console.log(e);
+      console.error(e);
     });
     webview.setFocus();
   }, []);
