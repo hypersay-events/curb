@@ -22,6 +22,15 @@ export const TARGET_LANGS: Language[] = [
     firstLiners: englishFirstLiners,
   },
   {
+    value: "fr",
+    label: "French",
+    flag: "🇫🇷",
+    firstLiners: [
+      "Bonjour! (ceci est un message d'essai)",
+      "Salut! (ceci est un message d'essai)",
+    ],
+  },
+  {
     value: "ar",
     label: "Arabic",
     flag: "AR",
