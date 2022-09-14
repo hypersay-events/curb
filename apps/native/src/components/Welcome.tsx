@@ -10,7 +10,7 @@ import {
   NativeSelect,
   Center,
 } from "@mantine/core";
-import imgUrl from "./hypersay-events-live-subtitles.svg";
+import imgUrl from "./hf-multilanguage.svg";
 
 import TARGET_LANGS from "../languages";
 
@@ -73,8 +73,8 @@ function Welcome({ setRoomIdAndLanguage }: WelcomeParams) {
         </ActionIcon>
       </Group>
       <Center style={{ height: "100%" }}>
-        <Group data-tauri-drag-region align="center">
-          <Box style={{ width: 250 }}>
+        <Group data-tauri-drag-region align="center" spacing="xl">
+          <Box style={{ width: 220 }}>
             <img
               src={imgUrl}
               alt="Hypersay Live Captions Logo"
