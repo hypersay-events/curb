@@ -7,8 +7,8 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "Hypersay Captions Client",
-    "version": "0.1.2"
+    "productName": "Hypersay Multilanguage Client",
+    "version": "0.1.3"
   },
   "tauri": {
     "allowlist": {
