@@ -25,13 +25,17 @@ export class Room extends EventEmitter {
   async addMessage(message: Message) {
     this.emit("message", message);
     if (message.transient !== true) {
-      await this.captionDBService.saveCaption({
-        roomName: this.id,
-        sourceLanguage: message.lang,
-        text: message.text,
-        timestampStart: message.timestampStart,
-        timestampEnd: message.timestampEnd,
-      });
+      try {
+        await this.captionDBService.saveCaption({
+          roomName: this.id,
+          sourceLanguage: message.lang,
+          text: message.text,
+          timestampStart: message.timestampStart,
+          timestampEnd: message.timestampEnd,
+        });
+      } catch (e) {
+        console.error(e);
+      }
     }
   }
 }
