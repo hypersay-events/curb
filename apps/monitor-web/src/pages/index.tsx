@@ -14,7 +14,7 @@ const Home: NextPage = () => {
   return (
     <div>
       <Head>
-        <title>Curb monitor app</title>
+        <title>Hypersay Multilanguage Monitor App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Stack sx={{ maxWidth: "400px" }}>
