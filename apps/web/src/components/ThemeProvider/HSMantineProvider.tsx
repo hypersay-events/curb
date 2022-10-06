@@ -51,7 +51,7 @@ export const HSMantineProvider: React.FC<
     cursorType: "pointer",
     defaultRadius: "lg",
     colorScheme: colorScheme,
-    primaryColor: "red",
+    primaryColor: "hsOrange",
     // primaryShade: { light: 5, dark: 7 },
     colors: {
       // Brand Colors over-writing default Mantine colors
@@ -84,32 +84,6 @@ export const HSMantineProvider: React.FC<
         "#d37c06",
         "#ba6d05",
       ],
-    },
-    components: {
-      Menu: {
-        styles: (theme: MantineTheme) => ({
-          dropdown: {
-            backgroundColor: theme.colors.hseDarkPurple[5],
-            borderColor: theme.colors.gray[7],
-            boxShadow: theme.shadows.xl,
-          },
-        }),
-      },
-      Button: {
-        defaultProps: {
-          size: "md",
-          compact: true,
-        },
-      },
-      Input: {
-        styles: (theme: MantineTheme) => ({
-          input: {
-            "&:focus": {
-              borderColor: theme.colors.gray[7],
-            },
-          },
-        }),
-      },
     },
     loader: "dots",
     fontFamily: `"Inter var", system-ui, sans-serif`,

@@ -1,5 +1,4 @@
 import type { AppProps } from "next/app";
-import { MantineProvider } from "@mantine/core";
 import { HSMantineProvider } from "../components/ThemeProvider/HSMantineProvider";
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -8,10 +7,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       theme={{
         colorScheme: "dark",
         defaultRadius: "sm",
-        primaryColor: "orange",
+        primaryColor: "hsOrange",
       }}
-      withGlobalStyles
-      withNormalizeCSS
     >
       <Component {...pageProps} />
     </HSMantineProvider>
