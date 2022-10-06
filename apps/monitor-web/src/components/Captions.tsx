@@ -1,12 +1,26 @@
 import { useContext, useEffect, useState } from "react";
-import { Icon } from "@iconify/react";
-import { ActionIcon, Box, Group, Stack, Text } from "@mantine/core";
+import {
+  ActionIcon,
+  AppShell,
+  Badge,
+  Box,
+  Drawer,
+  Group,
+  Header,
+  Modal,
+  Select,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { useLines } from "../hooks/useCaptionLines";
 import { SocketContext } from "./SocketProvider";
 import { TARGET_LANGS } from "../utils/languages";
 import CaptionLine from "./CaptionLine";
 import { storedThemeAtom } from "../atoms/theme";
 import { useAtom } from "jotai";
+import { IconSettings, IconArrowLeft } from "@tabler/icons";
+import Settings from "./Settings";
+import { useRouter } from "next/router";
 
 // import llamaBase64 from "./llama.json";
 
@@ -18,6 +32,8 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
   const { socket, roomId, targetLang, isReady } = useContext(SocketContext);
   const [showExampleLine, setShowExampleLine] = useState(true);
   const [exampleLine, setExampleLine] = useState("");
+  const router = useRouter();
+  const [lang, setLang] = useState<string>(router.query.lang as string);
 
   useEffect(() => {
     const firstLiners =
@@ -87,6 +103,12 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
   // ]);
 
   useEffect(() => {
+    if (lang !== router.query.lang) {
+      router.push(`/${router.query.room}/${lang}`);
+    }
+  }, [lang, router]);
+
+  useEffect(() => {
     const onTranslate = (translation: { text: string }) => {
       addLine(translation.text);
       setShowExampleLine(false);
@@ -100,72 +122,79 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
   const language = TARGET_LANGS.find((l) => l.value === targetLang);
 
   return (
-    <Box
-      sx={(theme) => ({
-        // position: "relative",
-        // backgroundColor: isWindowHover
-        //   ? theme.colors.gray[9]
-        //   : `rgba(0,0,0,${captionsTheme.WindowOpacity})`,
-        // backdropFilter: "blur(5px)",
-        // transition: "background-color 0.5s ease",
-        // height: "100vh",
-        // borderRadius: theme.radius.lg,
-        // overflow: "hidden",
-      })}
-    >
-      <Stack
-        align="stretch"
-        style={{
-          height: "100%",
-          position: "relative",
-        }}
-      >
-        {/* Menu */}
-        <Group
-          sx={(theme) => ({
-            // opacity: isWindowHover ? 1 : 0,
-            // transition: "opacity 0.5s ease",
-            alignSelf: "flex-end",
-            // backgroundColor: theme.colors.gray[9],
-            zIndex: 1,
-            justifyContent: "space-between",
-            width: "100%",
-          })}
-          pl="sm"
-          spacing={5}
-        >
-          <Group spacing={5}>
-            <ActionIcon onClick={onGoBack}>
-              <Icon icon="bi:arrow-left" />
-            </ActionIcon>
-            <Text size="sm">
-              {roomId} {language?.flag} {isReady ? "ready" : "not ready"}
-            </Text>
-          </Group>
-        </Group>
-        <Box
-          style={{
-            // position: "absolute",
-            // bottom: 0,
-            width: "100%",
+    <AppShell
+      styles={{ root: { backgroundColor: captionsTheme.TextBackground } }}
+      header={
+        <Header
+          height={70}
+          p="md"
+          sx={{
+            opacity: 0.2,
+            "&:hover": { opacity: 1 },
+            transition: "opacity 0.5s ease-in-out",
           }}
-          px="lg"
-          pb="lg"
-          // ref={parentRef}
-          dir={language?.dir === "rtl" ? "rtl" : "ltr"}
         >
-          {showExampleLine ? (
-            <Box>
-              <CaptionLine text={exampleLine} />
-            </Box>
-          ) : null}
-          {lines.map((line, idx) => (
-            <Box key={idx}>
-              <CaptionLine text={line} />
-            </Box>
-          ))}
-        </Box>
-      </Stack>
-    </Box>
+          <Group sx={{ width: "100%", justifyContent: "space-between" }}>
+            <Group>
+              <ActionIcon onClick={onGoBack}>
+                <IconArrowLeft />
+              </ActionIcon>
+              <Badge>{roomId}</Badge>
+              {language?.flag}
+              <Text>{isReady ? "ready" : "not ready"}</Text>
+            </Group>
+            <Group>
+              <Select
+                // label="Language"
+                placeholder="Pick one"
+                clearable
+                data={TARGET_LANGS.map((l) => ({
+                  value: l.value,
+                  label: l.label,
+                }))}
+                value={lang}
+                onChange={(l) => setLang(l as string)}
+                // size="lg"
+              />
+              <Settings />
+            </Group>
+          </Group>
+        </Header>
+      }
+    >
+      <Box>
+        <Stack
+          align="stretch"
+          style={{
+            height: "100%",
+            position: "relative",
+          }}
+        >
+          {/* Menu */}
+          <Box
+            style={{
+              // position: "absolute",
+              // bottom: 0,
+              width: "100%",
+            }}
+            px="lg"
+            pb="lg"
+            // ref={parentRef}
+            dir={language?.dir === "rtl" ? "rtl" : "ltr"}
+          >
+            {showExampleLine ? (
+              <Box>
+                <CaptionLine text={exampleLine} />
+              </Box>
+            ) : null}
+            {lines.map((line, idx) => (
+              <Box key={idx}>
+                <CaptionLine text={line} />
+              </Box>
+            ))}
+          </Box>
+        </Stack>
+      </Box>
+    </AppShell>
   );
 };
