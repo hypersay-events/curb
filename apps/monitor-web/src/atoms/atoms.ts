@@ -1,5 +1,5 @@
 import { atom } from "jotai";
+import { AVAILABLE_LANGUAGES } from "../utils/languages";
 
-type Languages = "en" | "fr";
-
-export const languageAtom = atom<Languages | null>(null);
+export const languageAtom = atom<keyof typeof AVAILABLE_LANGUAGES | null>(null);
+export const roomAtom = atom<string>("");
