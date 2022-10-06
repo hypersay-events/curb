@@ -9,13 +9,18 @@ export type CaptionStylePresets =
   | "whiteBlue"
   | "yellowBlue"
   | "bionic"
+  | "chroma"
   | "custom";
+
+export type TextAlignmentsType = "left" | "center" | "right";
 
 export type CaptionStyle = {
   StyleId: CaptionStylePresets;
   StyleLabel: string;
   TextColor: MantineColor;
   TextBackground: MantineColor;
+  TextAlign: TextAlignmentsType;
+  ScreenBackground: MantineColor | undefined;
   TextStroke: number;
   TextWeight: number;
   LineHeight: number;
@@ -34,6 +39,8 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     StyleLabel: "White / Black",
     TextColor: "rgba(255, 255, 255, 1)",
     TextBackground: "rgba(0, 0, 0, 1)",
+    ScreenBackground: undefined,
+    TextAlign: "left",
     TextStroke: 0,
     TextWeight: 700,
     LineHeight: 1,
@@ -44,6 +51,8 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     StyleLabel: "Yellow / Black",
     TextColor: "rgba(255, 225, 0, 1)",
     TextBackground: "rgba(0, 0, 0, 1)",
+    ScreenBackground: undefined,
+    TextAlign: "left",
     TextStroke: 0,
     TextWeight: 700,
     LineHeight: 1,
@@ -54,6 +63,8 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     StyleLabel: "Black / Yellow",
     TextColor: "rgba(0, 0, 0, 1)",
     TextBackground: "rgba(255, 225, 0, 1)",
+    ScreenBackground: undefined,
+    TextAlign: "left",
     TextStroke: 0,
     TextWeight: 700,
     LineHeight: 1,
@@ -64,6 +75,8 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     StyleLabel: "White / Blue",
     TextColor: "rgba(255, 255, 255, 1)",
     TextBackground: "rgba(56, 65, 224, 1)",
+    ScreenBackground: undefined,
+    TextAlign: "left",
     TextStroke: 0,
     TextWeight: 700,
     LineHeight: 1,
@@ -74,6 +87,8 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     StyleLabel: "Yellow / Blue",
     TextColor: "rgba(255, 225, 0, 1)",
     TextBackground: "rgba(56, 65, 224, 1)",
+    ScreenBackground: undefined,
+    TextAlign: "left",
     TextStroke: 0,
     TextWeight: 700,
     LineHeight: 1,
@@ -84,7 +99,21 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     StyleLabel: "No Background",
     TextColor: "rgba(255, 255, 255, 1)",
     TextBackground: "transparent",
+    ScreenBackground: undefined,
+    TextAlign: "left",
     TextStroke: 3,
+    TextWeight: 700,
+    LineHeight: 1,
+    BionicReading: false,
+  },
+  {
+    StyleId: "chroma",
+    StyleLabel: "Chroma",
+    TextColor: "rgba(255, 255, 255, 1)",
+    TextBackground: "rgba(0, 0, 0, 1)",
+    ScreenBackground: "rgba(0, 255, 0, 1)",
+    TextAlign: "left",
+    TextStroke: 0,
     TextWeight: 700,
     LineHeight: 1,
     BionicReading: false,
@@ -94,6 +123,8 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     StyleLabel: "Bionic (exp)",
     TextColor: "rgba(255, 255, 255, 1)",
     TextBackground: "rgba(0, 0, 0, 1)",
+    ScreenBackground: undefined,
+    TextAlign: "left",
     TextStroke: 0,
     TextWeight: 400,
     LineHeight: 1,
@@ -104,6 +135,8 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     StyleLabel: "Custom",
     TextColor: "rgba(255, 255, 255, 1)",
     TextBackground: "rgba(0, 0, 0, 1)",
+    ScreenBackground: "rgba(0, 0, 0, 1)",
+    TextAlign: "left",
     TextStroke: 0,
     TextWeight: 700,
     LineHeight: 1,
@@ -117,6 +150,8 @@ export const DEFAULT: CaptionsTheme = {
   StyleLabel: "White / Black",
   TextColor: "rgba(255, 255, 255, 1)",
   TextBackground: "rgba(0, 0, 0, 1)",
+  ScreenBackground: undefined,
+  TextAlign: "left",
   TextStroke: 0,
   TextWeight: 700,
   LineHeight: 1,

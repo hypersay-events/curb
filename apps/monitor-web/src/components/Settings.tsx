@@ -13,6 +13,9 @@ import {
   Group,
   Paper,
   Radio,
+  ScrollArea,
+  SegmentedControl,
+  Select,
   SimpleGrid,
   Slider,
   Stack,
@@ -29,11 +32,21 @@ import {
   CAPTION_STYLES,
   DEFAULT,
   storedThemeAtom,
+  TextAlignmentsType,
 } from "../atoms/theme";
 import CaptionLine from "./CaptionLine";
 import { useAtom } from "jotai";
 import { useRouter } from "next/router";
-import { IconRefresh, IconSettings } from "@tabler/icons";
+import {
+  IconRefresh,
+  IconSettings,
+  IconCheck,
+  IconLetterT,
+  IconLineHeight,
+  IconAlignLeft,
+  IconAlignCenter,
+  IconAlignRight,
+} from "@tabler/icons";
 
 export const STEP = 0.1;
 
@@ -41,22 +54,29 @@ interface SettingsBox extends StackProps {
   label: string;
 }
 
-const SettingsBox: React.FC<SettingsBox> = ({ label = "Label", children }) => {
+const SettingsBox: React.FC<SettingsBox & { noBorder?: boolean }> = ({
+  label,
+  children,
+  noBorder,
+}) => {
   return (
-    <Stack
+    <Group
       sx={(theme) => ({
         width: "100%",
-        height: "100%",
-        border: "1px solid",
+        // height: "100%",
+        border: noBorder ? 0 : "1px solid",
         borderRadius: theme.radius.md,
         borderColor: theme.colors.gray[8],
       })}
-      spacing="sm"
+      spacing="md"
       p="sm"
+      noWrap
     >
-      <Text size="sm">{label}</Text>
-      {children}
-    </Stack>
+      <Text size="sm" sx={{ width: 150 }}>
+        {label}
+      </Text>
+      <Box sx={{ flexGrow: 1, width: "100%" }}>{children}</Box>
+    </Group>
   );
 };
 
@@ -64,6 +84,7 @@ export const Settings = () => {
   const router = useRouter();
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
+  // const [chromaMode, setChromeMode] = useState(false);
 
   const [captionsTheme, setCaptionsTheme] = useAtom(storedThemeAtom);
 
@@ -116,77 +137,86 @@ export const Settings = () => {
         title="Subtitle settings"
         position="top"
         padding="xl"
-        size="75%"
+        size="100%"
       >
-        <Grid sx={{ width: "100%" }}>
+        <Box
+          sx={(theme) => ({
+            width: "100%",
+            height: `calc(100% - ${theme.spacing.xl * 2}px)`,
+            display: "grid",
+            gridTemplateColumns: "auto 1fr",
+            gridTemplateRows: "1fr",
+            gap: theme.spacing.md,
+          })}
+        >
           {/* Text Size */}
-          <Grid.Col sm={12} lg={6}>
-            <SettingsBox label="Text size">
-              <Slider
-                mb="lg"
-                defaultValue={captionsTheme.FontSize}
-                min={2}
-                max={5}
-                step={STEP}
-                styles={{
-                  label: { display: "none" },
-                }}
-                onChange={(e) =>
-                  setCaptionsTheme({ ...captionsTheme, FontSize: e })
-                }
-                marks={FONTSIZE_MARKS}
-                precision={1}
-                sx={{ maxWidth: 600 }}
-              />
-            </SettingsBox>
-          </Grid.Col>
+          <ScrollArea
+            offsetScrollbars
+            sx={{ height: "100%", position: "relative" }}
+          >
+            <Stack sx={{ maxWidth: 600, height: "100%" }}>
+              <SettingsBox label="Text size">
+                <Group>
+                  <IconLetterT size={12} />
+                  <Slider
+                    defaultValue={captionsTheme.FontSize}
+                    min={2}
+                    max={5}
+                    step={STEP}
+                    styles={{
+                      label: { display: "none" },
+                    }}
+                    onChange={(e) =>
+                      setCaptionsTheme({ ...captionsTheme, FontSize: e })
+                    }
+                    // marks={FONTSIZE_MARKS}
+                    precision={1}
+                    sx={{ flexGrow: 1 }}
+                  />
+                  <IconLetterT />
+                </Group>
+              </SettingsBox>
 
-          {/* Window Opacity */}
-          <Grid.Col sm={12} lg={6}>
-            <SettingsBox label="Mode">
-              <Radio.Group
-                value={captionsTheme.Mode}
-                onChange={(e) =>
-                  setCaptionsTheme({
-                    ...captionsTheme,
-                    Mode: e as CaptionsTheme["Mode"],
-                  })
-                }
-              >
-                <Radio
-                  value="cc"
-                  label={
-                    <Stack spacing={0} ml="sm" mt={-20}>
-                      <Text style={{ lineHeight: "100%" }} size="lg">
-                        Subtitles
-                      </Text>
-                      <Text color="dimmed" size="xs">
-                        Text disappears after 10s
-                      </Text>
-                    </Stack>
+              <SettingsBox label="Mode">
+                <Radio.Group
+                  value={captionsTheme.Mode}
+                  onChange={(e) =>
+                    setCaptionsTheme({
+                      ...captionsTheme,
+                      Mode: e as CaptionsTheme["Mode"],
+                    })
                   }
-                  mr={20}
-                />
-                <Radio
-                  value="transcript"
-                  label={
-                    <Stack spacing={0} ml="sm" mt={-20}>
-                      <Text style={{ lineHeight: "100%" }} size="lg">
-                        Transcript
-                      </Text>
-                      <Text color="dimmed" size="xs">
-                        Text is kept permanently on screen
-                      </Text>
-                    </Stack>
-                  }
-                />
-              </Radio.Group>
-            </SettingsBox>
-          </Grid.Col>
-
-          <Grid.Col span={12}>
-            <SettingsBox label="Caption styles">
-              <Box>
+                >
+                  <Radio
+                    value="cc"
+                    label={
+                      <Stack spacing={0} ml="sm" mt={-20}>
+                        <Text style={{ lineHeight: "100%" }} size="lg">
+                          Subtitles
+                        </Text>
+                        <Text color="dimmed" size="xs">
+                          Text disappears after 10s
+                        </Text>
+                      </Stack>
+                    }
+                    mr={20}
+                  />
+                  <Radio
+                    value="transcript"
+                    label={
+                      <Stack spacing={0} ml="sm" mt={-20}>
+                        <Text style={{ lineHeight: "100%" }} size="lg">
+                          Transcript
+                        </Text>
+                        <Text color="dimmed" size="xs">
+                          Text is preserved on screen
+                        </Text>
+                      </Stack>
+                    }
+                  />
+                </Radio.Group>
+              </SettingsBox>
+              <SettingsBox label="Caption styles">
                 <Group spacing={10}>
                   {CAPTION_STYLES.map((k) => {
                     const capTheme = CAPTION_STYLES.find(
@@ -224,112 +254,241 @@ export const Settings = () => {
                     );
                   })}
                 </Group>
-              </Box>
-            </SettingsBox>
-          </Grid.Col>
+              </SettingsBox>
+              {/* <Text size="sm">Custom Style</Text> */}
+              {/* Custom */}
+              {captionsTheme.StyleId === "custom" ? (
+                <>
+                  {/* Colors */}
+                  <Box
+                    sx={{
+                      border: "1px solid",
+                      borderRadius: theme.radius.md,
+                      borderColor: theme.colors.gray[8],
+                    }}
+                  >
+                    <SettingsBox label="Text color" noBorder>
+                      <ColorInput
+                        // label="Text color"
+                        value={captionsTheme.TextColor}
+                        onChange={(e) =>
+                          setCaptionsTheme({ ...captionsTheme, TextColor: e })
+                        }
+                        format="rgba"
+                        swatches={swatches}
+                      />
+                    </SettingsBox>
+                    <SettingsBox label="Text Background" noBorder>
+                      <ColorInput
+                        // label="Text background color"
+                        value={captionsTheme.TextBackground}
+                        onChange={(e) =>
+                          setCaptionsTheme({
+                            ...captionsTheme,
+                            TextBackground: e,
+                          })
+                        }
+                        format="rgba"
+                        swatches={swatches}
+                      />
+                    </SettingsBox>
+                    <SettingsBox label="Screen background" noBorder>
+                      <ColorInput
+                        // label="Screen background color"
+                        value={captionsTheme.ScreenBackground}
+                        onChange={(e) =>
+                          setCaptionsTheme({
+                            ...captionsTheme,
+                            ScreenBackground: e,
+                          })
+                        }
+                        format="rgba"
+                        swatches={swatches}
+                      />
+                    </SettingsBox>
+                  </Box>
 
-          {/* Custom */}
-          {captionsTheme.StyleId === "custom" ? (
-            <Grid.Col span={12}>
-              <Text size="sm">Custom Style</Text>
-              <Stack spacing={30}>
-                <Group>
-                  <ColorInput
-                    label="Text color"
-                    value={captionsTheme.TextColor}
-                    onChange={(e) =>
-                      setCaptionsTheme({ ...captionsTheme, TextColor: e })
-                    }
-                    format="rgba"
-                    swatches={swatches}
-                  />
-                  <ColorInput
-                    label="Background color"
-                    value={captionsTheme.TextBackground}
-                    onChange={(e) =>
-                      setCaptionsTheme({
-                        ...captionsTheme,
-                        TextBackground: e,
-                      })
-                    }
-                    format="rgba"
-                    swatches={swatches}
-                  />
-                </Group>
-                <Group style={{ width: 400 }}>
-                  <Text size="sm">Text weight</Text>
-                  <Slider
-                    style={{ flexGrow: 1 }}
-                    defaultValue={captionsTheme.TextWeight}
-                    min={100}
-                    max={900}
-                    // label={(size) =>
-                    //   TEXTWEIGHT_MARKS.find((mark) => mark.value === size)?.label ||
-                    //   size.toFixed(1)
-                    // }
-                    step={10}
-                    // styles={{ markLabel: { display: "none" } }}
-                    onChange={(e) =>
-                      setCaptionsTheme({ ...captionsTheme, TextWeight: e })
-                    }
-                    marks={TEXTWEIGHT_MARKS}
-                    precision={0}
-                  />
-                </Group>
-                <Group style={{ width: 400 }}>
-                  <Text size="sm">Text stroke</Text>
-                  <Slider
-                    style={{ flexGrow: 1 }}
-                    defaultValue={captionsTheme.TextStroke}
-                    min={0}
-                    max={10}
-                    // label={(size) =>
-                    //   TEXTWEIGHT_MARKS.find((mark) => mark.value === size)?.label ||
-                    //   size.toFixed(1)
-                    // }
-                    step={1}
-                    // styles={{ markLabel: { display: "none" } }}
-                    onChange={(e) =>
-                      setCaptionsTheme({ ...captionsTheme, TextStroke: e })
-                    }
-                    // marks={TEXTWEIGHT_MARKS}
-                    precision={0}
-                  />
-                </Group>
-                <Group style={{ width: 400 }}>
-                  <Text size="sm">Line spacing</Text>
-                  <Slider
-                    style={{ flexGrow: 1 }}
-                    defaultValue={captionsTheme.LineHeight}
-                    min={1}
-                    max={2}
-                    // label={(size) =>
-                    //   TEXTWEIGHT_MARKS.find((mark) => mark.value === size)?.label ||
-                    //   size.toFixed(1)
-                    // }
-                    step={0.1}
-                    // styles={{ markLabel: { display: "none" } }}
-                    onChange={(e) =>
-                      setCaptionsTheme({ ...captionsTheme, LineHeight: e })
-                    }
-                    // marks={TEXTWEIGHT_MARKS}
-                    precision={2}
-                  />
-                </Group>
-                <Switch
-                  label="Enable Bionic Reading"
-                  checked={captionsTheme.BionicReading}
-                  onChange={(e) =>
-                    setCaptionsTheme({
-                      ...captionsTheme,
-                      BionicReading: e.currentTarget.checked,
-                    })
+                  <Box
+                    sx={{
+                      border: "1px solid",
+                      borderRadius: theme.radius.md,
+                      borderColor: theme.colors.gray[8],
+                    }}
+                  >
+                    <SettingsBox label="Text weight" noBorder>
+                      <Group>
+                        <IconLetterT stroke={1} />
+                        <Slider
+                          style={{ flexGrow: 1 }}
+                          defaultValue={captionsTheme.TextWeight}
+                          min={100}
+                          max={900}
+                          step={10}
+                          onChange={(e) =>
+                            setCaptionsTheme({
+                              ...captionsTheme,
+                              TextWeight: e,
+                            })
+                          }
+                          // marks={TEXTWEIGHT_MARKS}
+                          precision={0}
+                          sx={{ flexGrow: 1 }}
+                        />
+                        <IconLetterT stroke={5} />
+                      </Group>
+                    </SettingsBox>
+
+                    <SettingsBox label="Text stroke" noBorder>
+                      <Group>
+                        <Box sx={{ position: "relative" }}>
+                          <IconLetterT stroke={5} color="white" />
+                          <IconLetterT
+                            stroke={2}
+                            color={theme.colors.gray[8]}
+                            style={{ position: "absolute", top: 0, left: 0 }}
+                          />
+                        </Box>
+                        <Slider
+                          style={{ flexGrow: 1 }}
+                          defaultValue={captionsTheme.TextStroke}
+                          min={0}
+                          max={10}
+                          // label={(size) =>
+                          //   TEXTWEIGHT_MARKS.find((mark) => mark.value === size)?.label ||
+                          //   size.toFixed(1)
+                          // }
+                          step={1}
+                          // styles={{ markLabel: { display: "none" } }}
+                          onChange={(e) =>
+                            setCaptionsTheme({
+                              ...captionsTheme,
+                              TextStroke: e,
+                            })
+                          }
+                          // marks={TEXTWEIGHT_MARKS}
+                          precision={0}
+                          sx={{ flexGrow: 1 }}
+                        />
+                      </Group>
+                    </SettingsBox>
+                    <SettingsBox label="Line spacing" noBorder>
+                      <Group>
+                        <IconLineHeight />
+                        <Slider
+                          style={{ flexGrow: 1 }}
+                          defaultValue={captionsTheme.LineHeight}
+                          min={1}
+                          max={2}
+                          // label={(size) =>
+                          //   TEXTWEIGHT_MARKS.find((mark) => mark.value === size)?.label ||
+                          //   size.toFixed(1)
+                          // }
+                          step={0.1}
+                          // styles={{ markLabel: { display: "none" } }}
+                          onChange={(e) =>
+                            setCaptionsTheme({
+                              ...captionsTheme,
+                              LineHeight: e,
+                            })
+                          }
+                          // marks={TEXTWEIGHT_MARKS}
+                          precision={2}
+                          sx={{ flexGrow: 1 }}
+                        />
+                      </Group>
+                    </SettingsBox>
+                  </Box>
+
+                  <SettingsBox label="Bionic reading">
+                    <Switch
+                      label={
+                        captionsTheme.BionicReading ? "Enabled" : "Disabled"
+                      }
+                      checked={captionsTheme.BionicReading}
+                      onChange={(e) =>
+                        setCaptionsTheme({
+                          ...captionsTheme,
+                          BionicReading: e.currentTarget.checked,
+                        })
+                      }
+                    />
+                  </SettingsBox>
+                  <SettingsBox label="Text alignment">
+                    <SegmentedControl
+                      data={[
+                        {
+                          label: (
+                            <Center>
+                              <IconAlignLeft />
+                              <Box ml={10}>Left</Box>
+                            </Center>
+                          ),
+                          value: "left",
+                        },
+                        {
+                          label: (
+                            <Center>
+                              <IconAlignCenter />
+                              <Box ml={10}>Center</Box>
+                            </Center>
+                          ),
+                          value: "center",
+                        },
+                        {
+                          label: (
+                            <Center>
+                              <IconAlignRight />
+                              <Box ml={10}>Right</Box>
+                            </Center>
+                          ),
+                          value: "right",
+                        },
+                      ]}
+                      onChange={(e) =>
+                        setCaptionsTheme({
+                          ...captionsTheme,
+                          TextAlign: e as TextAlignmentsType,
+                        })
+                      }
+                      value={captionsTheme.TextAlign}
+                    />
+                  </SettingsBox>
+                </>
+              ) : null}
+              <Group
+                sx={{
+                  width: "100%",
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                }}
+              >
+                <Button
+                  onClick={() => setCaptionsTheme(DEFAULT)}
+                  leftIcon={<IconRefresh size={20} />}
+                  color="gray"
+                  disabled={
+                    JSON.stringify(DEFAULT) === JSON.stringify(captionsTheme)
                   }
-                />
-              </Stack>
-            </Grid.Col>
-          ) : null}
-          {captionsTheme.BionicReading ? (
+                  compact={false}
+                  sx={{ flexGrow: 1 }}
+                >
+                  Reset theme
+                </Button>
+                <Button
+                  onClick={() => setOpened(false)}
+                  compact={false}
+                  leftIcon={<IconCheck size={20} />}
+                  sx={{ flexGrow: 1 }}
+                >
+                  Done
+                </Button>
+              </Group>
+            </Stack>
+          </ScrollArea>
+
+          {/* {captionsTheme.BionicReading ? (
             <Grid.Col span={12}>
               <Text color="dimmed">
                 Bionic Reading is an experimental mode that speeds up reading by
@@ -339,19 +498,22 @@ export const Settings = () => {
                 </Anchor>
               </Text>
             </Grid.Col>
-          ) : null}
+          ) : null} */}
 
+          {/* Preview */}
           <Center
             style={{
               flexGrow: 1,
               borderRadius: theme.radius.lg,
-              background: `repeating-linear-gradient(
-              45deg,
-              #606dbc,
-              #606dbc 10px,
-              #465298 10px,
-              #465298 20px
-            )`,
+              //     background: `repeating-linear-gradient(
+              //   45deg,
+              //   #606dbc,
+              //   #606dbc 10px,
+              //   #465298 10px,
+              //   #465298 20px
+              // )`,
+              backgroundColor:
+                captionsTheme.ScreenBackground || captionsTheme.TextBackground,
               overflow: "hidden",
               position: "relative",
               height: "100%",
@@ -362,39 +524,12 @@ export const Settings = () => {
               style={{
                 backgroundColor: `rgba(0,0,0,${captionsTheme.WindowOpacity})`,
                 ...theme.fn.cover(),
+                textAlign: captionsTheme.TextAlign,
               }}
             />
             <CaptionLine text={previewLine} />
           </Center>
-        </Grid>
-
-        <Group
-          style={{
-            width: "100%",
-            justifyContent: "space-between",
-            position: "fixed",
-            bottom: 0,
-            left: 0,
-          }}
-          p="md"
-        >
-          <Button
-            onClick={() => setCaptionsTheme(DEFAULT)}
-            style={{ alignSelf: "flex-start" }}
-            leftIcon={<IconRefresh size={20} />}
-            color="gray"
-            // variant="white"
-            disabled={JSON.stringify(DEFAULT) === JSON.stringify(captionsTheme)}
-          >
-            Reset theme
-          </Button>
-          <Button
-            onClick={() => setOpened(false)}
-            style={{ alignSelf: "flex-start" }}
-          >
-            Done
-          </Button>
-        </Group>
+        </Box>
       </Drawer>
     </>
   );

@@ -123,7 +123,12 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
 
   return (
     <AppShell
-      styles={{ root: { backgroundColor: captionsTheme.TextBackground } }}
+      styles={{
+        root: {
+          backgroundColor:
+            captionsTheme.ScreenBackground || captionsTheme.TextBackground,
+        },
+      }}
       header={
         <Header
           height={70}

@@ -87,6 +87,7 @@ export const CaptionLine: React.FC<ICaptionLine> = ({ text }) => {
         display: "inline",
         fontSize: `clamp(18px, ${captionsTheme.FontSize}vw, 200px)`,
         fontWeight: captionsTheme.TextWeight,
+        textAlign: captionsTheme.TextAlign,
         textShadow:
           captionsTheme.TextStroke > 0
             ? getShadow(captionsTheme.TextStroke)
