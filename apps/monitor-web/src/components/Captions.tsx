@@ -4,10 +4,8 @@ import {
   AppShell,
   Badge,
   Box,
-  Drawer,
   Group,
   Header,
-  Modal,
   Select,
   Stack,
   Text,
@@ -18,7 +16,7 @@ import { TARGET_LANGS } from "../utils/languages";
 import CaptionLine from "./CaptionLine";
 import { storedThemeAtom } from "../atoms/theme";
 import { useAtom } from "jotai";
-import { IconSettings, IconArrowLeft } from "@tabler/icons";
+import { IconArrowLeft } from "@tabler/icons";
 import Settings from "./Settings";
 import { useRouter } from "next/router";
 
@@ -33,7 +31,6 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
   const [showExampleLine, setShowExampleLine] = useState(true);
   const [exampleLine, setExampleLine] = useState("");
   const router = useRouter();
-  const [lang, setLang] = useState<string>(router.query.lang as string);
 
   useEffect(() => {
     const firstLiners =
@@ -103,12 +100,6 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
   // ]);
 
   useEffect(() => {
-    if (lang !== router.query.lang) {
-      router.push(`/${router.query.room}/${lang}`);
-    }
-  }, [lang, router]);
-
-  useEffect(() => {
     const onTranslate = (translation: { text: string }) => {
       addLine(translation.text);
       setShowExampleLine(false);
@@ -157,8 +148,8 @@ export const Captions = function Captions({ onGoBack }: CaptionsParams) {
                   value: l.value,
                   label: l.label,
                 }))}
-                value={lang}
-                onChange={(l) => setLang(l as string)}
+                value={targetLang}
+                onChange={(l) => router.push(`/${router.query.room}/${l}`)}
                 // size="lg"
               />
               <Settings />
