@@ -33,6 +33,7 @@ import {
   DEFAULT,
   storedThemeAtom,
   TextAlignmentsType,
+  TextVerticalAlignmentsType,
 } from "../atoms/theme";
 import CaptionLine from "./CaptionLine";
 import { useAtom } from "jotai";
@@ -46,7 +47,14 @@ import {
   IconAlignLeft,
   IconAlignCenter,
   IconAlignRight,
+  IconLayoutAlignTop,
+  IconLayoutAlignCenter,
+  IconLayoutAlignBottom,
+  IconLayoutAlignMiddle,
 } from "@tabler/icons";
+import { Preview } from "./Preview";
+import { kMaxLength } from "buffer";
+import { useMediaQuery } from "@mantine/hooks";
 
 export const STEP = 0.1;
 
@@ -85,12 +93,9 @@ export const Settings = () => {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   // const [chromaMode, setChromeMode] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 900px)");
 
   const [captionsTheme, setCaptionsTheme] = useAtom(storedThemeAtom);
-
-  const [previewLine] = useState(
-    englishFirstLiners[Math.floor(Math.random() * englishFirstLiners.length)]
-  );
 
   const FONTSIZE_MARKS: MarksProps["marks"] = [
     { value: 2.1, label: "small" },
@@ -136,23 +141,26 @@ export const Settings = () => {
         onClose={() => setOpened(false)}
         title="Subtitle settings"
         position="top"
-        padding="xl"
         size="100%"
+        padding="md"
       >
         <Box
           sx={(theme) => ({
             width: "100%",
-            height: `calc(100% - ${theme.spacing.xl * 2}px)`,
+            height: `calc(100% - ${theme.spacing.xl * 1.8}px)`,
             display: "grid",
-            gridTemplateColumns: "auto 1fr",
-            gridTemplateRows: "1fr",
+            gridTemplateColumns: isMobile ? "1fr" : "auto 1fr",
+            gridTemplateRows: isMobile ? "auto 1fr auto" : "1fr auto",
+            gridTemplateAreas: isMobile
+              ? '"settings" "preview" "menu"'
+              : '"settings preview" "menu menu"',
             gap: theme.spacing.md,
           })}
         >
-          {/* Text Size */}
+          {/* Side */}
           <ScrollArea
             offsetScrollbars
-            sx={{ height: "100%", position: "relative" }}
+            sx={{ height: "100%", position: "relative", gridArea: "settings" }}
           >
             <Stack sx={{ maxWidth: 600, height: "100%" }}>
               <SettingsBox label="Text size">
@@ -218,7 +226,24 @@ export const Settings = () => {
               </SettingsBox>
               <SettingsBox label="Caption styles">
                 <Group spacing={10}>
-                  {CAPTION_STYLES.map((k) => {
+                  <Select
+                    data={CAPTION_STYLES.filter((s) =>
+                      isMobile ? s.StyleId !== "custom" : true
+                    ).map((k) => {
+                      return {
+                        label: k.StyleLabel,
+                        value: k.StyleId,
+                      };
+                    })}
+                    value={captionsTheme.StyleId}
+                    onChange={(e) => {
+                      setCaptionsTheme({
+                        ...captionsTheme,
+                        ...CAPTION_STYLES.find((i) => i.StyleId === e),
+                      });
+                    }}
+                  />
+                  {/* {CAPTION_STYLES.map((k) => {
                     const capTheme = CAPTION_STYLES.find(
                       (i) => i.StyleId === k.StyleId
                     );
@@ -252,10 +277,10 @@ export const Settings = () => {
                         {k.StyleLabel}
                       </Chip>
                     );
-                  })}
+                  })} */}
                 </Group>
               </SettingsBox>
-              {/* <Text size="sm">Custom Style</Text> */}
+
               {/* Custom */}
               {captionsTheme.StyleId === "custom" ? (
                 <>
@@ -453,82 +478,86 @@ export const Settings = () => {
                       value={captionsTheme.TextAlign}
                     />
                   </SettingsBox>
+                  <SettingsBox label="Text vertical alignment">
+                    <SegmentedControl
+                      data={[
+                        // {
+                        //   label: (
+                        //     <Center>
+                        //       <IconLayoutAlignTop />
+                        //       <Box ml={10}>Top</Box>
+                        //     </Center>
+                        //   ),
+                        //   value: "top",
+                        // },
+                        {
+                          label: (
+                            <Center>
+                              <IconLayoutAlignMiddle />
+                              <Box ml={10}>Center</Box>
+                            </Center>
+                          ),
+                          value: "center",
+                        },
+                        {
+                          label: (
+                            <Center>
+                              <IconLayoutAlignBottom />
+                              <Box ml={10}>Bottom</Box>
+                            </Center>
+                          ),
+                          value: "bottom",
+                        },
+                      ]}
+                      onChange={(e) =>
+                        setCaptionsTheme({
+                          ...captionsTheme,
+                          TextVerticalAlign: e as TextVerticalAlignmentsType,
+                        })
+                      }
+                      value={captionsTheme.TextVerticalAlign}
+                    />
+                  </SettingsBox>
                 </>
               ) : null}
-              <Group
-                sx={{
-                  width: "100%",
-                  position: "absolute",
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                }}
-              >
-                <Button
-                  onClick={() => setCaptionsTheme(DEFAULT)}
-                  leftIcon={<IconRefresh size={20} />}
-                  color="gray"
-                  disabled={
-                    JSON.stringify(DEFAULT) === JSON.stringify(captionsTheme)
-                  }
-                  compact={false}
-                  sx={{ flexGrow: 1 }}
-                >
-                  Reset theme
-                </Button>
-                <Button
-                  onClick={() => setOpened(false)}
-                  compact={false}
-                  leftIcon={<IconCheck size={20} />}
-                  sx={{ flexGrow: 1 }}
-                >
-                  Done
-                </Button>
-              </Group>
             </Stack>
           </ScrollArea>
 
-          {/* {captionsTheme.BionicReading ? (
-            <Grid.Col span={12}>
-              <Text color="dimmed">
-                Bionic Reading is an experimental mode that speeds up reading by
-                helping you focus on the first letters in a word.{" "}
-                <Anchor href="https://bionic-reading.com/" target="_blank">
-                  read more here
-                </Anchor>
-              </Text>
-            </Grid.Col>
-          ) : null} */}
+          {/* Button Menu */}
+          <Group
+            sx={{
+              width: "100%",
+              gridArea: "menu",
+              borderTop: "1px solid",
+              borderColor: theme.colors.gray[8],
+              justifyContent: "flex-end",
+            }}
+            pt="md"
+          >
+            <Button
+              onClick={() => setCaptionsTheme(DEFAULT)}
+              leftIcon={<IconRefresh size={20} />}
+              color="gray"
+              disabled={
+                JSON.stringify(DEFAULT) === JSON.stringify(captionsTheme)
+              }
+              compact={false}
+              // sx={{ flexGrow: 1 }}
+            >
+              Reset theme
+            </Button>
+            <Button
+              onClick={() => setOpened(false)}
+              compact={false}
+              leftIcon={<IconCheck size={20} />}
+              // sx={{ flexGrow: 1 }}
+            >
+              Done
+            </Button>
+          </Group>
 
           {/* Preview */}
-          <Center
-            style={{
-              flexGrow: 1,
-              borderRadius: theme.radius.lg,
-              //     background: `repeating-linear-gradient(
-              //   45deg,
-              //   #606dbc,
-              //   #606dbc 10px,
-              //   #465298 10px,
-              //   #465298 20px
-              // )`,
-              backgroundColor:
-                captionsTheme.ScreenBackground || captionsTheme.TextBackground,
-              overflow: "hidden",
-              position: "relative",
-              height: "100%",
-            }}
-            p="xl"
-          >
-            <Box
-              style={{
-                backgroundColor: `rgba(0,0,0,${captionsTheme.WindowOpacity})`,
-                ...theme.fn.cover(),
-                textAlign: captionsTheme.TextAlign,
-              }}
-            />
-            <CaptionLine text={previewLine} />
-          </Center>
+          <Preview style={{ gridArea: "preview" }} />
         </Box>
       </Drawer>
     </>

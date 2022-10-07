@@ -1,4 +1,4 @@
-import { TextInput } from "@mantine/core";
+import { Global, TextInput } from "@mantine/core";
 import type { AppProps } from "next/app";
 import { DARK_PURPLE } from ".";
 import { HSMantineProvider } from "../components/ThemeProvider/HSMantineProvider";
@@ -30,6 +30,14 @@ function MyApp({ Component, pageProps }: AppProps) {
         },
       }}
     >
+      <Global
+        styles={(theme) => ({
+          "@keyframes line-highlight": {
+            "0%": { color: theme.colors.red[7] },
+            "100%": { color: theme.white },
+          },
+        })}
+      />
       <Component {...pageProps} />
     </HSMantineProvider>
   );

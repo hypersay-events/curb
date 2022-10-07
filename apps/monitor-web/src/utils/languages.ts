@@ -1,4 +1,4 @@
-interface Language {
+export interface Language {
   value: string;
   label: string;
   flag: string;

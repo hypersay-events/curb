@@ -19,7 +19,8 @@ export const SocketProvider: React.FC<{
   children,
   roomId,
   targetLang,
-  endpoint = process.env.VITE_CAPTIONS_ENDPOINT || "http://localhost:4554",
+  endpoint = process.env.NEXT_PUBLIC_CAPTIONS_ENDPOINT ||
+    "http://localhost:4554",
 }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isReady, setIsReady] = useState(false);

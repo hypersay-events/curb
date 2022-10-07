@@ -13,15 +13,17 @@ export type CaptionStylePresets =
   | "custom";
 
 export type TextAlignmentsType = "left" | "center" | "right";
+export type TextVerticalAlignmentsType = "center" | "bottom";
 
 export type CaptionStyle = {
   StyleId: CaptionStylePresets;
-  StyleLabel: string;
-  TextColor: MantineColor;
-  TextBackground: MantineColor;
-  TextAlign: TextAlignmentsType;
   ScreenBackground: MantineColor | undefined;
+  StyleLabel: string;
+  TextBackground: MantineColor;
+  TextColor: MantineColor;
   TextStroke: number;
+  TextAlign: TextAlignmentsType;
+  TextVerticalAlign: TextVerticalAlignmentsType;
   TextWeight: number;
   LineHeight: number;
   BionicReading: boolean;
@@ -41,6 +43,7 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     TextBackground: "rgba(0, 0, 0, 1)",
     ScreenBackground: undefined,
     TextAlign: "left",
+    TextVerticalAlign: "bottom",
     TextStroke: 0,
     TextWeight: 700,
     LineHeight: 1,
@@ -53,6 +56,7 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     TextBackground: "rgba(0, 0, 0, 1)",
     ScreenBackground: undefined,
     TextAlign: "left",
+    TextVerticalAlign: "bottom",
     TextStroke: 0,
     TextWeight: 700,
     LineHeight: 1,
@@ -65,6 +69,7 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     TextBackground: "rgba(255, 225, 0, 1)",
     ScreenBackground: undefined,
     TextAlign: "left",
+    TextVerticalAlign: "bottom",
     TextStroke: 0,
     TextWeight: 700,
     LineHeight: 1,
@@ -77,6 +82,7 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     TextBackground: "rgba(56, 65, 224, 1)",
     ScreenBackground: undefined,
     TextAlign: "left",
+    TextVerticalAlign: "bottom",
     TextStroke: 0,
     TextWeight: 700,
     LineHeight: 1,
@@ -89,6 +95,7 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     TextBackground: "rgba(56, 65, 224, 1)",
     ScreenBackground: undefined,
     TextAlign: "left",
+    TextVerticalAlign: "bottom",
     TextStroke: 0,
     TextWeight: 700,
     LineHeight: 1,
@@ -101,6 +108,7 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     TextBackground: "transparent",
     ScreenBackground: undefined,
     TextAlign: "left",
+    TextVerticalAlign: "bottom",
     TextStroke: 3,
     TextWeight: 700,
     LineHeight: 1,
@@ -113,6 +121,7 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     TextBackground: "rgba(0, 0, 0, 1)",
     ScreenBackground: "rgba(0, 255, 0, 1)",
     TextAlign: "left",
+    TextVerticalAlign: "bottom",
     TextStroke: 0,
     TextWeight: 700,
     LineHeight: 1,
@@ -125,6 +134,7 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     TextBackground: "rgba(0, 0, 0, 1)",
     ScreenBackground: undefined,
     TextAlign: "left",
+    TextVerticalAlign: "bottom",
     TextStroke: 0,
     TextWeight: 400,
     LineHeight: 1,
@@ -137,6 +147,7 @@ export const CAPTION_STYLES: CaptionStyle[] = [
     TextBackground: "rgba(0, 0, 0, 1)",
     ScreenBackground: "rgba(0, 0, 0, 1)",
     TextAlign: "left",
+    TextVerticalAlign: "bottom",
     TextStroke: 0,
     TextWeight: 700,
     LineHeight: 1,
@@ -152,6 +163,7 @@ export const DEFAULT: CaptionsTheme = {
   TextBackground: "rgba(0, 0, 0, 1)",
   ScreenBackground: undefined,
   TextAlign: "left",
+  TextVerticalAlign: "bottom",
   TextStroke: 0,
   TextWeight: 700,
   LineHeight: 1,
