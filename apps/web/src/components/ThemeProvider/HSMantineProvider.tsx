@@ -48,7 +48,7 @@ export const HSMantineProvider: React.FC<
   const hsTheme: MantineThemeOverride = {
     black: "#141414",
     white: "#ffffff",
-    cursorType: "pointer",
+    // cursorType: "pointer",
     defaultRadius: "lg",
     colorScheme: colorScheme,
     primaryColor: "hsOrange",

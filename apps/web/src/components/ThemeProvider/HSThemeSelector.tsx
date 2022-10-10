@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
+import React, { FC } from "react";
 
-import { IconSun, IconMoonStars } from '@tabler/icons';
+import { IconSun, IconMoonStars } from "@tabler/icons";
 
 import {
   ActionIcon,
@@ -8,9 +8,9 @@ import {
   Menu,
   MenuItemProps,
   useMantineColorScheme,
-} from '@mantine/core';
+} from "@mantine/core";
 
-export const HSThemeSelector: FC<ActionIconProps> = (props) => {
+export const HSThemeSelector: FC<ActionIconProps<"button">> = (props) => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   return (
     <ActionIcon
@@ -18,23 +18,25 @@ export const HSThemeSelector: FC<ActionIconProps> = (props) => {
       aria-label="switch theme"
       onClick={() => toggleColorScheme()}
     >
-      {colorScheme === 'light' ? <IconMoonStars /> : <IconSun />}
+      {colorScheme === "light" ? <IconMoonStars /> : <IconSun />}
     </ActionIcon>
   );
 };
 
-export const HSThemeSelectorAsMenuItem: FC<MenuItemProps> = ({ ...props }) => {
+export const HSThemeSelectorAsMenuItem: FC<MenuItemProps<"button">> = ({
+  ...props
+}) => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
   const icon =
-    colorScheme === 'light' ? (
+    colorScheme === "light" ? (
       <IconMoonStars size={14} />
     ) : (
       <IconSun size={14} />
     );
   return (
     <Menu.Item onClick={() => toggleColorScheme()} icon={icon} {...props}>
-      {`${colorScheme === 'light' ? 'Dark' : 'Light'} theme`}
+      {`${colorScheme === "light" ? "Dark" : "Light"} theme`}
     </Menu.Item>
   );
 };
