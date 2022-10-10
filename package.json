@@ -10,5 +10,8 @@
     "apps/web",
     "apps/monitor-web",
     "apps/native"
-  ]
+  ],
+  "devDependencies": {
+    "syncpack": "^8.2.4"
+  }
 }

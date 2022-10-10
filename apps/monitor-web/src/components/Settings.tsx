@@ -1,22 +1,15 @@
 import {
   ActionIcon,
-  AlphaSlider,
-  Anchor,
   Box,
   Button,
   Center,
-  Chip,
   ColorInput,
-  Container,
   Drawer,
-  Grid,
   Group,
-  Paper,
   Radio,
   ScrollArea,
   SegmentedControl,
   Select,
-  SimpleGrid,
   Slider,
   Stack,
   StackProps,
@@ -24,9 +17,7 @@ import {
   Text,
   useMantineTheme,
 } from "@mantine/core";
-import { MarksProps } from "@mantine/core/lib/components/Slider/Marks/Marks";
 import { useState } from "react";
-import { englishFirstLiners } from "../utils/languages";
 import {
   CaptionsTheme,
   CAPTION_STYLES,
@@ -35,7 +26,6 @@ import {
   TextAlignmentsType,
   TextVerticalAlignmentsType,
 } from "../atoms/theme";
-import CaptionLine from "./CaptionLine";
 import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 import {
@@ -47,14 +37,12 @@ import {
   IconAlignLeft,
   IconAlignCenter,
   IconAlignRight,
-  IconLayoutAlignTop,
-  IconLayoutAlignCenter,
   IconLayoutAlignBottom,
   IconLayoutAlignMiddle,
 } from "@tabler/icons";
 import { Preview } from "./Preview";
-import { kMaxLength } from "buffer";
 import { useMediaQuery } from "@mantine/hooks";
+import { MarksProps } from "@mantine/core/lib/Slider/Marks/Marks";
 
 export const STEP = 0.1;
 
