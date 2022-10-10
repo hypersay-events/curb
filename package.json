@@ -8,6 +8,7 @@
   "workspaces": [
     "services/server",
     "apps/web",
+    "apps/monitor-web",
     "apps/native"
   ]
 }
