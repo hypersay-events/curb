@@ -23,12 +23,16 @@ export const useMonitor = <T>(roomName: string, language?: string) => {
       const socket = io(
         `${NEXT_PUBLIC_CAPTIONS_ENDPOINT}?targetLang=${language}&roomName=${roomName}`
       );
+      const onTranslation = (translation: any) => {
+        setTranslation(translation);
+      };
       socket.once("connect", () => {
         setIsConnected(true);
-        socket.on("translation", (translation) => {
-          setTranslation(translation);
-        });
       });
+      socket.on("translation", onTranslation);
+      return () => {
+        socket.off("translation", onTranslation);
+      };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language, roomName /* , setTranslation */]);

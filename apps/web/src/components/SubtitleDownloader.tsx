@@ -58,6 +58,7 @@ export const SubtitleDownloader: React.FC<{ roomName: string }> = ({
               <Button
                 onClick={() => downloadSubtitles("srt", lang.value)}
                 size="xs"
+                color="hsOrange"
               >
                 Download SRT
               </Button>
@@ -66,6 +67,7 @@ export const SubtitleDownloader: React.FC<{ roomName: string }> = ({
               <Button
                 onClick={() => downloadSubtitles("vtt", lang.value)}
                 size="xs"
+                color="hsOrange"
               >
                 Download WebVTT
               </Button>

@@ -104,8 +104,8 @@ export const CaptionerInput: React.FC<{
               // color: "#ffffff !important",
               fontWeight: "bold",
               backgroundColor: language
-                ? ""
-                : theme.fn.darken(theme.colors.red[8], 0),
+                ? theme.colors.gray[7]
+                : theme.colors.hsOrange[8],
               "::placeholder": {
                 color: "rgba(255,255,255,0.5)",
               },
@@ -162,13 +162,17 @@ export const CaptionerInput: React.FC<{
               "::placeholder": {
                 color: "rgba(255,255,255,0.5)",
               },
+              ":focus": {
+                borderColor: `${theme.white} !important`,
+              },
+              ":focus-within": {
+                borderColor: `${theme.white} !important`,
+              },
             },
             filledVariant: {
               color: "#ffffff !important",
               fontWeight: "bold",
-              backgroundColor: language
-                ? theme.fn.darken(theme.colors.red[8], 0)
-                : "",
+              backgroundColor: language ? theme.colors.hsOrange[8] : "",
             },
           })}
         />
@@ -177,8 +181,16 @@ export const CaptionerInput: React.FC<{
           onClick={onSend}
           disabled={!text || !roomName}
           size="xl"
-          color="gray"
+          // color="gray"
           radius="md"
+          variant="filled"
+          styles={(theme) => ({
+            root: {
+              ":disabled": {
+                backgroundColor: `${theme.colors.dark[3]} !important`,
+              },
+            },
+          })}
         >
           Send
         </Button>

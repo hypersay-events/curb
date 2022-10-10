@@ -123,10 +123,15 @@ const api: FastifyPluginAsync<ApiOptions> = async (
       roomName: string;
     };
   }>("/listAvailableTranslations", async (request, reply) => {
-    const languages = await roomsManager.getRoomAvailableLanguages({
-      roomName: request.query.roomName,
-    });
-    reply.send(languages);
+    try {
+      const languages = await roomsManager.getRoomAvailableLanguages({
+        roomName: request.query.roomName,
+      });
+      reply.send(languages);
+    } catch (e) {
+      console.log("Cannot retrieve languages", e);
+      return [];
+    }
   });
 };
 
