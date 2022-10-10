@@ -56,7 +56,6 @@ export default function Room() {
               }}
               size="sm"
               color="gray"
-              variant="hover"
             >
               <IconArrowNarrowLeft />
             </ActionIcon>

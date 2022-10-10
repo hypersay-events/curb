@@ -10,7 +10,7 @@ import {
   useMantineColorScheme,
 } from "@mantine/core";
 
-export const HSThemeSelector: FC<ActionIconProps<"button">> = (props) => {
+export const HSThemeSelector: FC<ActionIconProps> = (props) => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   return (
     <ActionIcon
@@ -23,9 +23,7 @@ export const HSThemeSelector: FC<ActionIconProps<"button">> = (props) => {
   );
 };
 
-export const HSThemeSelectorAsMenuItem: FC<MenuItemProps<"button">> = ({
-  ...props
-}) => {
+export const HSThemeSelectorAsMenuItem: FC<MenuItemProps> = ({ ...props }) => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
   const icon =
