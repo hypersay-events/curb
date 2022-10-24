@@ -678,6 +678,17 @@
     "@radix-ui/react-scroll-area" "1.0.0"
     react-textarea-autosize "8.3.4"
 
+"@mantine/core@^5.6.1":
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/@mantine/core/-/core-5.6.1.tgz#aa1fcc8a15f6285ffefbbba4f186a290f1350729"
+  integrity sha512-QzX7uzlK6t/EzMzBBY5+G+qTtwOL0ULajzofvLMhh+y5dftMxoBbJaGu3X3/xWvHZwgJuFWCbZb0XCyicrFuSQ==
+  dependencies:
+    "@floating-ui/react-dom-interactions" "^0.10.1"
+    "@mantine/styles" "5.6.1"
+    "@mantine/utils" "5.6.1"
+    "@radix-ui/react-scroll-area" "1.0.0"
+    react-textarea-autosize "8.3.4"
+
 "@mantine/hooks@^4.2.9":
   version "4.2.12"
   resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-4.2.12.tgz#8dfbd23763959b721f5c5c784b3c412bb7c9823a"
@@ -687,6 +698,11 @@
   version "5.5.4"
   resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-5.5.4.tgz#5b7f14dfffba4f59aed21ee6bccf336a438f96a3"
   integrity sha512-4lPIcZgoMkq+GCILN8CDTVxYzsE/Gfi6ICjHhPZU1Ufmw0mftpjTQhLx3+TFMtBlqnamgBia2ZS1o2BpvTLazA==
+
+"@mantine/hooks@^5.6.1":
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-5.6.1.tgz#36bd46b1f865621938527dbfc0f9add912408b69"
+  integrity sha512-IkRJ2D047egMwJj4CB3NeDe1wVpukiEhg3R3mKZVNYYnKZdUGypFI4rX648Eck9aFFWJulg7JqhnF9W65n7bDA==
 
 "@mantine/next@^5.5.4":
   version "5.5.4"
@@ -724,10 +740,23 @@
     clsx "1.1.1"
     csstype "3.0.9"
 
+"@mantine/styles@5.6.1":
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/@mantine/styles/-/styles-5.6.1.tgz#71866098b473adfe49aeeee7d0ab158693ba1a5c"
+  integrity sha512-IsJqMRqw0pGr0Rd959H4W6RhbdMxcP7E06f78zQZLB6GTng+vYhTog5l7BXFwrJ9zPDzz68fDt51Rd1gz7Yarw==
+  dependencies:
+    clsx "1.1.1"
+    csstype "3.0.9"
+
 "@mantine/utils@5.5.4":
   version "5.5.4"
   resolved "https://registry.yarnpkg.com/@mantine/utils/-/utils-5.5.4.tgz#4cea84cfbe16ac04b9b407b4215c66d606c702f3"
   integrity sha512-EO0iD99wfvKC09WHpCXrqb5ewTmuYf4GeNR3xOtecNaXNbFUVxmlV6wwhsJ61YScy+7bM1lplwNvkGz5CF0v7Q==
+
+"@mantine/utils@5.6.1":
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/@mantine/utils/-/utils-5.6.1.tgz#5ab75c2185b5f64e78c70e1d0a5cbf56c9c1c8e9"
+  integrity sha512-pu7ajDLJfW9oMVfzK6DKkhuaayRiCEZLfB6Be+wbL9joWrzMCZkc0tA3KxET7TGSO98d4NpjjmbEg2IsjT8Alw==
 
 "@next/env@12.1.6":
   version "12.1.6"
