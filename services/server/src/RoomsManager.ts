@@ -75,10 +75,12 @@ export class RoomsManager {
     roomName: string;
     language?: string;
     format: ExportType;
+    startingFrom?: number;
   }): Promise<string> {
     const { captions, startAt } = await this.captionDBService.listCaptions({
       roomName: opt.roomName,
       language: opt.language,
+      startingFrom: opt.startingFrom,
     });
     switch (opt.format) {
       case "srt":

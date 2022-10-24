@@ -35,12 +35,15 @@ export const sdk = {
     format: string;
     language: string;
     roomName: string;
+    startingFrom?: number;
   }) => {
     const language = data.language === "original" ? null : data.language;
     const res = await fetch(
       `${NEXT_PUBLIC_CAPTIONS_ENDPOINT}/export?roomName=${
         data.roomName
-      }&format=${data.format}${language ? `&language=${language}` : ""}`,
+      }&format=${data.format}${
+        language ? `&language=${language}` : ""
+      }&startingFrom=${data.startingFrom || 0}`,
       {
         method: "GET",
       }

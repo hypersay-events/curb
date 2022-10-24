@@ -1,4 +1,13 @@
-import { Box, Button, Group, Table, Text } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Group,
+  Input,
+  Stack,
+  Table,
+  Text,
+  TextInput,
+} from "@mantine/core";
 import React, { useCallback, useEffect, useState } from "react";
 import { sdk } from "../business/client";
 
@@ -6,7 +15,7 @@ export const SubtitleDownloader: React.FC<{ roomName: string }> = ({
   roomName,
 }) => {
   const [availableLanguages, setAvailableLanguages] = useState<string[]>([]);
-  const [selectedLang, setSelectedLang] = useState<string | null>(null);
+  const [startingFrom, setStartingFrom] = useState("");
 
   useEffect(() => {
     sdk
@@ -20,6 +29,7 @@ export const SubtitleDownloader: React.FC<{ roomName: string }> = ({
         format,
         language,
         roomName,
+        startingFrom: startingFrom ? new Date(startingFrom).getTime() : 0,
       });
       var content = res.content;
       var filename = `${roomName}${
@@ -34,47 +44,56 @@ export const SubtitleDownloader: React.FC<{ roomName: string }> = ({
       link.setAttribute("download", filename);
       link.click();
     },
-    [roomName]
+    [roomName, startingFrom]
   );
   return (
-    <Table highlightOnHover verticalSpacing="sm" horizontalSpacing="sm">
-      <thead>
-        <tr>
-          <th>Language</th>
-          <th>SRT</th>
-          <th>WebVTT</th>
-        </tr>
-      </thead>
-      <tbody>
-        {[
-          { value: "original", label: "original" },
-          ...availableLanguages.map((l) => ({ value: l, label: l })),
-        ].map((lang) => (
-          <tr key={lang.label}>
-            <td>
-              <Text weight={800}>{lang.label}</Text>
-            </td>
-            <td>
-              <Button
-                onClick={() => downloadSubtitles("srt", lang.value)}
-                size="xs"
-                color="hsOrange"
-              >
-                Download SRT
-              </Button>
-            </td>
-            <td>
-              <Button
-                onClick={() => downloadSubtitles("vtt", lang.value)}
-                size="xs"
-                color="hsOrange"
-              >
-                Download WebVTT
-              </Button>
-            </td>
+    <Stack>
+      <Input.Wrapper label="Optional start time">
+        <TextInput
+          value={startingFrom}
+          onChange={(e) => setStartingFrom(e.target.value)}
+          placeholder="2022-10-24T11:00:00.000Z"
+        />
+      </Input.Wrapper>
+      <Table highlightOnHover verticalSpacing="sm" horizontalSpacing="sm">
+        <thead>
+          <tr>
+            <th>Language</th>
+            <th>SRT</th>
+            <th>WebVTT</th>
           </tr>
-        ))}
-      </tbody>
-    </Table>
+        </thead>
+        <tbody>
+          {[
+            { value: "original", label: "original" },
+            ...availableLanguages.map((l) => ({ value: l, label: l })),
+          ].map((lang) => (
+            <tr key={lang.label}>
+              <td>
+                <Text weight={800}>{lang.label}</Text>
+              </td>
+              <td>
+                <Button
+                  onClick={() => downloadSubtitles("srt", lang.value)}
+                  size="xs"
+                  color="hsOrange"
+                >
+                  Download SRT
+                </Button>
+              </td>
+              <td>
+                <Button
+                  onClick={() => downloadSubtitles("vtt", lang.value)}
+                  size="xs"
+                  color="hsOrange"
+                >
+                  Download WebVTT
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </Stack>
   );
 };

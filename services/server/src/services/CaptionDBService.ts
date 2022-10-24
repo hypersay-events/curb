@@ -18,13 +18,15 @@ export default class CaptionDBService {
   async listCaptions(opt: {
     roomName: string;
     language?: string;
+    startingFrom?: number;
   }): Promise<{ captions: Caption[]; startAt: number }> {
-    const { roomName, language = null } = opt;
+    const { roomName, language = null, startingFrom = 0 } = opt;
 
     const captions = await this.prisma.caption.findMany({
       where: {
         roomName,
         targetLanguage: language,
+        timestampStart: { gte: startingFrom },
       },
       orderBy: {
         timestampStart: "asc",

@@ -111,9 +111,16 @@ const api: FastifyPluginAsync<ApiOptions> = async (
       roomName: string;
       language?: string;
       format: ExportType;
+      startingFrom?: string;
     };
   }>("/export", async (request, reply) => {
-    const exported = await roomsManager.export(request.query);
+    const exported = await roomsManager.export({
+      ...request.query,
+      startingFrom:
+        typeof request.query.startingFrom !== "undefined"
+          ? parseInt(request.query.startingFrom)
+          : undefined,
+    });
     reply.header("Content-Type", `text/${request.query.format}; charset=utf-8`);
     reply.send(exported);
   });
