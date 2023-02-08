@@ -11,7 +11,7 @@ export const SocketContext = createContext<{
 });
 
 const VITE_CAPTIONS_ENDPOINT =
-  import.meta.env.VITE_CAPTIONS_ENDPOINT || "http://localhost:4554";
+  import.meta.env.VITE_CAPTIONS_ENDPOINT || "https://captions.hypersay.com";
 
 export const SocketProvider: React.FC<{
   children: ReactNode;
